@@ -13,7 +13,8 @@ I envisioned Fumble as more than just a dating app—it would be a supportive co
 
 My passion for helping others find love and companionship, coupled with my own experiences of fumbling through the dating world, inspired me to bring Fumble to life. I knew that if given the opportunity, Fumble could revolutionize the way people approached dating, fostering meaningful connections and empowering individuals to embrace their journey to finding love.
 
-![fumblemockup5](https://github.com/zabloncharles/fumble/assets/74889517/b6694c90-a32d-41d7-85ff-aa5954fb3fc7)
+![fumblemockupprofile](https://github.com/zabloncharles/fumble/assets/74889517/283585e8-e8ec-442b-aa56-553c9429a4c7)
+
 
 # How
 The idea for Fumble came to me during a particularly frustrating period in my own dating life. After yet another failed attempt at finding love through traditional dating apps, I realized that there had to be a better way. I started reflecting on my own experiences and those of my friends, and it became clear that many of us were struggling with similar issues—miscommunication, unrealistic expectations, and a lack of genuine connections.
@@ -23,8 +24,9 @@ I knew that I wanted to create a dating app that addressed these pain points and
 I reached out to friends, family, and experts in the field to gather insights and feedback on what features and functionalities would be most valuable in a dating app. I also conducted surveys and interviews to better understand the needs and preferences of potential users.
 
 As I delved deeper into the development process, I remained committed to creating a platform that prioritized authenticity, empathy, and inclusivity. I wanted Fumble to be a safe space where users could be themselves without fear of judgment, and where genuine connections could flourish.
+![fumblegenderpref](https://github.com/zabloncharles/fumble/assets/74889517/9f2eb962-7d94-469a-9465-56274c316acf)
 
-![fumblemockup6](https://github.com/zabloncharles/fumble/assets/74889517/f26406e2-8e48-45e8-a4cc-f9a496dfd583)
+
 
 # UI/UX
 When designing the UI of Fumble, I used SwiftUI, Apple's modern framework for building user interfaces across all Apple platforms. SwiftUI provides a declarative syntax that makes it easy to create and maintain complex user interfaces with less code.
@@ -177,6 +179,10 @@ By leveraging Google Firebase as the backend API and database solution, Fumble c
 
 ### Database/firebase 
 <img src="https://firebase.google.com/static/downloads/brand-guidelines/PNG/logo-knockout.png" alt="Firebase Icon" width="300">
+
+
+## About the Author
+* Made with love 💖 by @zabloncharles
 
 ### How to Contribute
 
