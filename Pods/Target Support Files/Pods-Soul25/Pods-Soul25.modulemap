@@ -1,0 +1,6 @@
+framework module Pods_Soul25 {
+  umbrella header "Pods-Soul25-umbrella.h"
+
+  export *
+  module * { export * }
+}
