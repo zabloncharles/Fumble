@@ -548,10 +548,10 @@
 		F7FF13C12BCC74B700880D0A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F7C37D382BCC937B002E6B25 /* MatchView.swift */,
 				F7C37D3F2BCC97C6002E6B25 /* LikesView.swift */,
 				F7C37D412BCCA42C002E6B25 /* HomeView.swift */,
 				F7FF13CC2BCC74B700880D0A /* ChatsView.swift */,
-				F7C37D382BCC937B002E6B25 /* MatchView.swift */,
 				F7C37D472BCCB085002E6B25 /* ProfileView.swift */,
 			);
 			path = Views;

@@ -35,9 +35,13 @@ struct MessageDetailView: View {
     @State var backButtonTapped = false
     @State var btapped = ""
     @State var blurPage = false
+    @State var messageSent = false
     @State var bubblesAppeared = false
     @State var messageDeleted = false
     @State private var scrollToBottom: Bool = false
+    @State var tappedUserAvatar  = ""
+    @State var goToProfile = false
+    @State var currentUser : UserStruct? = fakeUser
     var body: some View {
         NavigationView {
             ZStack {
@@ -47,8 +51,16 @@ struct MessageDetailView: View {
                 texting
                 
             }
-            .zIndex(1)
-        }.navigationBarBackButtonHidden()
+           
+        }  .navigationBarTitle(log.firstName, displayMode: .inline)
+            .navigationBarBackButtonHidden(false) // Hide the default back button
+          
+            .sheet(isPresented: $goToProfile){
+                SkullProfile(currentUser: $currentUser, profile: log, showProfile: .constant(false), currentIndex: .constant(-1))
+                    .edgesIgnoringSafeArea(.all)
+                    .padding(.bottom, -120)
+                    
+            }
         .onAppear{
             withAnimation(.spring()) {
                 hidemainTab = true
@@ -66,61 +78,63 @@ struct MessageDetailView: View {
     var cover: some View {
         VStack {
             HStack {
-                Image(systemName: "chevron.left")
-                    .font(.title)
-                    .foregroundColor(backButtonTapped ? .clear : Color("black"))
-//
-                    .onTapGesture {
-                        //go back to messages view
-                        backButtonTapped = true
-                        presentationMode.wrappedValue.dismiss()
-                    }
-          
-                GetImageAndUrl(url:log.avatar, loaded: .constant(true), imageUrl: .constant(""))
-                    .cornerRadius(80)
-                    .neoButton(isToggle: false) {
-                        //go to user profile
-                    }
-                    .mask(Circle())
-                    .background(
-                        Circle()
-                            .fill(Color.clear)
-                            .padding(-2)
-                        
-                    )
-                    .frame(width: 40, height: 40)
-                 
-                VStack{
-                    HStack(spacing: 4.0) {
-                        Text(log.firstName)
-                     
-                            .font(.headline).bold()
-                        .foregroundColor(.primary)
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor( .blue)
-                            .font(.subheadline)
-                        Spacer()
-                    }
-                    
-                    HStack(spacing:2) {
-                        Image(systemName: "circlebadge.fill")
-                            .foregroundColor( .green)
-                            .font(.caption2)
-                        Text(" 2 minutes ago")
-                            .font(.footnote)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.primary.opacity(0.7))
-                    }
-                    
-                }.padding(.leading,5)
                 Spacer()
+//                Image(systemName: "chevron.left")
+//                    .font(.title)
+//                    .foregroundColor(backButtonTapped ? .clear : Color("black"))
+////
+//                    .onTapGesture {
+//                        //go back to messages view
+//                        backButtonTapped = true
+//                        presentationMode.wrappedValue.dismiss()
+//                    }
+          
+//                GetImageAndUrl(url:log.avatar, loaded: .constant(true), imageUrl: $tappedUserAvatar)
+//                    .cornerRadius(80)
+//                    .neoButton(isToggle: false) {
+//                        //go to user profile
+//                    }
+//                    .mask(Circle())
+//                    .background(
+//                        Circle()
+//                            .fill(Color.clear)
+//                            .padding(-2)
+//
+//                    )
+//                    .frame(width: 40, height: 40)
+//                    .opacity(0.00001)
+                 
+//                VStack{
+//                    HStack(spacing: 4.0) {
+//                        Text(log.firstName)
+//
+//                            .font(.headline).bold()
+//                        .foregroundColor(.primary)
+//                        Image(systemName: "checkmark.circle")
+//                            .foregroundColor( .blue)
+//                            .font(.subheadline)
+//                        Spacer()
+//                    }
+//
+//                    HStack(spacing:2) {
+//                        Image(systemName: "circlebadge.fill")
+//                            .foregroundColor( .green)
+//                            .font(.caption2)
+//                        Text(" 2 minutes ago")
+//                            .font(.footnote)
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                            .foregroundColor(.primary.opacity(0.7))
+//                    }
+//
+//                }.padding(.leading,5)
+                
                 
                 Image(systemName: "exclamationmark.circle")
                     .foregroundColor(.gray )
                     .font(.headline)
                     .padding(.trailing,10)
             }
-            
+            .frame( height: 40)
             .padding(.horizontal,10)
             .padding(.top,50)
             .padding(.bottom,10)
@@ -141,7 +155,7 @@ struct MessageDetailView: View {
                                    
                                         VStack {
                                         
-                                            MessageBubblesView(section: section, blurPage: $blurPage, messageDeleted: $messageDeleted, bTapped: $btapped)
+                                            MessageBubblesView(section: section, blurPage: $blurPage, messageDeleted: $messageDeleted, avatar: log.avatar, bTapped: $btapped, goToProfile: $goToProfile)
                                               
     //                                            .opacity(bubblesAppeared ? 1 : 0.30)
                                                 .onLongPressGesture {
@@ -153,24 +167,10 @@ struct MessageDetailView: View {
                                                 .blur(radius: btapped == (section.timestamp ) ? 0 :  blurPage ? 13 : 0)
                                                 .id(section.id)
                                                 .onAppear{
-                                                    scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
+                                                    scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+                                                   // scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
                                                 }
-    //                                            .onAppear {
     //
-    //                                                    scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 2]).id), anchor: .bottom)
-    //
-    //                                                    withAnimation(.easeInOut) {
-    //                                                        bubblesAppeared = true
-    //                                                    }
-    ////                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-    ////                                                    withAnimation(.spring()) {
-    ////
-    ////                                                            scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
-    ////                                                            scrollToBottom = true
-    ////
-    ////                                                    }
-    ////                                                }
-    //                                        }
                                         }
                                         
                                         
@@ -180,9 +180,19 @@ struct MessageDetailView: View {
                             
                             
                         
-                        .onChange(of: blurPage) { newValue in
+                        .onChange(of: blurPage || messageSent) { newValue in
                             if !blurPage {
                                 btapped = ""
+                            }
+                            // scroll chats to bottom if i send message 
+                            if messageSent {
+                                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
+                                    withAnimation(.spring()) {
+                                        scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+                                    }
+                                                                }
+                                
+                                
                             }
                         }
     //                    .onChange(of: messageDeleted) { newValue in
@@ -273,9 +283,10 @@ struct MessageDetailView: View {
                             //send the fake text to array
                             sendFakeText()
                             messageText = ""
+                            
                         } else {
                             if !guardSending {
-                                typeWriteText("You haven't typed anything bro :/") {
+                                typeWriteText("You haven't typed anything :/") {
                                     print("Typing finished")
                                 }
                             }
@@ -302,6 +313,7 @@ struct MessageDetailView: View {
         let fakeMessage = MessageModel(userID: "user1", text: messageText, sender: "user1", timestamp: "\(Date())", stamp: "Sent")
         
         withAnimation {
+            messageSent = true
             chatMessages.append(fakeMessage)
         }
     }

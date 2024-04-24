@@ -8,13 +8,15 @@ struct MainTab: View {
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @AppStorage("currentPage") var selected = 0
     @AppStorage("hidemainTab") var hidemainTab = false
-   
+   @State var loadApp = true
  
 
     var body: some View {
         
         ZStack {
             BackgroundView()
+            
+            
             NavigationView {
                 VStack{
                     
@@ -47,14 +49,22 @@ struct MainTab: View {
                 .animation(.spring(), value: hidemainTab)
                
             
-            
+            if loadApp {
+                LogoLoadingView()
+            }
             
             
             
                 
         }.onAppear{
-           // fetchCurrentUser()
+        
             fetchFakeUser()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                withAnimation(.easeInOut){
+                    loadApp = false
+                }
+            }
+            
         }
         
     }

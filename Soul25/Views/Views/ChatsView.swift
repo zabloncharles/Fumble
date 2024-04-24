@@ -32,6 +32,7 @@ struct ChatsView: View {
     @State private var chatMessages: [MessageModel] = []
     @State var currentViewed = ""
     @State var texter = ""
+
     
     
     //  @State var fakeincomingMessages = IncomingMessage(name: "", text: "", timestamp: "")
@@ -40,7 +41,7 @@ struct ChatsView: View {
         ZStack {
                 VStack {
                     ScrollView(showsIndicators: false) {
-                        DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "4",trailinglabelicon: ""){
+                        DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(profiles.count)",trailinglabelicon: "", notification: true){
                             
                         }
                             .background{
@@ -53,11 +54,16 @@ struct ChatsView: View {
                   
                 }
                 
-            if !showMessages {
+            if profiles.count != 0 && !showMessages {
                 gettingmessages
                     .transition(.opacity)
             }
         }.onAppear{
+            fetchUserData(parameter: "") { result in
+                
+                profiles = result ?? fakeUsers
+                
+            }
             hidemainTab = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(.spring()){
@@ -80,11 +86,8 @@ struct ChatsView: View {
                 sectionsSection
             
                 .padding(.bottom, 30)
-                .offset(y: !showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
+                .offset(y: !showMessages ? UIScreen.main.bounds.height  : 0)
                 
-        }.onAppear{
-            // fetchIncomingMessages()
-            fetchFakeMessages()
         }
     }
     
@@ -107,7 +110,8 @@ struct ChatsView: View {
             }
            
 
-        }
+        }.opacity(showMessages ? 1 : 0)
+           
         .padding(.horizontal,10)
         .padding(.vertical, 40)
         
@@ -140,7 +144,7 @@ struct ChatsView: View {
                     .cornerRadius(30)
             }.padding(10)
                 
-                .offset(y: showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
+//                .offset(y: showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
             Spacer()
         }
     }
@@ -197,10 +201,6 @@ struct ChatsView: View {
     }
     
   
-    
-    func fetchFakeMessages() {
-       // userMessages = messageContent
-    }
    
 }
 

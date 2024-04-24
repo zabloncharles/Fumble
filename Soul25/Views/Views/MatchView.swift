@@ -41,7 +41,7 @@ struct MatchView: View {
     
     var body: some View {
         ZStack {
-            LogoLoadingView()
+           
             //the whole page
             if currentIndex != profiles.count {
                 ZStack {

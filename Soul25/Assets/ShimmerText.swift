@@ -39,17 +39,21 @@ struct ShimmerVar: View {
             //We are simply scrolling the gradient from left to right for effect
                 .background(
                     VStack {
-                        LinearGradient(gradient:
-                                        Gradient(colors: [Color("black"), .yellow.opacity(0.79), Color("black")]),
-                                       startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/)
-                        
-                            .opacity(shimmerAppeared ? 1 : 1)
-//                            .animation(.easeIn(duration: 2.3), value: shimmerAppeared)
-                            .animation(.easeIn(duration: 2.3).repeatCount(5).delay(0.5), value: shimmerAppeared)
+                        ZStack {
+                            LinearGradient(colors: [Color.green, .blue, .red], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(gradient:
+                                            Gradient(colors: [Color.clear, .yellow.opacity(0.79), Color.clear]),
+                                           startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/)
+                            
+                                .opacity(shimmerAppeared ? 1 : 1)
+    //                            .animation(.easeIn(duration: 2.3), value: shimmerAppeared)
+                            .animation(.easeIn(duration: 2.3).repeatCount(10).delay(0.1), value: shimmerAppeared)
+                            .offset(x:shimmerAppeared ? 170 : -290)
+                        }
                         
                         
                     }
-                        .offset(x:shimmerAppeared ? 170 : -290)
+                        
                     
                     //We mask the gradient with the same text on the view
                         .mask(

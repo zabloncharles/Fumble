@@ -18,6 +18,7 @@ struct MessageCard: View {
     @Binding var userAvatarLoaded : Bool
     @State var isTapped = false
     @State var whoSent = ["Sent","Received","Seen"]
+    @State var image = ""
     
     var body: some View {
         VStack {
@@ -27,9 +28,10 @@ struct MessageCard: View {
               //  Image(section.avatar)
                   //  .resizable()
                   //  .aspectRatio(contentMode: .fill)
-                GetImageAndUrl(url:section.avatar, loaded: $userAvatarLoaded, imageUrl: .constant(""))
+                GetImageAndUrl(url:section.avatar, loaded: $userAvatarLoaded, imageUrl: $image)
                     .frame(width: 49, height: 49)
                     .mask(Circle())
+                   
                    
                     .neoButton(isToggle: false) {
                         //user tapped the avatar
@@ -45,11 +47,11 @@ struct MessageCard: View {
                     
                     // GradientText(text: section.name, gradient: [.black, .blue])
                     Text(section.firstName)
-                        .customfontFunc(customFont: "sanfrancisco", style: .title3)
+                        .font(.headline)
                         .foregroundColor(Color("black"))
                     
                     Text(whoSent[0])
-                        .customfontFunc(customFont: "sanfrancisco", style: .footnote)
+                        .font(.footnote)
                         .foregroundColor(.gray)
                         .lineLimit(1)
                     

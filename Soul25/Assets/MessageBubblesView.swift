@@ -18,8 +18,11 @@ struct MessageBubblesView: View {
     var messageTime = "2:30 PM"
     @Binding var blurPage : Bool
     @Binding var messageDeleted : Bool
+    var avatar = ""
     @State var showDate = false
     @Binding var bTapped : String
+    @State var tappedUserAvatar = ""
+    @Binding var goToProfile : Bool
     var body: some View {
         
         if section.userID == "user1" {
@@ -65,21 +68,38 @@ struct MessageBubblesView: View {
                                    
                             }
                         }
-                        Text(section.text)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .font(.subheadline)
-                            .padding(.horizontal, 11.0)
-                            .padding(.vertical, 9.0)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
-                            .neoDoubleTapButton(isToggle: false, perform: {
-                                withAnimation(.easeIn) {
-                                    bTapped = section.timestamp
-                                    showDate.toggle()
+                   
+                           
+                            Text(section.text)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color("black"))
+                                .font(.subheadline)
+                                .padding(.horizontal, 11.0)
+                                .padding(.vertical, 9.0)
+                                .background(Color("neolighshadow"))
+                                .cornerRadius(12)
+                                .background{
+                                    HStack {
+                                        Spacer()
+                                        VStack {
+                                            Spacer()
+                                            
+                                            Rectangle()
+                                                .fill(Color("neolighshadow"))
+                                                .frame(width:20, height: 20)
+                                        }
+                                        
+                                    }
+                                    
                                 }
-                            })
+                                .neoDoubleTapButton(isToggle: false, perform: {
+                                    withAnimation(.easeIn) {
+                                        bTapped = section.timestamp
+                                        showDate.toggle()
+                                    }
+                                })
                             .padding(.bottom,9)
+                        
                     }
                     
                     
@@ -136,22 +156,59 @@ struct MessageBubblesView: View {
                         }
                         
                         VStack {
-                            Text(section.text)
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                                .font(.subheadline)
-                                .padding(.horizontal, 11.0)
-                                .padding(.vertical, 9.0)
-                                .background(Color.purple.opacity(0.23))
-                                .cornerRadius(12)
-                                .neoDoubleTapButton(isToggle: false, perform: {
-                                    //code
-                                    withAnimation(.easeIn) {
-                                            bTapped = section.timestamp
-                                            showDate.toggle()
+                            HStack {
+                                VStack {
+                                    Spacer()
+                                    
+                                    GetImageAndUrl(url:avatar, loaded: .constant(true), imageUrl: .constant(""))
+                                        .cornerRadius(80)
+                                        .neoButton(isToggle: false) {
+                                            //go to user profile
+                                            withAnimation(.spring()) {
+                                                goToProfile = true
+                                            }
+                                        }
+                                        .mask(Circle())
+                                        .background(
+                                            Circle()
+                                                .fill(Color.clear)
+                                                .padding(-2)
+                                            
+                                        )
+                                    .frame(width: 30, height: 30)
+                                    .offset(y:-8)
+                                }
+                                
+                                Text(section.text)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(Color("black"))
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 11.0)
+                                    .padding(.vertical, 9.0)
+                                    .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                                    .cornerRadius(12)
+                                    .background{
+                                        HStack {
+                                            VStack {
+                                                Spacer()
+                                                
+                                                Rectangle()
+                                                    .fill(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                                                .frame(width:20, height: 20)
+                                            }
+                                            Spacer()
+                                        }
+                                            
                                     }
-                                })
+                                    .neoDoubleTapButton(isToggle: false, perform: {
+                                        //code
+                                        withAnimation(.easeIn) {
+                                                bTapped = section.timestamp
+                                                showDate.toggle()
+                                        }
+                                    })
                                 .padding(.bottom,9)
+                            }
                         }
                         
                     }

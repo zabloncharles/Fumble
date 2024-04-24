@@ -57,9 +57,14 @@ struct SkullProfile: View {
         
         
         ZStack {
+            if !profileImagesLoaded[1] {
+                progressloading
+            }
+            
                     ScrollView(.vertical, showsIndicators: false) {
                         ScrollDetectionView(userScrolledAmount: $userScrolledAmount)
                     
+                        
                         content
                           
                        
@@ -81,13 +86,15 @@ struct SkullProfile: View {
             }
             
             
-            
-            NavigationBar(userScrolledAmount: $userScrolledAmount, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "gear" : "heart.slash" ){
-                //call the next profile
-                nextProfile()
-            }
-          
+           
+                NavigationBar(userScrolledAmount: $userScrolledAmount, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "gear" : currentIndex == -1 ? "" : "heart.slash" ){
+                    //call the next profile
+                    nextProfile()
+                }
+                
                 .padding(.top,selected == 0 || selected == 1 ? 34 : 0)
+            
+            
             
             
         }.background(Color("offwhiteneo"))
@@ -279,6 +286,16 @@ struct SkullProfile: View {
             .padding(.leading,20)
          
     }
+    var progressloading : some View {
+        VStack(alignment: .center) {
+            HStack(alignment: .center) {
+                Spacer()
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
+                Spacer()
+            }
+        }.padding(.top,30)
+    }
     var content: some View {
         
       
@@ -315,6 +332,7 @@ struct SkullProfile: View {
                         Divider()
                      
                     
+                   
                        
                         
                     QuoteImageCard(name: profile.firstName, caption: "Life is too short to worry about thigh gaps, focus on making memories",url: profile.photos[0], urlReturned: $profileImages[0], loaded: $profileImagesLoaded[0], report: $report)
