@@ -18,7 +18,7 @@ struct ProfileView: View {
         ZStack {
           
           
-                SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex)
+            SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex)
            
         }.onAppear{
             editingProfile = true

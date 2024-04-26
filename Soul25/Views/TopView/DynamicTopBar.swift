@@ -14,11 +14,15 @@ struct DynamicTopBar: View {
     var trailinglabel = ""
     var trailinglabelicon = ""
     var notification = false
+    @State var scrolledUp = false
     let completion: () -> Void
     var body: some View {
         VStack {
+            ScrollDetectionView(userScrolledDown: $scrolledUp)
             GeometryReader { proxy in
                 
+                
+              
                 
                 VStack {
                     Spacer()

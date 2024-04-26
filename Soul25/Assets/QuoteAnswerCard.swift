@@ -41,7 +41,7 @@ struct QuoteAnswerCard: View {
                                 report = true
                             }
                         }
-                }.padding(.trailing,10)
+                }
                 Spacer()
             }
             Text(caption)
@@ -53,9 +53,7 @@ struct QuoteAnswerCard: View {
             
             //                        the prompt
             HStack {
-                VStack{
-                    Spacer()
-                }.frame(width: 1, height: .infinity)
+              Divider()
                    
                 HStack {
                     Spacer()
@@ -68,8 +66,7 @@ struct QuoteAnswerCard: View {
                     
                 }.padding(20)
                 
-                    .cornerRadius(12)
-                    .padding(.leading,20)
+                
             }
             
             

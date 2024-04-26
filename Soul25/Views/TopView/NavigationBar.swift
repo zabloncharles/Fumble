@@ -10,7 +10,7 @@ import SwiftUI
 struct NavigationBar: View {
     @AppStorage("hidemainTab") var hidemainTab = false
     @AppStorage("currentPage") var selected = 0
-    @Binding var userScrolledAmount : Bool
+    @Binding var userScrolledDown : Bool
     var label = "label"
     var labelicon = ""
     var trailinglabel = ""
@@ -88,8 +88,8 @@ struct NavigationBar: View {
                             .padding(.horizontal,19)
                             .padding(.bottom,5)
                             .background(Color("offwhiteneo"))
-                            .offset(y: userScrolledAmount ?  -120 : !appeared ? -120 : 0)
-                            .opacity(userScrolledAmount ? 0 : 1)
+                            .offset(y: userScrolledDown ?  -120 : !appeared ? -120 : 0)
+                            .opacity(userScrolledDown ? 0 : 1)
                     
                     
                     

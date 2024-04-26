@@ -19,7 +19,7 @@ struct ChatsView: View {
     @State var profiles: [UserStruct] = fakeUsers// Array to hold the user data
     @State var profile = fakeUsers[0]
     @State var currentUser: UserStruct? = fakeUser
-    @State var userScrolledAmount : Bool = false
+    @State var userScrolledDown : Bool = false
     @AppStorage("hidemainTab") var hidemainTab = false
     var isAnimated = true
     @State var viewState: CGSize = .zero
@@ -45,7 +45,7 @@ struct ChatsView: View {
                             
                         }
                             .background{
-                                ScrollDetectionView(userScrolledAmount: $userScrolledAmount)
+                                ScrollDetectionView(userScrolledDown: $userScrolledDown)
                             }
                         navandmessages
                     }

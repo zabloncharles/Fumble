@@ -10,7 +10,7 @@ import SwiftUI
 struct LikesView: View {
     @AppStorage("currentPage") var selected = 0
     @AppStorage("hidemainTab") var hidemainTab = false
-    @State var userScrolledAmount : Bool = false
+    @State var userScrolledDown : Bool = false
     @State var pageAppeared = false
     @State var profiles: [UserStruct] = []
     @Binding var currentUser: UserStruct?
@@ -27,6 +27,9 @@ struct LikesView: View {
     @State var showError = false
     @State var noProfiles = false
     @State var profileUrl = ""
+    @State var currentIndex = 0
+    @State var showX = false
+    @State var animateX = false
     
     var body: some View {
         ZStack {
@@ -37,9 +40,13 @@ struct LikesView: View {
             
             if profiles.count != 0{
                 
+                
+                
+                stories
+                
                
-                    
-                    stories
+                  
+                
                     if profileLoaded < 5 {
                         loading
                     }
@@ -54,7 +61,7 @@ struct LikesView: View {
             }
             
             
-            NavigationBar(userScrolledAmount: $userScrolledAmount, label:"Likes", labelicon: "fleuron", trailinglabel:"\(profiles.count)",notification: true){
+            NavigationBar(userScrolledDown: $userScrolledDown, label:"Likes", labelicon: "fleuron", trailinglabel:"\(profiles.count)",notification: true){
                 
             }
             
@@ -62,11 +69,38 @@ struct LikesView: View {
            
             
           showprofile
-            
+              
+            if   showX {
+                
+                
+                Image(systemName: "xmark")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.red)
+                    .scaleEffect(animateX ? 1.5 : 1)
+                    .rotationEffect(.degrees(animateX ? 90 : 0))
+                    .animation(.spring(), value: animateX)
+                    .onAppear{
+                        withAnimation(.spring()) {
+                            animateX = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            withAnimation(.spring()) {
+                                
+                                showX = false
+                                animateX = false
+                            }
+                        }
+                    }
+            }
             
         }.onAppear{
             profileAppeared = true
             
+            withAnimation(.spring()){
+                hidemainTab = false
+            }
+           
 //            if loading for 10 seconds show error
             DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                 showError = true
@@ -77,16 +111,48 @@ struct LikesView: View {
                 
             }
         }
-        .onChange(of: unmatch) { newValue in
+        .onChange(of: unmatch || showProfile) { newValue in
             //
-            withAnimation(.spring()) {
-                if unmatch {
-                    profiles.remove(at: indexRemoved)
-                    // Remove the first item from the array when it appears
+            
+            
+            if !showProfile {
+                withAnimation(.spring()) {
+                    showX = true
+                   
                 }
-               
+            }
+            
+            
+            withAnimation(.spring()) {
+             
+                if showProfile {
+                    
+              
+                    
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        
+                        withAnimation(.spring()) {
+                            
+                            removeCurrentIndexFunc()
+                            
+                        }
+                        
+                        
+                        
+                    }
+                }
+                
+                
+                    if !showProfile && unmatch {
+                        profiles.remove(at: indexRemoved)
+                        // Remove the first item from the array when it appears
+                    }
+                
                 
             }
+                
+            
         }
         
         
@@ -99,7 +165,7 @@ struct LikesView: View {
                     .animation(.spring(), value: showProfile)
                     .cornerRadius(showProfile ?  40 : 43)
                     .edgesIgnoringSafeArea(.all)
-                    .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
+                    .offset(y: !showProfile ? UIScreen.main.bounds.height : 0)
                 
                    
                     .transition(.asymmetric(
@@ -107,7 +173,7 @@ struct LikesView: View {
                         removal: .push(from: .top)))
                     .animation(.spring(), value: showProfile)
                 
-                 // .offset(y: showProfile ? 0 : -50)
+                   
                     .onAppear{
                         profileAppeared = true
                         hidemainTab = true
@@ -115,7 +181,9 @@ struct LikesView: View {
                     .onDisappear{
                         profileAppeared = false
                         hidemainTab = false
+                      
                     }
+                   
             }
         }
     }
@@ -210,7 +278,7 @@ struct LikesView: View {
                 
             }
                 .background{
-                    ScrollDetectionView(userScrolledAmount: $userScrolledAmount)
+                    ScrollDetectionView(userScrolledDown: $userScrolledDown)
                 }
             ScrollView(.horizontal,showsIndicators: false){
                 HStack(spacing: 15.0){
@@ -269,7 +337,7 @@ struct LikesView: View {
                         }
                     }
                 }
-                
+                .offset(x:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.width )
                 .padding(.top,5)
                 
                 .offset(x:10)
@@ -285,14 +353,18 @@ struct LikesView: View {
                     ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
                             //
                         PostCard(firstname: user.firstName,avatar: user.avatar, post: user.photos[0], indexRemoved: $indexRemoved, imageUrlReturned: $profileUrl, imageLoaded: $profileLoaded, unmatch: $unmatch, index: index){
-                                //tapp does what?
-                                profile = user
-                                withAnimation(.spring()) {
-                                    showProfile = true
-                                    
-                                }
-                               
+                            //tapp does what?
+                            currentIndex = index
+                            profile = user
+                            
+                            withAnimation(.spring()) {
+                                showProfile = true
+                                
                             }
+                            
+                            
+                        }
+                    
                            
                             .padding(.bottom,5)
                         if index != profiles.count - 1{
@@ -305,7 +377,7 @@ struct LikesView: View {
                 }
                 .padding(.top,20)
                 .padding(.bottom,80)
-                .offset(y:  profileLoaded > 2 ? 0 : UIScreen.main.bounds.height )
+                .offset(y:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.height )
             .animation(.spring(), value: profileLoaded)
             
         
@@ -319,7 +391,9 @@ struct LikesView: View {
         return profiles.filter { matchingEmails.contains($0.email) }
     }
     
-    
+    func removeCurrentIndexFunc(){
+        profiles.remove(at: currentIndex)
+    }
  
     func getDataMessages(){
         

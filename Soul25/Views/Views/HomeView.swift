@@ -15,7 +15,7 @@ struct HomeView: View {
     @State var profile = fakeUsers[0]
     @State var profiletype = 0
     @State var profilesLoaded = 0
-    @State var userScrolledAmount : Bool = false
+    @State var userScrolledDown : Bool = false
 
     @State var contentHasScrolled = false
     @State var noCardsPageAppeared = false
@@ -28,13 +28,13 @@ struct HomeView: View {
         ZStack {
             BackgroundView()
                 ScrollView {
-                    ScrollDetectionView(userScrolledAmount: $userScrolledAmount)
+                    ScrollDetectionView(userScrolledDown: $userScrolledDown)
                    topbar
                      .padding(.top,70)
                      
                    if (profiletype == 0) {
-                       CompatibleProfilesCards(profile: $profile, showProfile: $showProfile)
-                           
+//                       CompatibleProfilesCards(profile: $profile, showProfile: $showProfile)
+                       FeedView(profiles: $profiles)
                    } else {
                        nocards
                    }
@@ -72,7 +72,7 @@ struct HomeView: View {
                         
                     }.background(Color("offwhiteneo"))
                      
-                        .offset(y: userScrolledAmount  ?  -150 : 0)
+                        .offset(y: userScrolledDown  ?  -150 : 0)
                     
                         
                     
@@ -82,6 +82,13 @@ struct HomeView: View {
                 }
             
         }.edgesIgnoringSafeArea(.all)
+            .onAppear{
+                fetchUserData(parameter: "") { result in
+                    
+                    profiles = result ?? []
+                    
+                }
+            }
     }
     var loading : some View {
         VStack(alignment: .center) {
@@ -96,14 +103,14 @@ struct HomeView: View {
                 .overlay{
                     //app name and right system icons
                 navigation
-                        .opacity(userScrolledAmount ? 1 : 0)
-                        .scaleEffect(userScrolledAmount ? 1 : 0.96)
+                        .opacity(userScrolledDown ? 1 : 0)
+                        .scaleEffect(userScrolledDown ? 1 : 0.96)
                     .offset(y:-90)
             }
             Divider()
             // type of profiles cards section
             typeofprofiles
-                .opacity(!userScrolledAmount ? 0.30 : 1)
+                .opacity(!userScrolledDown ? 0.30 : 1)
             Divider()
         }.padding(.top,50)
     }

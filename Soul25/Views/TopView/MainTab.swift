@@ -50,7 +50,7 @@ struct MainTab: View {
                
             
             if loadApp {
-                LogoLoadingView()
+               // LogoLoadingView()
             }
             
             

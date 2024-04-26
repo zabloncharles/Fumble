@@ -4,10 +4,13 @@ import SwiftUI
 
 
 struct ScrollDetectionModifier: ViewModifier {
-    @Binding var userScrolledAmount: Bool // Binding to the userScrolledAmount variable
+    @Binding var userScrolledDown: Bool // Binding to the userScrolledDown variable
+    @Binding var userReloadingView : Bool
+ 
     
     func body(content: Content) -> some View {
         content
+           
             .background(
                 GeometryReader { proxy in
                     let offset = proxy.frame(in: .named("scroll")).minY
@@ -15,23 +18,33 @@ struct ScrollDetectionModifier: ViewModifier {
                 }
             )
             .onPreferenceChange(ScrollPreferenceKey.self) { offset in
+          
+                if offset > 155 {
+                    userReloadingView = true
+                   
+                } 
+                
+                
                 
                 if offset > -55 {
                     withAnimation(.spring()) {
-                        userScrolledAmount = true
+                        userScrolledDown = true
                     }
                 } else {
                     withAnimation(.spring()) {
-                        userScrolledAmount = false
+                        userScrolledDown = false
                     }
+                  
                 }
+                
+                
                
             }
     }
 }
 
 extension View {
-    func scrollDetection(userScrolledAmount: Binding<Bool>) -> some View {
-        self.modifier(ScrollDetectionModifier(userScrolledAmount: userScrolledAmount))
+    func scrollDetection(userScrolledDown: Binding<Bool>, userReloadingView: Binding<Bool>) -> some View {
+        self.modifier(ScrollDetectionModifier(userScrolledDown: userScrolledDown, userReloadingView: userReloadingView))
     }
 }

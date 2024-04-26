@@ -8,7 +8,7 @@ import SwiftUI
 import MapKit
 
 struct SettingsView: View {
-    @State var userScrolledAmount : CGFloat = 0
+    @State var userScrolledDown : CGFloat = 0
     @State  var firstName: String = ""
     @State  var lastName: String = ""
     @State  var age: String = ""

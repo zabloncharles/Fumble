@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct SkullProfile: View {
-    @State var userScrolledAmount = false
+    @State var userScrolledDown = false
     @State  var previousOffset: CGFloat = 0
     @State var showblacknav = false
     @AppStorage("currentPage") var selected = 0
@@ -26,7 +26,7 @@ struct SkullProfile: View {
     @State var showHearts = false
     var editingProfile = false
     @State private var isShowingModal = false
-    
+    @State private var shuffledViews: [Int] = (0..<4).shuffled()
     @State var showDragProgressView = false
     @State var text = ""
     @State var erro = ""
@@ -62,7 +62,7 @@ struct SkullProfile: View {
             }
             
                     ScrollView(.vertical, showsIndicators: false) {
-                        ScrollDetectionView(userScrolledAmount: $userScrolledAmount)
+                        ScrollDetectionView(userScrolledDown: $userScrolledDown)
                     
                         
                         content
@@ -87,9 +87,11 @@ struct SkullProfile: View {
             
             
            
-                NavigationBar(userScrolledAmount: $userScrolledAmount, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "gear" : currentIndex == -1 ? "" : "heart.slash" ){
+                NavigationBar(userScrolledDown: $userScrolledDown, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "gear" : currentIndex == -1 ? "" : "heart.slash" ){
                     //call the next profile
                     nextProfile()
+                    
+                 
                 }
                 
                 .padding(.top,selected == 0 || selected == 1 ? 34 : 0)
@@ -332,45 +334,41 @@ struct SkullProfile: View {
                         Divider()
                      
                     
-                   
+                    ForEach(shuffledViews, id: \.self) { index in
+                        switch index {
+                            case 0:
+                                QuoteImageCard(name: profile.firstName, caption: "Life is too short to worry about thigh gaps, focus on making memories", url: profile.photos[0], urlReturned: $profileImages[0], loaded: $profileImagesLoaded[0], report: $report)
+                                    .neoDoubleTapButton(isToggle: false) {
+                                        // Handle double tap action
+                                        likedquote = "Life is too short to worry about thigh gaps, focus on making memories"
+                                        likedImageUrl = profileImages[0]
+                                        if profileImagesLoaded[0] {
+                                            isShowingModal.toggle()
+                                        }
+                                    }
+                            case 1:
+                                whatilike
+                                Divider()
+                            case 2:
+                                QuoteImageCard(name: profile.firstName, caption: "Life's a beach, enjoy the waves and soak up the sun", url: profile.photos[1], urlReturned: $profileImages[1], loaded: $profileImagesLoaded[1], report: $report)
+                                    .neoDoubleTapButton(isToggle: false) {
+                                        // Handle double tap action
+                                        likedquote = "Life's a beach, enjoy the waves and soak up the sun"
+                                        likedImageUrl = profileImages[1]
+                                        if profileImagesLoaded[1] {
+                                            isShowingModal.toggle()
+                                        }
+                                    }
+                            case 3:
+                                answerprompt
+                            default:
+                                outofmatchesView
+                        }
+                    }
+
                        
                         
-                    QuoteImageCard(name: profile.firstName, caption: "Life is too short to worry about thigh gaps, focus on making memories",url: profile.photos[0], urlReturned: $profileImages[0], loaded: $profileImagesLoaded[0], report: $report)
-                        .neoDoubleTapButton(isToggle: false, perform: {
-                            //when first image is clicked
-                           likedquote = "Life is too short to worry about thigh gaps, focus on making memories"
-                            likedImageUrl = profileImages[0]
-                            if profileImagesLoaded[0] {
-//                                withAnimation(.spring()) {
-//                                    liked = true
-//                                }
-                                isShowingModal.toggle()
-                            }
-                            
-                        })
                  
-                   
-//                    Likes Pill
-                  whatilike
-                    
-                    Divider()
-                    
-                    QuoteImageCard(name: profile.firstName, caption: "Life's a beach, enjoy the waves and soak up the sun", url: profile.photos[1], urlReturned: $profileImages[1], loaded: $profileImagesLoaded[1], report: $report)
-                        .neoDoubleTapButton(isToggle: false, perform: {
-                            //when first image is clicked
-                            likedquote = "Life's a beach, enjoy the waves and soak up the sun"
-                            likedImageUrl = profileImages[1]
-                            
-                            if profileImagesLoaded[1] {
-                               
-                                isShowingModal.toggle()
-                            }
-                            
-                            
-                        })
-                    
-                    
-                   answerprompt
                     
                     
                     
