@@ -8,42 +8,51 @@
 import SwiftUI
 
 struct FeedView: View {
-    @State var scrolled = false
-    @State var report = false
     @Binding var profiles: [UserStruct]
+    @Binding var profile: UserStruct
+    @Binding var showProfile: Bool
+    @State var report = false
+    @State private var shuffledViews: Bool = Bool.random()
     
     var body: some View {
         VStack {
-          
-                ForEach(profiles, id: \.id) { user in
-                    
-                    let randomNumber = Int.random(in: 0..<3)
-                    switch randomNumber {
-                        case 0:
-                            QuoteAnswerCard(name: user.firstName, report: .constant(false))
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 10)
-                        case 1:
-                            QuotePillsCard(name: user.firstName, report: $report)
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 10)
-                        case 2:
-                            QuoteImageCard(name:user.firstName, urlReturned: .constant(""), loaded: .constant(true), report: .constant(false))
-                        
-                        default:
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
-                    }
-                   Divider()
-                 
+            ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
+                if index % 3 == 0 {
+                    QuoteImageCard(name: user.firstName, urlReturned: .constant(""), loaded: .constant(true), report: .constant(false))
+                        .neoButton(isToggle: false) {
+                            profile = user
+                            showProfile = true
+                        }
+                } else if index % 3 == 1 {
+                  
+                        QuotePillsCard(name: user.firstName, report: $report)
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 10)
+                            .neoButton(isToggle: false) {
+                                profile = user
+                                showProfile = true
+                            }
+               
+                } else {
+                    QuoteAnswerCard(name: user.firstName, report: .constant(false))
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .neoButton(isToggle: false) {
+                            profile = user
+                            showProfile = true
+                        }
                 }
-            
-        }.padding(.bottom,90)
+                Divider()
+            }
+        }
+        .padding(.bottom, 90)
+      
     }
 }
 
-struct FeedView_Previews: PreviewProvider {
-    static var previews: some View {
-        FeedView( profiles: .constant(fakeUsers))
-    }
-}
+
+//struct FeedView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FeedView( profiles: .constant(fakeUsers))
+//    }
+//}

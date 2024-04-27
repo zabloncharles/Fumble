@@ -17,7 +17,7 @@ struct DynamicTopBar: View {
     @State var scrolledUp = false
     let completion: () -> Void
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             ScrollDetectionView(userScrolledDown: $scrolledUp)
             GeometryReader { proxy in
                 
@@ -31,7 +31,7 @@ struct DynamicTopBar: View {
                 .frame(height:40)
                 
                 .overlay(
-                    VStack(alignment: .trailing, spacing: 8) {
+                    VStack(alignment: .center, spacing: 8) {
                         HStack {
                             HStack(spacing: 3.0) {
                                 
@@ -62,11 +62,11 @@ struct DynamicTopBar: View {
                                     }
                             } else {
                                 
-                                HStack {
+                                HStack(alignment: .center) {
+                                  
                                     
                                     Image(systemName: trailinglabelicon)
                                         .font(.title)
-                                        .fontWeight(.bold)
                                         .foregroundColor(selected == 4 ? Color("black") : .red)
                                     //number of messages
                                     if  !trailinglabel.isEmpty {
@@ -101,7 +101,7 @@ struct DynamicTopBar: View {
                                 
                         )
                     
-                        .padding(10)
+                        .padding(.leading, 10)
                 )
             }
         }

@@ -21,65 +21,95 @@ struct HomeView: View {
     @State var noCardsPageAppeared = false
     @State var loadingIcon = false
     @State var showProfile = false
+    @State var hideNavs = false
     @AppStorage("hidemainTab") var hidemainTab = false
     
     
     var body: some View {
         ZStack {
             BackgroundView()
-                ScrollView {
-                    ScrollDetectionView(userScrolledDown: $userScrolledDown)
-                   topbar
-                     .padding(.top,70)
-                     
-                   if (profiletype == 0) {
-//                       CompatibleProfilesCards(profile: $profile, showProfile: $showProfile)
-                       FeedView(profiles: $profiles)
-                   } else {
-                       nocards
-                   }
-                } .coordinateSpace(name: "scroll")
-                .cornerRadius(showProfile ? 25 : 0)
-                .scaleEffect( showProfile ? 0.98 : 1)
-                
             
-            
-            // show the profile of the user in full view
-                SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
-                    .animation(.spring(), value: showProfile)
-                    .cornerRadius(showProfile ?  40 : 43)
-                    .edgesIgnoringSafeArea(.all)
-                    .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
-                    
             if loadingIcon  {
                 loading
             }
             
+            VStack {
+                topbar
+                    .padding(.top,30)
+                ScrollView {
+                        ScrollDetectionView(userScrolledDown: $userScrolledDown)
+                     
+                         
+                  
+    //                       CompatibleProfilesCards(profile: $profile, showProfile: $showProfile)
+                           FeedView(profiles: $profiles, profile: $profile, showProfile: $showProfile)
+                       
+                        
+                        if (profiles.count < 1) {
+                           nocards
+                       }
+                    } .coordinateSpace(name: "scroll")
+                    .cornerRadius(showProfile ? 25 : 0)
+                .scaleEffect( showProfile ? 0.98 : 1)
+            }
+                
+            
+            
+            // show the profile of the user in full view
+            VStack {
+                if showProfile {
+                    SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
+                        .animation(.spring(), value: hideNavs)
+                        .cornerRadius(hideNavs ?  40 : 43)
+                        .edgesIgnoringSafeArea(.all)
+                    .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
+                    .transition(.offset(y:UIScreen.main.bounds.height *  1.02 ))
+                    .onAppear{
+                        
+                        withAnimation(.spring()){
+                            hidemainTab = true
+                            hideNavs = true
+                            
+                        }
+                    }
+                    .onDisappear{
+                        withAnimation(.spring()){
+                            
+                            hidemainTab = false
+                            hideNavs = false
+                        }
+                       
+                    }
+                }
+            }
+                    
+           
+            
             
           
-                VStack {
-                    VStack {
-                     
-                        HomeHeaderView(contentHasScrolled: .constant(false), showProfile: .constant(false), profiletype: .constant(0))
-                            .padding(.top,40)
-                       Rectangle()
-                            .fill(.gray.opacity(0.30))
-                            .padding(.horizontal)
-                            .frame(height:1)
-                            .offset(y:-44)
-                        typeofprofiles
-                            .padding(.top,-45)
-                        
-                    }.background(Color("offwhiteneo"))
-                     
-                        .offset(y: userScrolledDown  ?  -150 : 0)
-                    
-                        
-                    
-                    
-                    
-                    Spacer()
-                }
+//                VStack {
+//                    VStack {
+//
+//                        HomeHeaderView(contentHasScrolled: .constant(false), showProfile: .constant(false), profiletype: .constant(0))
+//                            .padding(.top,40)
+//                       Rectangle()
+//                            .fill(.gray.opacity(0.30))
+//                            .padding(.horizontal)
+//                            .frame(height:1)
+//                            .offset(y:-44)
+//                        typeofprofiles
+//                            .padding(.top,-45)
+//
+//                    }.background(Color("offwhiteneo"))
+//
+//                        .offset(y: userScrolledDown  ?  -150 : 0)
+//
+//
+//
+//
+//
+//                    Spacer()
+//                }.opacity(hideNavs ? 0 : 1)
             
         }.edgesIgnoringSafeArea(.all)
             .onAppear{
@@ -99,20 +129,22 @@ struct HomeView: View {
     var topbar : some View {
         VStack {
             // current signed in user card
-            HomeProfileHeaderCard()
-                .overlay{
+          
                     //app name and right system icons
                 navigation
-                        .opacity(userScrolledDown ? 1 : 0)
-                        .scaleEffect(userScrolledDown ? 1 : 0.96)
-                    .offset(y:-90)
-            }
+                        
+                        .padding(.bottom,-10)
+               
+            
             Divider()
             // type of profiles cards section
             typeofprofiles
-                .opacity(!userScrolledDown ? 0.30 : 1)
-            Divider()
-        }.padding(.top,50)
+//                .opacity(userScrolledDown ? 1 : 0)
+//                .scaleEffect(userScrolledDown ? 1 : 0.86)
+            if userScrolledDown {
+                Divider()
+            }
+        }
     }
     var nocards: some View {
       NoProfilesView(pageAppeared: $noCardsPageAppeared, profiletype: $profiletype)

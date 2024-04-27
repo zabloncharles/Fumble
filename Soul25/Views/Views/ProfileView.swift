@@ -12,29 +12,42 @@ struct ProfileView: View {
     @State var profile : UserStruct = fakeUser
     @State var editingProfile = false
     @State var isSheetPresented = false
-    @State var currentIndex = 5
+    @State var currentIndex = 0
     
     var body: some View {
         ZStack {
           
           
             SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex)
+            
+        
            
         }.onAppear{
             editingProfile = true
            
         }
-        .sheet(isPresented: $isSheetPresented, content: {
-            if currentIndex != 1 {
-                NavigationView {
-                    SettingsView(isSheetPresented: $isSheetPresented)
+        .sheet(isPresented: $isSheetPresented) {
+        
+                
+                
+                
+                if currentIndex == 1 {
+                    NavigationView {
+                        SettingsView(isSheetPresented: $isSheetPresented)
+                        
+                        
+                    }
                     
-                }.navigationViewStyle(StackNavigationViewStyle())
-             
-            } else {
-                EditProfileInfoDetailView(isSheetPresented: $isSheetPresented)
+                    
+                } else  {
+                    NavigationView {
+                        EditProfileInfoDetailView(isSheetPresented: $isSheetPresented)
+                    }
+                }
             }
-        })
+  
+        
+      
     }
 }
 

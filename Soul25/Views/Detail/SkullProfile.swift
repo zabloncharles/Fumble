@@ -87,9 +87,11 @@ struct SkullProfile: View {
             
             
            
-                NavigationBar(userScrolledDown: $userScrolledDown, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "gear" : currentIndex == -1 ? "" : "heart.slash" ){
+                NavigationBar(userScrolledDown: $userScrolledDown, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "person" : currentIndex == -1 ? "" : "heart.slash" ){
                     //call the next profile
+                    currentIndex = 1
                     nextProfile()
+                    
                     
                  
                 }
@@ -137,15 +139,33 @@ struct SkullProfile: View {
                         .frame(width: 91)
                         .cornerRadius(64)
                         .overlay(
-                            Text("Active")
+                            Text(selected ==  4 ? "Edit Profile" : "Active")
                                 .font(.caption)
                                 .padding(.horizontal,5)
                                 .padding(.vertical,2)
                                 .background(.black)
+                                .neoButtonOff(isToggle: false, cornerRadius: 12, perform: {
+                                    //
+                                    if selected ==  4 {
+                                        currentIndex = 2
+                                        nextProfile()
+                                    }
+                                })
                                 .foregroundColor(.white)
                                 .cornerRadius(12)
                                 .offset(x:30,y:30)
+                                
+                               
                         )
+                        .neoButton(isToggle: false, perform: {
+                            //
+                            
+                            if selected ==  4 {
+                                currentIndex = 2
+                                nextProfile()
+                            }
+                            
+                        })
                 }
                 .padding(.horizontal,5)
                 .padding(.bottom,-20)
@@ -157,7 +177,7 @@ struct SkullProfile: View {
                         
                         VStack{
                             Image(systemName: "balloon.fill")
-                            Text("24")
+                            Text(String(currentIndex))
                         }
                         .padding(.horizontal,10)
                         .padding(.vertical,4)
@@ -193,6 +213,8 @@ struct SkullProfile: View {
                         
                     }
                     
+                  
+                    
                     
                     
                 }
@@ -225,6 +247,8 @@ struct SkullProfile: View {
                 }
                
             } .padding(.top,20)
+            
+          
         }.padding(.leading,20)
     }
     
@@ -316,6 +340,7 @@ struct SkullProfile: View {
                 
                 DynamicTopBar(label: selected != 4 ? "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "gear" : "heart.slash"){
                     //go to next profile
+                    currentIndex = 1
                     nextProfile()
                 }
                     .padding(.bottom, 27)
@@ -687,11 +712,16 @@ struct SkullProfile: View {
     func nextProfile(){
         if editingProfile {
             showProfile = true
+          
         } else {
             showProfile = false
+          
         }
-      
-        currentIndex += 1
+        if !editingProfile {
+            currentIndex += 1
+        }
+       
+       
        
     }
     func roundDistance(distanceInMiles: Double) -> String {

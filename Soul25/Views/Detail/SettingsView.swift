@@ -31,15 +31,16 @@ struct SettingsView: View {
        
             ZStack {
                 BackgroundView()
-                VStack {
+               
                     ScrollView(.vertical, showsIndicators: false) {
       
                         HStack {
-                            Text("Match Preferences: \(returnedChange) + \(storedValues[0]) + \(optionType)")
+                            Text("Match Preferences: ")
 
                                 .foregroundColor(.gray)
                             Spacer()
                         }.padding(.horizontal)
+                          
                             VStack {
                                 
                                 NavigationLink(destination: picklistview
@@ -188,8 +189,10 @@ struct SettingsView: View {
                 
                         Spacer()
                     }
-                    .padding(.top, 60)
-                }
+                    .padding(.top, 0)
+                    .navigationTitle("Preferences")
+                    .navigationBarTitleDisplayMode(.inline)
+                
                 
     //        
                

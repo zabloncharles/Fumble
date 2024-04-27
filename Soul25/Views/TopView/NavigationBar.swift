@@ -61,6 +61,10 @@ struct NavigationBar: View {
                             else  {
                                 HStack {
                                         if !trailingicon.isEmpty {
+                                           
+                                            
+                                            
+                                            
                                             Image(systemName: trailingicon)
                                                 .font(!trailinglabel.isEmpty ? nil : .title)
                                                 

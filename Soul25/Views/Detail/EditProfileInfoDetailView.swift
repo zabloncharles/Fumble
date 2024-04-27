@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct EditProfileInfoDetailView: View {
+    @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @State var userScrolledDown : CGFloat = 0
     @State  var firstName: String = ""
     @State  var lastName: String = ""
@@ -16,6 +17,7 @@ struct EditProfileInfoDetailView: View {
     @State  var gender: String = ""
     @State  var occupation: String = ""
     @State var returnedChange = ""
+    @State var photos = [""]
     @State var isPresented = false
     @State var list : [String] = []
     @State var title = "title"
@@ -32,58 +34,130 @@ struct EditProfileInfoDetailView: View {
             BackgroundView()
             ScrollView(.vertical, showsIndicators: false) {
                 HStack {
-                    Text("Match Preferences: \(returnedChange)")
+                    Text("Profile Infomation: \(returnedChange)")
                     
                         .foregroundColor(.gray)
                     Spacer()
                 }.padding(.horizontal)
+                    .padding(.bottom,-5)
+                
+               VStack {
+                    ScrollView(.horizontal,showsIndicators: false){
+                        HStack {
+                            ForEach(0 ..< 2) { item in
+                               
+                                GetImageAndUrl(url: currentUser?.photos[item] ?? "",width: 150, height: 150, loaded: .constant(true), imageUrl: .constant(""))
+                                    .cornerRadius(8)
+                                    .overlay(
+                                        VStack {
+                                            HStack {
+                                                Spacer()
+                                                Image(systemName: "xmark")
+                                                    .foregroundColor(Color("white"))
+                                                    .padding(5)
+                                                    .background(Circle().fill(Color("black")))
+                                                    .offset(x:10, y:-10)
+                                                    .scaleEffect(0.87)
+                                                    .neoButton(isToggle: false) {
+                                                        //
+                                                        
+                                                    }
+                                            }
+                                            Spacer()
+                                        }
+                                    ).padding(.top,8)
+                                    Divider()
+                            }
+                        }.padding(.horizontal,30)
+                        
+                    }
+                   HStack {
+                       Text("Tap to edit your pictures")
+                           .font(.footnote)
+                       
+                           .foregroundColor(.gray)
+                       .multilineTextAlignment(.leading)
+                       Spacer()
+                   }.padding(.horizontal)
+                       .padding(.horizontal)
+                }
+                Divider()
+                HStack {
+                    Text("Written Prompts: (3)")
+                    
+                        .foregroundColor(.gray)
+                    Spacer()
+                }.padding(.horizontal)
+                
                 VStack {
                     
-                    PreferenceInfoCard(label: "Interested in", sublabel: "Women")
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "I recently discovered that", sublabel: "Hamburgers are made in germany")
+                    }
                     
-                    PreferenceInfoCard(label: "My hometown", sublabel: "Chicago")
-                    PreferenceInfoCard(label: "Maximum distance", sublabel: "100 mi")
-                    PreferenceInfoCard(label: "Age range", sublabel: "Women 18 - 30")
-                    PreferenceInfoCard(label: "Ethnicity", sublabel: "Black/African")
-                    PreferenceInfoCard(label: "Religion", sublabel: "Christian")
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "My favorite hobby is", sublabel: "Hiking")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "I like to undwind by", sublabel: "Going out to eat")
+                    }
+               
                     // Add more form fields for other personal information
                 }.padding()
                 
-                    .neoButtonOff(isToggle: false, cornerRadius: 19, perform: {
-                        //
-                    })
+                    
                     .padding(.horizontal)
-                
-                
-                
-                
-                // Add more sections for additional profile information
+                Divider()
                 HStack {
-                    //                    Text("Subscribed Member Preferences: \(Array(trackChanges).map { "\($0)" }.joined(separator: ", "))")
-                    Text("Subscribed Member Preferences:")
+                    Text("Virtues")
+                    
                         .foregroundColor(.gray)
                     Spacer()
-                }.padding(.top,10)
+                }.padding(.horizontal)
+                
+                VStack {
+                    
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Work", sublabel: "Emonics")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Job Title", sublabel: "Software Engineer")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "School", sublabel: "Minnesota State")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Education Level", sublabel: "Undergrad")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Religious Beliefs", sublabel: "Christian")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Hometown", sublabel: "Otsego")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Languages Spoken", sublabel: "Swahili, English, Spanish")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Dating Intentions", sublabel: "Long-term relationship")
+                    }
+                    NavigationLink(destination: picklistview) {
+                        PreferenceInfoCard(label: "Relationship Type", sublabel: "Monogamy")
+                    }
+                    // Add more form fields for other personal information
+                }.padding()
+                
+                
                     .padding(.horizontal)
             
+            
+                secondsection
                 
                 
-                Section {
-                    Text("Save Changes")
-                        .padding(.horizontal,10)
-                        .padding(.vertical,10)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .neoButton(isToggle: false, perform: {
-                            // Add code to save changes to the user's profile
-                            trackChanges.removeAll()
-                        })
-                }.padding(.top,20)
                 
                 Spacer()
             }
-            .padding(.top, 60)
+          
           
         }.sheet(isPresented: $isPresented) {
             
@@ -126,6 +200,8 @@ struct EditProfileInfoDetailView: View {
             }
             
         }
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.large)
         .onChange(of: isPresented) { newValue in
             
             
@@ -133,6 +209,72 @@ struct EditProfileInfoDetailView: View {
                 trackChanges.insert(optionType)
             }
         }
+    }
+    var secondsection : some View {
+        VStack{
+            Divider()
+            HStack {
+                Text("My Vitals")
+                
+                    .foregroundColor(.gray)
+                Spacer()
+            }.padding(.horizontal)
+            
+            VStack {
+                
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Name", sublabel: "Charles")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Gender", sublabel: "Man")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Pronouns", sublabel: "None")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Sexuality", sublabel: "Straight")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Age", sublabel: "24")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Height", sublabel: "6' 0\"")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Location", sublabel: "Central Minneapolis")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Ethnicity", sublabel: "Black/African Descent")
+                }
+                NavigationLink(destination: picklistview) {
+                    PreferenceInfoCard(label: "Children", sublabel: "Prefer not to say")
+                }
+            
+                // Add more form fields for other personal information
+            }.padding()
+            
+            
+                .padding(.horizontal)
+        }
+    }
+    var picklistview : some View{
+        PicklistSheetView(isPresented: $isPresented, returned: $returnedChange, title: "Preferences", label: label, sublabel: sublabel, list: list)
+            .onAppear{
+                // if the modal sheet is showing
+                
+            }
+            .onDisappear{
+                list = []
+                label = ""
+                //                    title = ""
+                sublabel = ""
+                if  optionType == 0 {
+                    withAnimation(){
+//                        storedValues[0] = returnedChange
+                    }
+                    
+                }
+            }
     }
 }
 
