@@ -8,6 +8,7 @@ import SwiftUI
 import MapKit
 
 struct SettingsView: View {
+    
     @State var userScrolledDown : CGFloat = 0
     @State  var firstName: String = ""
     @State  var lastName: String = ""
@@ -292,9 +293,7 @@ struct PicklistSheetView: View {
                 }
             }.padding(.horizontal)
                 .padding(.vertical,10)
-                .neoButtonOff(isToggle: true, cornerRadius: 13) {
-                    //
-                }
+                .neoButtonOff(isToggle: true, cornerRadius: 13)
                 .padding(.horizontal)
               
             Spacer()
@@ -306,7 +305,9 @@ struct PicklistSheetView: View {
                 .padding(.horizontal,30)
                 .padding(.vertical,10)
                 .foregroundColor(!returned.isEmpty ? .green : Color("black"))
-                .neoButtonOff(isToggle: false, cornerRadius: 13) {
+                .neoButtonOff(isToggle: false, cornerRadius: 13)
+                .onTapGesture {
+                  
                     //
                     isPresented = false
             
@@ -420,8 +421,9 @@ struct MapSheetView: View {
                 .padding(.vertical,10)
                 
                 .foregroundColor(Color("black"))
-                .neoButtonOff(isToggle: false, cornerRadius: 19) {
-                    //
+                .neoButtonOff(isToggle: false, cornerRadius: 19)
+                .onTapGesture {
+                  
                     isPresented = false
                     
                 }

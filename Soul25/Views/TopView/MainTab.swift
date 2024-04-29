@@ -50,7 +50,7 @@ struct MainTab: View {
                
             
             if loadApp {
-               // LogoLoadingView()
+                LogoLoadingView()
             }
             
             
@@ -59,7 +59,7 @@ struct MainTab: View {
         }.onAppear{
         
             fetchFakeUser()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation(.easeInOut){
                     loadApp = false
                 }

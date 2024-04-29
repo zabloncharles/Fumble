@@ -144,13 +144,14 @@ struct SkullProfile: View {
                                 .padding(.horizontal,5)
                                 .padding(.vertical,2)
                                 .background(.black)
-                                .neoButtonOff(isToggle: false, cornerRadius: 12, perform: {
-                                    //
+                                .neoButtonOff(isToggle: false, cornerRadius: 12)
+                                .onTapGesture {
+                                  
                                     if selected ==  4 {
                                         currentIndex = 2
                                         nextProfile()
                                     }
-                                })
+                                }
                                 .foregroundColor(.white)
                                 .cornerRadius(12)
                                 .offset(x:30,y:30)

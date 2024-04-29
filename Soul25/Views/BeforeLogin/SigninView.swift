@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SigninView: View {
     @AppStorage("currentPage") var selected = 0
+    @AppStorage("onboardComplete") var onboardComplete = false
     @State var text = "test@gmail.com"
     @State var password = "123456"
     @State var circleInitialY = CGFloat.zero
@@ -23,7 +24,6 @@ struct SigninView: View {
     @FocusState var isPasswordFocused: Bool
     @State var appear = [false, false, false, false]
     @Binding var signIn : Bool
-    @AppStorage("doneIntro") var doneIntro = false
     @State var userMessage = "Sign in"
     @State var messageTitle = "Sign In"
     @State var messageDescription = "Log in to your account to access your profile. Furthermore you can sign up for an account if you have not done so yet."
@@ -40,10 +40,12 @@ struct SigninView: View {
          
                 ZStack {
                    
-                    
+                    LogoLoadingView()
+                        .scaleEffect(1.2)
+                        .offset(y:-80)
                 
                     //MARK: THE TOP ICONS
-                    Group{
+               
                     LottieView(filename: "stars" ,loop: true)
                         .frame(width: 380)
                         .offset(x: 0, y: -420)
@@ -54,8 +56,8 @@ struct SigninView: View {
                     
                     topIcons
                     
-                applogo
-                    }.offset(y: signInTapped ? -700 : 0)
+               
+                  
                     
                     
                     
@@ -92,18 +94,7 @@ struct SigninView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
-    var applogo: some View {
-        VStack{
-            
-            Image("fusionhalfgirl")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 350, height: 350, alignment: .center)
-                .offset(y: UIScreen.main.bounds.height * -0.1)
-            
-            
-        }
-    }
+  
     var topIcons: some View {
         VStack{
             
@@ -133,9 +124,9 @@ struct SigninView: View {
                     Text("Sign Up")
                         .padding(.horizontal,10)
                         .padding(.vertical,7)
-                        .neoButtonOff(isToggle: false, cornerRadius: 8) {
-                            //
-                            doneIntro = false
+                        .neoButtonOff(isToggle: false, cornerRadius: 8)
+                        .onTapGesture {
+                            onboardComplete = false
                         }
                     Spacer()
                     Image(systemName: "info.circle")
@@ -179,7 +170,8 @@ struct SigninView: View {
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
-                  
+                        .padding(.vertical,12)
+                        .padding(.horizontal,10)
                         .neoButtonOffShadow(cornerRadius: 15, isTapped: false)
                         .overlay(
                             GeometryReader { proxy in
@@ -207,8 +199,9 @@ struct SigninView: View {
                     
                     SecureField("Password", text: $password)
                         .textContentType(.password)
-                     
-                        .neoButtonOffShadow(cornerRadius: 15, isTapped: false)
+                        .padding(.vertical,12)
+                        .padding(.horizontal,10)
+                        .neoButtonOffShadow(cornerRadius: 12, isTapped: false)
                         .focused($isPasswordFocused)
                         .onChange(of: isPasswordFocused, perform: { isPasswordFocused in
                             if isPasswordFocused {
@@ -224,9 +217,7 @@ struct SigninView: View {
                 }//.offset(y: !infoTapped ? 0 : UIScreen.main.bounds.height * 0.3)
                
                 .padding()
-                .neoButtonOff(isToggle: false, cornerRadius: 15, perform: {
-                    //
-                })
+                .neoButtonOff(isToggle: false, cornerRadius: 15)
                 Button {
                     //model.dismissModal.toggle()
                     login()
@@ -235,8 +226,9 @@ struct SigninView: View {
                 } label: {
                     
                     Text(userMessage)
-                    
-                        .neoButtonOffShadow(cornerRadius: 15, isTapped: false)
+                        .padding(.vertical,9)
+                        .padding(.horizontal,28)
+                        .neoButtonOffShadow(cornerRadius: 12, isTapped: false)
                         .padding(.horizontal,120)
                         .padding(.top, isEmailFocused || isPasswordFocused ? 0 : 10)
                         .padding(.bottom, isEmailFocused || isPasswordFocused ? 10 : 0)
@@ -257,63 +249,23 @@ struct SigninView: View {
 //        ))
     }
     var titleandDescription: some View{
-        //        VStack {
+        
         VStack{
-            //MARK: PROFILE PICTURE
-            //                Image(profilePictureTapped ? "image_04" : "image_03")
-            //                    .resizable(resizingMode: .stretch)
-            //                    .aspectRatio(contentMode: .fill)
-            //                    .font(.body)
-            //                    .rotationEffect(.degrees(profilePictureTapped ? 360 : 0))
-            //                    .animation(.spring(), value: profilePictureTapped)
-            //
-            //            }.frame(width:  90, height:  90)
-            //                .background(.ultraThinMaterial)
-            //                .background(Circle().fill(.blue).blur(radius: 20))
-            //                .cornerRadius(80)
-            //                .background(
-            //                    Circle()
-            //                        .fill(.ultraThinMaterial)
-            //                        .padding(-0.5)
-            //                )
-            //                .onTapGesture {
-            //                    withAnimation(.easeInOut(duration: 23)){
-            //                        profilePictureTapped.toggle()
-            //                    }
-            //                }
-            
-            //MARK: SIGN IN MESSAGE AND DESCRIPTION
-            //            Text(messageTitle)
-            //                .font(.title)
-            //                .foregroundColor(Color("black"))
-            //                .lineLimit(2)
+          
             
             if !infoTapped {
                 VStack {
                     //  Text(messageDescription)
-                    GradientText(text: messageDescription, gradient: [Color("black"), Color("black"), .purple])
+                    Text("Log in to your account to access your profile. Furthermore, you can sign up if you don't have an account with us. (Sign Up)")
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                         .padding()
-                    //                        .background(
-                    //                            Rectangle()
-                    //                                .background(.ultraThinMaterial)
-                    //                                .opacity(0.10)
-                    //
-                    //                        )
-                    //                        .background(Circle()
-                    //                                        .fill(.purple.opacity(0.5))
-                    //                                        .blur(radius: 33)
-                    //                                        .offset(x:90, y:98)
-                    //                                        .frame(width: 266, height: 266)
-                    //                        )
-                    //        .cornerRadius(20)
+             
                         .onTapGesture {
                             isPasswordFocused = false
                             isEmailFocused = false
                         }
-                        .offset(x:animate ? -390 : !animate ? 0 : 0)
-                        .animation(.spring(), value: animate)
+//
                 }
                 
                 
@@ -339,26 +291,7 @@ struct SigninView: View {
             
         }
         
-        if infoTapped{
-            
-            
-            
-            infoMessage = "How you resolve problems signing into your fusion account depends on the type of issue preventing you from signing in. For example, are you having a password problem? Did you forget your username? Or did you get a message that your account is locked? To help you find the correct solution, select the issue from below that best describes the reason you can't sign in."
-            userMessage = "Try Signing in"
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                showtext = true
-            }
-            showtext = false
-            
-            
-        } else{
-            messageDescription = "Log in to your account to access your profile. Furthermore, you can sign up if you don't have an account with us. (Sign Up)"
-            infoMessage = ""
-            showtext = false
-            userMessage = "Sign In"
-            
-        }
+       
         
     }
     func vibrate() {
@@ -371,6 +304,7 @@ struct SigninView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation(.easeInOut(duration: 1)) {
                 signInTapped = true
+                signIn = true
             }
         }
       

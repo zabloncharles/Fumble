@@ -208,9 +208,7 @@ struct LikesView: View {
                 
             }
                 .padding(15)
-                .neoButtonOff(isToggle: false, cornerRadius: 16, perform: {
-                    
-                })
+                .neoButtonOff(isToggle: false, cornerRadius: 16)
 //                .offset(y: pageAppeared ? 0 : -300)
             Spacer()
         }.padding(20)

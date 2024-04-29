@@ -10,6 +10,7 @@
 		7E52D23886849852767335C4 /* Pods_Soul25.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE65DE2F6550D2F9B0273A2 /* Pods_Soul25.framework */; };
 		F71110312BCC8B880045A36B /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71110302BCC8B880045A36B /* BackgroundView.swift */; };
 		F71110332BCC8BAF0045A36B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71110322BCC8BAF0045A36B /* LottieView.swift */; };
+		F73597172BDF2C360065F504 /* OnboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73597162BDF2C360065F504 /* OnboardView.swift */; };
 		F755EEC22BD43E2300BFBB82 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F755EEC12BD43E2300BFBB82 /* SettingsView.swift */; };
 		F755EEC42BD445B500BFBB82 /* PreferenceInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F755EEC32BD445B500BFBB82 /* PreferenceInfoCard.swift */; };
 		F755EEC62BD472BA00BFBB82 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F755EEC52BD472BA00BFBB82 /* MapView.swift */; };
@@ -149,6 +150,7 @@
 		A68E6CDEC6DC3FC38611AF7C /* Pods-Soul25.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Soul25.release.xcconfig"; path = "Target Support Files/Pods-Soul25/Pods-Soul25.release.xcconfig"; sourceTree = "<group>"; };
 		F71110302BCC8B880045A36B /* BackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		F71110322BCC8BAF0045A36B /* LottieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
+		F73597162BDF2C360065F504 /* OnboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardView.swift; sourceTree = "<group>"; };
 		F755EEC12BD43E2300BFBB82 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F755EEC32BD445B500BFBB82 /* PreferenceInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceInfoCard.swift; sourceTree = "<group>"; };
 		F755EEC52BD472BA00BFBB82 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 				F755EEDB2BD4F20100BFBB82 /* ScrollDetectionView.swift */,
 				F755EEE02BD60D6900BFBB82 /* EditPostPopUp.swift */,
 				F755EEE22BD62E5100BFBB82 /* LogoLoadingView.swift */,
+				F73597162BDF2C360065F504 /* OnboardView.swift */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -786,6 +789,7 @@
 				F7C37D2F2BCC8E7C002E6B25 /* MessageBubblesView.swift in Sources */,
 				F7FF121F2BCC745400880D0A /* AppUserData.swift in Sources */,
 				F7C37D402BCC97C6002E6B25 /* LikesView.swift in Sources */,
+				F73597172BDF2C360065F504 /* OnboardView.swift in Sources */,
 				F7FF13D12BCC74B800880D0A /* SigninView.swift in Sources */,
 				F71110312BCC8B880045A36B /* BackgroundView.swift in Sources */,
 				F7FF13D02BCC74B800880D0A /* LauchView.swift in Sources */,

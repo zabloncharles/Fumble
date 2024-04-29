@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct EditProfileInfoDetailView: View {
+    @AppStorage("signedIn") var signedIn = false
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @State var userScrolledDown : CGFloat = 0
     @State  var firstName: String = ""
@@ -153,9 +154,9 @@ struct EditProfileInfoDetailView: View {
             
                 secondsection
                 
+                thirdsection
                 
                 
-                Spacer()
             }
           
           
@@ -255,7 +256,41 @@ struct EditProfileInfoDetailView: View {
             
             
                 .padding(.horizontal)
+            
+           
         }
+    }
+    
+    var thirdsection: some View {
+        VStack{
+            Divider()
+            HStack {
+                Text("Account")
+                
+                    .foregroundColor(.gray)
+                Spacer()
+            }
+            
+            
+         
+            Text(signedIn ? "Sign Out" : "Logging Out..")
+                
+            .padding(.horizontal,13)
+            .padding(.vertical,6)
+            .background(.red)
+            .cornerRadius(12)
+            .neoButton(isToggle: false, perform: {
+               
+                withAnimation(.spring()) {
+                    isSheetPresented = false
+                    signedIn = false
+                }
+            })
+           
+            
+           
+        }.padding()
+           
     }
     var picklistview : some View{
         PicklistSheetView(isPresented: $isPresented, returned: $returnedChange, title: "Preferences", label: label, sublabel: sublabel, list: list)
