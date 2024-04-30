@@ -57,7 +57,7 @@ struct MessageDetailView: View {
           
             .sheet(isPresented: $goToProfile){
                 SkullProfile(currentUser: $currentUser, profile: log, showProfile: .constant(false), currentIndex: .constant(-1))
-                    .edgesIgnoringSafeArea(.all)
+                    .edgesIgnoringSafeArea(.top)
                     .padding(.bottom, -120)
                     
             }
@@ -79,54 +79,7 @@ struct MessageDetailView: View {
         VStack {
             HStack {
                 Spacer()
-//                Image(systemName: "chevron.left")
-//                    .font(.title)
-//                    .foregroundColor(backButtonTapped ? .clear : Color("black"))
-////
-//                    .onTapGesture {
-//                        //go back to messages view
-//                        backButtonTapped = true
-//                        presentationMode.wrappedValue.dismiss()
-//                    }
-          
-//                GetImageAndUrl(url:log.avatar, loaded: .constant(true), imageUrl: $tappedUserAvatar)
-//                    .cornerRadius(80)
-//                    .neoButton(isToggle: false) {
-//                        //go to user profile
-//                    }
-//                    .mask(Circle())
-//                    .background(
-//                        Circle()
-//                            .fill(Color.clear)
-//                            .padding(-2)
-//
-//                    )
-//                    .frame(width: 40, height: 40)
-//                    .opacity(0.00001)
-                 
-//                VStack{
-//                    HStack(spacing: 4.0) {
-//                        Text(log.firstName)
-//
-//                            .font(.headline).bold()
-//                        .foregroundColor(.primary)
-//                        Image(systemName: "checkmark.circle")
-//                            .foregroundColor( .blue)
-//                            .font(.subheadline)
-//                        Spacer()
-//                    }
-//
-//                    HStack(spacing:2) {
-//                        Image(systemName: "circlebadge.fill")
-//                            .foregroundColor( .green)
-//                            .font(.caption2)
-//                        Text(" 2 minutes ago")
-//                            .font(.footnote)
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                            .foregroundColor(.primary.opacity(0.7))
-//                    }
-//
-//                }.padding(.leading,5)
+
                 
                 
                 Image(systemName: "exclamationmark.circle")
@@ -167,7 +120,16 @@ struct MessageDetailView: View {
                                                 .blur(radius: btapped == (section.timestamp ) ? 0 :  blurPage ? 13 : 0)
                                                 .id(section.id)
                                                 .onAppear{
-                                                    scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+                                                    withAnimation(.spring()) {
+                                                        scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
+                                                    }
+                                                    
+                                                    
+                                                    Timer.scheduledTimer(withTimeInterval: 0.9, repeats: false) { timer in
+                                                        withAnimation(.spring()) {
+                                                            scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+                                                        }
+                                                    }
                                                    // scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
                                                 }
     //
@@ -186,7 +148,7 @@ struct MessageDetailView: View {
                             }
                             // scroll chats to bottom if i send message 
                             if messageSent {
-                                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
+                                Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { timer in
                                     withAnimation(.spring()) {
                                         scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
                                     }

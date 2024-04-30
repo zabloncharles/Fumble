@@ -138,7 +138,6 @@
 		F7FF13542BCC746A00880D0A /* FontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF12A62BCC746600880D0A /* FontModifier.swift */; };
 		F7FF13D02BCC74B800880D0A /* LauchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13A72BCC74B700880D0A /* LauchView.swift */; };
 		F7FF13D12BCC74B800880D0A /* SigninView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13A82BCC74B700880D0A /* SigninView.swift */; };
-		F7FF13D82BCC74B800880D0A /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13B12BCC74B700880D0A /* NavigationBar.swift */; };
 		F7FF13DA2BCC74B800880D0A /* MainTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13B32BCC74B700880D0A /* MainTab.swift */; };
 		F7FF13F12BCC74B800880D0A /* ChatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13CC2BCC74B700880D0A /* ChatsView.swift */; };
 		F7FF13F82BCC74C100880D0A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF13F52BCC74C100880D0A /* ViewController.swift */; };
@@ -280,7 +279,6 @@
 		F7FF12A62BCC746600880D0A /* FontModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontModifier.swift; sourceTree = "<group>"; };
 		F7FF13A72BCC74B700880D0A /* LauchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LauchView.swift; sourceTree = "<group>"; };
 		F7FF13A82BCC74B700880D0A /* SigninView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninView.swift; sourceTree = "<group>"; };
-		F7FF13B12BCC74B700880D0A /* NavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		F7FF13B32BCC74B700880D0A /* MainTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTab.swift; sourceTree = "<group>"; };
 		F7FF13CC2BCC74B700880D0A /* ChatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatsView.swift; sourceTree = "<group>"; };
 		F7FF13F52BCC74C100880D0A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -534,7 +532,6 @@
 			isa = PBXGroup;
 			children = (
 				F7FF13B32BCC74B700880D0A /* MainTab.swift */,
-				F7FF13B12BCC74B700880D0A /* NavigationBar.swift */,
 				F755EEDD2BD4FCAA00BFBB82 /* DynamicTopBar.swift */,
 			);
 			path = TopView;
@@ -766,7 +763,6 @@
 				F7C37D252BCC8D62002E6B25 /* NeoModifier.swift in Sources */,
 				F7C37D462BCCA7F6002E6B25 /* ShimmerText.swift in Sources */,
 				F7C37D312BCC8EBA002E6B25 /* OffWhiteButtonModifier.swift in Sources */,
-				F7FF13D82BCC74B800880D0A /* NavigationBar.swift in Sources */,
 				F77EBD792BDB486E002E22E0 /* FeedView.swift in Sources */,
 				F7C37D272BCC8E13002E6B25 /* MessageDetailView.swift in Sources */,
 				F755EEC22BD43E2300BFBB82 /* SettingsView.swift in Sources */,

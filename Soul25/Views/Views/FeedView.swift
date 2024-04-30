@@ -15,7 +15,7 @@ struct FeedView: View {
     @State private var shuffledViews: Bool = Bool.random()
     
     var body: some View {
-        VStack {
+        LazyVStack {
             ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
                 if index % 3 == 0 {
                     QuoteImageCard(name: user.firstName, urlReturned: .constant(""), loaded: .constant(true), report: .constant(false))
@@ -42,7 +42,10 @@ struct FeedView: View {
                             showProfile = true
                         }
                 }
-                Divider()
+                if index % 3 != 0 {
+                    Divider()
+                }
+                
             }
         }
         .padding(.bottom, 90)

@@ -16,7 +16,7 @@ import SwiftUI
 
 
 struct ChatsView: View {
-    @State var profiles: [UserStruct] = fakeUsers// Array to hold the user data
+    @Binding var profiles: [UserStruct]
     @State var profile = fakeUsers[0]
     @State var currentUser: UserStruct? = fakeUser
     @State var userScrolledDown : Bool = false
@@ -40,13 +40,14 @@ struct ChatsView: View {
     var body: some View {
         ZStack {
                 VStack {
+                    DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(profiles.count)",trailinglabelicon: "", notification: true){
+                        
+                    }
+                    .background{
+                        ScrollDetectionView(userScrolledDown: $userScrolledDown)
+                    }
                     ScrollView(showsIndicators: false) {
-                        DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(profiles.count)",trailinglabelicon: "", notification: true){
-                            
-                        }
-                            .background{
-                                ScrollDetectionView(userScrolledDown: $userScrolledDown)
-                            }
+                       
                         navandmessages
                     }
                     .coordinateSpace(name: "scroll")
@@ -59,11 +60,7 @@ struct ChatsView: View {
                     .transition(.opacity)
             }
         }.onAppear{
-            fetchUserData(parameter: "") { result in
-                
-                profiles = result ?? fakeUsers
-                
-            }
+           
             hidemainTab = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(.spring()){
@@ -113,7 +110,7 @@ struct ChatsView: View {
         }.opacity(showMessages ? 1 : 0)
            
         .padding(.horizontal,10)
-        .padding(.vertical, 40)
+        .padding(.top, 5)
         
     }
     var gettingmessages: some View {
@@ -169,7 +166,7 @@ struct ChatsView: View {
                 
                 Text("Opps! No messages yet")
                     .font(.headline)
-                Text("Nothing to seee here. Messages are more intentional on Soulmate so don't worry, They'll come in very soon.")
+                Text("Nothing to seee here. Messages are more intentional on Fumble so don't worry, They'll come in very soon.")
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal,25)

@@ -8,6 +8,10 @@ struct MainTab: View {
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @AppStorage("currentPage") var selected = 0
     @AppStorage("hidemainTab") var hidemainTab = false
+    @State var matchProfiles: [UserStruct] = fakeUsers
+    @State var chatProfiles: [UserStruct] = fakeUsers
+    @State var likesProfiles: [UserStruct] = fakeUsers
+    @State var homeProfiles: [UserStruct] = fakeUsers
    @State var loadApp = true
  
 
@@ -21,19 +25,19 @@ struct MainTab: View {
                 VStack{
                     
                     if self.selected == 0{
-                        MatchView( currentUser: $currentUser)
+                        MatchView(profiles: $matchProfiles, currentUser: $currentUser)
                     }
                    if self.selected == 1{
-                       LikesView(currentUser: $currentUser)
+                       LikesView(profiles: $likesProfiles, currentUser: $currentUser)
                           
                       
                     }
                     if self.selected == 2{
                         
-                        HomeView(currentUser: $currentUser)
+                        HomeView(profiles:$homeProfiles, currentUser: $currentUser)
                     }
                     if self.selected == 3{
-                       ChatsView()
+                        ChatsView(profiles: $chatProfiles)
                         
                     }
                     if self.selected == 4{
@@ -63,6 +67,31 @@ struct MainTab: View {
                 withAnimation(.easeInOut){
                     loadApp = false
                 }
+            }
+            //get match profiles
+            fetchUserData(parameter: "") { result in
+                
+                matchProfiles += result ?? [fakeUser]
+                
+            }
+            //get chat profiles
+            fetchUserData(parameter: "") { result in
+                
+                likesProfiles = result ?? fakeUsers
+                
+            }
+            //get chat profiles
+            fetchUserData(parameter: "") { result in
+                
+                chatProfiles = result ?? fakeUsers
+                
+            }
+            
+            //home profiles
+            fetchUserData(parameter: "",userCount: "100") { result in
+                
+                homeProfiles = result ?? []
+                
             }
             
         }

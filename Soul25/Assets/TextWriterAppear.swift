@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TextWriterAppear: View {
-    @State var typeText = "Soulmate"
+    @State var typeText = "Fumble"
     @State var speed = 0.3
     @State var wait = 0.0
     @State var appeared = false

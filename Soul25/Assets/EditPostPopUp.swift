@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditPostPopUp: View {
     @AppStorage("hidemainTab") var hidemainTab = false
+    @AppStorage("currentPage") var selected = 0
     @State var appeared = false
     @State var cancel = false
     @Binding var report : Bool
@@ -27,14 +28,14 @@ struct EditPostPopUp: View {
             Spacer()
             VStack {
                 VStack {
-                    Text("Please don't hesitate to report any inappropriate content you come across.")
+                    Text(selected == 4 ? "Would you like to replace the post?" : "Please don't hesitate to report any inappropriate content you come across.")
                         .foregroundColor(Color("black"))
                         .multilineTextAlignment(.center)
                         .padding(.top,10)
                     Divider()
                     HStack {
                         Spacer()
-                        Text("Report")
+                        Text(selected == 4 ? "Replace" :"Report")
                             .foregroundColor(.red)
                         Spacer()
                     } .padding(.vertical)
@@ -42,14 +43,14 @@ struct EditPostPopUp: View {
                     
                         .cornerRadius(12)
                         .padding(.horizontal)
-                } .background(Color("offwhite"))
+                } .background(Color("offwhiteneo"))
                     .cornerRadius(12)
                     .neoButton(isToggle: false, perform: {
 //                        report = true
                         // report the post
                     })
                     .padding()
-                    .padding(.bottom,-20)
+                    .padding(.bottom,-35)
                 
                 
                 
@@ -60,7 +61,7 @@ struct EditPostPopUp: View {
                     Spacer()
                 } .padding(.vertical)
                     .padding(.horizontal)
-                    .background(Color("offwhite"))
+                    .background(Color("offwhiteneo"))
                     .cornerRadius(12)
                     .neoButton(isToggle: false, perform: {
                         
@@ -75,7 +76,7 @@ struct EditPostPopUp: View {
             .animation(.spring(), value: appeared)
             
             
-        }
+        }.edgesIgnoringSafeArea(.all)
             
             .onAppear{
                 withAnimation(.spring()){

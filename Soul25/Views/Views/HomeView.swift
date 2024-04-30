@@ -9,19 +9,18 @@ import SwiftUI
 import Lottie
 
 struct HomeView: View {
-    @State var profiles: [UserStruct] = []
+    @Binding var profiles: [UserStruct]
     @State private var filteredProfiles: [UserStruct] = []
     @Binding var currentUser: UserStruct?
     @State var profile = fakeUsers[0]
     @State var profiletype = 0
     @State var profilesLoaded = 0
     @State var userScrolledDown : Bool = false
-
+    @AppStorage("currentPage") var selected = 0
     @State var contentHasScrolled = false
     @State var noCardsPageAppeared = false
     @State var loadingIcon = false
     @State var showProfile = false
-    @State var hideNavs = false
     @AppStorage("hidemainTab") var hidemainTab = false
     
     
@@ -35,7 +34,7 @@ struct HomeView: View {
             
             VStack {
                 topbar
-                    .padding(.top,30)
+                    .padding(.top,40)
                 ScrollView {
                         ScrollDetectionView(userScrolledDown: $userScrolledDown)
                      
@@ -56,69 +55,33 @@ struct HomeView: View {
             
             
             // show the profile of the user in full view
-            VStack {
-                if showProfile {
-                    SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
-                        .animation(.spring(), value: hideNavs)
-                        .cornerRadius(hideNavs ?  40 : 43)
-                        .edgesIgnoringSafeArea(.all)
-                    .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
-                    .transition(.offset(y:UIScreen.main.bounds.height *  1.02 ))
-                    .onAppear{
-                        
-                        withAnimation(.spring()){
-                            hidemainTab = true
-                            hideNavs = true
-                            
-                        }
-                    }
-                    .onDisappear{
-                        withAnimation(.spring()){
-                            
-                            hidemainTab = false
-                            hideNavs = false
-                        }
-                       
-                    }
-                }
-            }
-                    
-           
-            
-            
           
-//                VStack {
-//                    VStack {
-//
-//                        HomeHeaderView(contentHasScrolled: .constant(false), showProfile: .constant(false), profiletype: .constant(0))
-//                            .padding(.top,40)
-//                       Rectangle()
-//                            .fill(.gray.opacity(0.30))
-//                            .padding(.horizontal)
-//                            .frame(height:1)
-//                            .offset(y:-44)
-//                        typeofprofiles
-//                            .padding(.top,-45)
-//
-//                    }.background(Color("offwhiteneo"))
-//
-//                        .offset(y: userScrolledDown  ?  -150 : 0)
-//
-//
-//
-//
-//
-//                    Spacer()
-//                }.opacity(hideNavs ? 0 : 1)
+               
+                    SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
+                        .animation(.spring(), value: showProfile)
+                        .cornerRadius(showProfile ?  40 : 43)
+                        .padding(.top,selected == 2 ? 30 : 0)
+                    .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
+                    .onChange(of: showProfile, perform: { newValue in
+                        if showProfile {
+                                withAnimation(.spring()){
+                                    hidemainTab = true
+                                  
+                                    
+                                }
+                        } else {
+                            withAnimation(.spring()){
+                                
+                                hidemainTab = false
+                               
+                            }
+                        }
+                    })
+                   
+                
             
         }.edgesIgnoringSafeArea(.all)
-            .onAppear{
-                fetchUserData(parameter: "") { result in
-                    
-                    profiles = result ?? []
-                    
-                }
-            }
+            
     }
     var loading : some View {
         VStack(alignment: .center) {
@@ -150,7 +113,7 @@ struct HomeView: View {
       NoProfilesView(pageAppeared: $noCardsPageAppeared, profiletype: $profiletype)
     }
     var navigation: some View {
-        HomeHeaderView(contentHasScrolled: $contentHasScrolled, showProfile: $showProfile, profiletype: $profiletype)
+        HomeHeaderView(contentHasScrolled: $contentHasScrolled, showProfile: $showProfile, profiletype: $profiletype, count: "\(profiles.count)")
     }
     
     var typeofprofiles : some View {

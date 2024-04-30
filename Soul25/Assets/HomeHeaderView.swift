@@ -11,6 +11,7 @@ struct HomeHeaderView: View {
     @Binding var contentHasScrolled: Bool
     @Binding var showProfile: Bool
     @Binding var profiletype: Int
+    var count = "0"
     
     var body: some View {
         HStack {
@@ -38,7 +39,7 @@ struct HomeHeaderView: View {
                         .scaleEffect( 1)
                         .overlay(
                             VStack{
-                                Text("0")
+                                Text(count)
                                     .foregroundColor(.white)
                                     .font(.caption)
                                     .padding(2)

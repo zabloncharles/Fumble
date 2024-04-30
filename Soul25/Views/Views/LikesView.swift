@@ -12,7 +12,7 @@ struct LikesView: View {
     @AppStorage("hidemainTab") var hidemainTab = false
     @State var userScrolledDown : Bool = false
     @State var pageAppeared = false
-    @State var profiles: [UserStruct] = []
+    @Binding var profiles: [UserStruct] 
     @Binding var currentUser: UserStruct?
     @State var profile = fakeUsers[0]
     @State var dataMessages = "Getting your likes :)"
@@ -61,9 +61,7 @@ struct LikesView: View {
             }
             
             
-            NavigationBar(userScrolledDown: $userScrolledDown, label:"Likes", labelicon: "fleuron", trailinglabel:"\(profiles.count)",notification: true){
-                
-            }
+            
             
             
            
@@ -105,11 +103,7 @@ struct LikesView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                 showError = true
             }
-            fetchUserData(parameter: "") { result in
-                
-                profiles = result ?? []
-                
-            }
+           
         }
         .onChange(of: unmatch || showProfile) { newValue in
             //
@@ -162,11 +156,13 @@ struct LikesView: View {
         ZStack {
             if showProfile {
                 SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
+                    .padding(.top,37)
+                    .padding(.bottom,-80)
                     .animation(.spring(), value: showProfile)
                     .cornerRadius(showProfile ?  40 : 43)
                     .edgesIgnoringSafeArea(.all)
                     .offset(y: !showProfile ? UIScreen.main.bounds.height : 0)
-                
+                    
                    
                     .transition(.asymmetric(
                         insertion: .push(from: .bottom),
@@ -253,7 +249,7 @@ struct LikesView: View {
             
             Text(dataMessages)
                 .font(.headline)
-            Text("Likes are more intentional on Soulmate so don't worry, They'll come in very soon.")
+            Text("Likes are more intentional on Fumble so don't worry, They'll come in very soon.")
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
             HStack {
@@ -270,79 +266,82 @@ struct LikesView: View {
     }
    
     var stories : some View {
-        ScrollView(.vertical,showsIndicators: false){
-            
+        VStack {
             DynamicTopBar(label: "likes", labelicon: "fleuron"){
                 
+            }.background{
+                ScrollDetectionView(userScrolledDown: $userScrolledDown)
             }
-                .background{
-                    ScrollDetectionView(userScrolledDown: $userScrolledDown)
-                }
-            ScrollView(.horizontal,showsIndicators: false){
-                HStack(spacing: 15.0){
-                    VStack {
-                        
-                        Circle()
-                        
-                            .fill(.angularGradient(colors: [.purple, .orange, .purple], center: .center, startAngle: .degrees(0), endAngle: .degrees(360)))
-                        
-                            .overlay(
-                                Image(systemName: "plus")
-                                    .font(.headline)
-                                    .foregroundColor(Color("black"))
-                            )
-                            .frame(width: 65,height: 65)
-                            .cornerRadius(60)
-                            .neoButton(isToggle: false) {
-                                //Start matching
-                                selected = 0
-                            }
-                        
-                        Text("Start Matching")
-                            .font(.footnote)
-                            .lineLimit(1)
-                        
-                    }
-                    ForEach(profiles, id: \.id) { user in
+            ScrollView(.vertical,showsIndicators: false){
+                
+               
+                    
+                ScrollView(.horizontal,showsIndicators: false){
+                    HStack(spacing: 15.0){
                         VStack {
                             
-                            GetImageAndUrl(url:user.avatar, loaded: .constant(true), imageUrl: .constant(""))
+                            Circle()
+                            
+                                .fill(.angularGradient(colors: [.purple, .orange, .purple], center: .center, startAngle: .degrees(0), endAngle: .degrees(360)))
+                            
+                                .overlay(
+                                    Image(systemName: "plus")
+                                        .font(.headline)
+                                        .foregroundColor(Color("black"))
+                                )
                                 .frame(width: 65,height: 65)
                                 .cornerRadius(60)
-                                .overlay (
-                                    ZStack {
-                                        
-                                        CircularView(value: Double(99.9) / 100.0,lineWidth: 1.0,colors: [Color("black")])
-                                            .padding(-1)
-                                        
-                                        
-                                        //This one shows the percentage of match
-                                        CircularView(value: Double(56.9) / 100.0,lineWidth: 1.0,colors: [Color.green.opacity(0.67),Color.green])
-                                            .padding(-1)
-                                        
-                                        
-                                    }
-                                )
                                 .neoButton(isToggle: false) {
-                                    //when a story is clicked
-                                    showProfile = true
-                                    profile = user
+                                    //Start matching
+                                    selected = 0
                                 }
                             
-                            Text(user.firstName)
+                            Text("Start Matching")
                                 .font(.footnote)
                                 .lineLimit(1)
+                            
+                        }
+                        ForEach(profiles, id: \.id) { user in
+                            VStack {
+                                
+                                GetImageAndUrl(url:user.avatar, loaded: .constant(true), imageUrl: .constant(""))
+                                    .frame(width: 65,height: 65)
+                                    .cornerRadius(60)
+                                    .overlay (
+                                        ZStack {
+                                            
+                                            CircularView(value: Double(99.9) / 100.0,lineWidth: 1.0,colors: [Color("black")])
+                                                .padding(-1)
+                                            
+                                            
+                                            //This one shows the percentage of match
+                                            CircularView(value: Double(56.9) / 100.0,lineWidth: 1.0,colors: [Color.green.opacity(0.67),Color.green])
+                                                .padding(-1)
+                                            
+                                            
+                                        }
+                                    )
+                                    .neoButton(isToggle: false) {
+                                        //when a story is clicked
+                                        showProfile = true
+                                        profile = user
+                                    }
+                                
+                                Text(user.firstName)
+                                    .font(.footnote)
+                                    .lineLimit(1)
+                            }
                         }
                     }
-                }
-                .offset(x:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.width )
-                .padding(.top,5)
-                
-                .offset(x:10)
-            }.padding(.top, 30)
-            Divider()
-            likesprofiles
-        }.coordinateSpace(name: "scroll")
+                    .offset(x:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.width )
+                    .padding(.top,5)
+                    
+                    .offset(x:10)
+                }.padding(.top, 2)
+                Divider()
+                likesprofiles
+            }.coordinateSpace(name: "scroll")
+        }
     }
     var likesprofiles : some View {
       

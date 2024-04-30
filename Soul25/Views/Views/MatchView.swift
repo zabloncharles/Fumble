@@ -12,7 +12,7 @@ import SwiftUI
 struct MatchView: View {
     @AppStorage("hidemainTab") var hidemainTab = false
     @AppStorage("currentPage") var selected = 0
-    @State var profiles: [UserStruct] = []
+    @Binding var profiles: [UserStruct]
     @Binding var currentUser: UserStruct?
     @State var profile = fakeUsers[0]
     @State var viewState: CGSize = .zero
@@ -54,6 +54,7 @@ struct MatchView: View {
                                 .offset(y: index == currentIndex ? 0 : index == currentIndex - 1 ? -5 : UIScreen.main.bounds.height * 1.02)
                                 
                                 .cornerRadius(index == currentIndex - 1 ? 45 : 45)
+                                .rotation3DEffect(.degrees(index != currentIndex - 1 ? 0 : 50), axis: (x: 1, y: 0, z: 0))
                                 .scaleEffect(index == currentIndex - 1 ? 0.90 : 1)
                             
                                 .edgesIgnoringSafeArea(.all)
@@ -63,14 +64,12 @@ struct MatchView: View {
 //                                .overlay(Text("\(profiles.count)"))
                         }
                 }
+            } else {
+                outofmatchesView
             }
         } .onAppear {
-            // Fetch user data when the view appears
-            fetchUserData(parameter: "") { result in
-                
-                    profiles += result ?? [fakeUser]
-                
-            }
+           
+          
             noProfilesFunc()
             
         }
@@ -114,7 +113,8 @@ struct MatchView: View {
                         .background(Color.blue.opacity(0.3))
                         .cornerRadius(20)
                     
-                }.padding(15).offwhitebutton(isTapped: false, isToggle: false, cornerRadius: 15, action:  .constant(false))
+                }.padding(15)
+                    .neoButtonOff(isToggle: false, cornerRadius: 12)
                     .offset(y: pageAppeared ? 0 : -300)
                 
                 Spacer()
@@ -123,7 +123,7 @@ struct MatchView: View {
                     
                     Text("Come back later or adjust your preferences")
                         .font(.headline)
-                    Text("Matches are carefully curated on Soulmate so don't worry, They'll come in very soon.")
+                    Text("Matches are carefully curated on fumble so don't worry, They'll come in very soon.")
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                     HStack {
@@ -198,14 +198,11 @@ struct MatchView: View {
     }
     func noProfilesFunc(){
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            //if user is loading for more than 10 seconds show error
             if profiles.isEmpty {
                 withAnimation(.spring()){
                     noprofiles = true
-                }
-            } else {
-                withAnimation(.spring()){
-                    noprofiles = false
                 }
             }
            

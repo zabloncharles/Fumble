@@ -11,7 +11,7 @@ import SwiftUI
 struct SkullProfile: View {
     @State var userScrolledDown = false
     @State  var previousOffset: CGFloat = 0
-    @State var showblacknav = false
+    @State var disliked = false
     @AppStorage("currentPage") var selected = 0
     @State var profiles: [UserStruct] = fakeUsers
     @Binding var currentUser: UserStruct?
@@ -24,6 +24,7 @@ struct SkullProfile: View {
     @FocusState var sendMessageFocused: Bool
     @State var profileImagesLoaded = [false,false,false]
     @State var showHearts = false
+    @State var arrowTapped = false
     var editingProfile = false
     @State private var isShowingModal = false
     @State private var shuffledViews: [Int] = (0..<4).shuffled()
@@ -61,21 +62,50 @@ struct SkullProfile: View {
                 progressloading
             }
             
-                    ScrollView(.vertical, showsIndicators: false) {
-                        ScrollDetectionView(userScrolledDown: $userScrolledDown)
+            VStack {
+                DynamicTopBar(label: selected != 4 ? "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "gear" : disliked ? "heart.slash.fill" : "heart.slash"){
+                    //go to next profile
+                    if selected == 4 {
+                        currentIndex = 1
+                    }
                     
+                    nextProfile()
+                }.padding(.top,selected == 0 ? 45 : 0)
+                    .overlay{
+                     
+                            HStack {
+                                Spacer()
+                                Image(systemName: "arrow.counterclockwise")
+                                    .font(.title)
+                                    .foregroundColor(.blue)
+                                    .rotationEffect(.degrees(arrowTapped ? -60 : 0))
+                                    .onTapGesture {
+                                        //
+                                        withAnimation(.spring()) {
+                                            arrowTappedFunc()
+                                        }
+                                    }
+                                    .offset(x:-60,y:23)
+                            }.opacity(currentIndex != 0 ? 1 : 0)
                         
-                        content
+                    }
+                
+                ScrollView(.vertical, showsIndicators: false) {
                           
-                       
                         
+                            
+                            content
+                              
+                           
+                            
+                        }
+                        .coordinateSpace(name: "scroll")
+                   
+                        
+                        .onAppear{
+                            profileNumber = profileNumber + 1
                     }
-                    .coordinateSpace(name: "scroll")
-                    .edgesIgnoringSafeArea(.all)
-                    
-                    .onAppear{
-                        profileNumber = profileNumber + 1
-                    }
+            }
                    
                   
                     
@@ -87,19 +117,27 @@ struct SkullProfile: View {
             
             
            
-                NavigationBar(userScrolledDown: $userScrolledDown, label:editingProfile ? "profile" : "match", labelicon: editingProfile ? "person.crop.circle" : "person.2",trailingicon: editingProfile ?  "person" : currentIndex == -1 ? "" : "heart.slash" ){
-                    //call the next profile
-                    currentIndex = 1
-                    nextProfile()
-                    
-                    
-                 
-                }
+              
                 
-                .padding(.top,selected == 0 || selected == 1 ? 34 : 0)
-            
-            
-            
+            VStack {
+                Spacer()
+                HStack {
+                    Image(systemName: disliked ? "heart.slash.fill" : "heart.slash")
+                        .font(.title)
+                        .foregroundColor(.red)
+                        .padding(.horizontal,6)
+                        .padding(.vertical,7)
+                        .background(Color("offwhiteneo"))
+                        .cornerRadius(60)
+                        .neoButton(isToggle: false, perform: {
+                            nextProfile()
+                        })
+                        .padding(.bottom,110)
+                        .padding(.leading,20)
+                        .opacity(selected == 0 ? 1 : 0)
+                    Spacer()
+                }
+            }
             
         }.background(Color("offwhiteneo"))
             .sheet(isPresented: $isShowingModal) {
@@ -324,29 +362,8 @@ struct SkullProfile: View {
         }.padding(.top,30)
     }
     var content: some View {
-        
-      
-            
-            
-            
-            
             VStack( spacing: 20.0) {
                
-                if showDragProgressView {
-                    VStack {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
-                    }.padding(.top,30)
-                }
-                
-                DynamicTopBar(label: selected != 4 ? "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "gear" : "heart.slash"){
-                    //go to next profile
-                    currentIndex = 1
-                    nextProfile()
-                }
-                    .padding(.bottom, 27)
-             
-                
                avatarandthreeinfo
            
                
@@ -391,27 +408,15 @@ struct SkullProfile: View {
                                 outofmatchesView
                         }
                     }
-
-                       
-                        
-                 
-                    
-                    
-                    
-                    
                     
                 }
                 //animate the profile loading and show it coming from the bottom
                 
                 .offset(y:  !profileImagesLoaded[0] && !profileImagesLoaded[1] ? UIScreen.main.bounds.height : 0)
                 
-                
-                
-             
-                    
             }
             .padding(.bottom,120)
-            .padding(.top,40)
+            .padding(.top,10)
            
    
             
@@ -477,7 +482,7 @@ struct SkullProfile: View {
                     
                     Text("Come back later or adjust your preferences")
                         .font(.headline)
-                    Text("Matches are carefully curated on Soulmate so don't worry, They'll come in very soon.")
+                    Text("Matches are carefully curated on Fumble so don't worry, They'll come in very soon.")
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                     HStack {
@@ -691,7 +696,7 @@ struct SkullProfile: View {
                 .onAppear{
                     
                     withAnimation(.spring()) {
-                        showblacknav = false
+                  
                         
                         heartsFunc()
                         
@@ -707,7 +712,23 @@ struct SkullProfile: View {
         }.background(Color("offwhiteneo"))
             .modifier(KeyboardAwareModifier())
     }
-    func hideNavOnNextProfile(){
+    
+    
+    func arrowTappedFunc(){
+        if currentIndex != 0 {
+            arrowTapped = true
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                withAnimation(.spring()) {
+                    currentIndex -= 1
+                    arrowTapped = false
+                    showProfile = false
+                    
+                    
+                }
+            }
+        }
         
     }
     func nextProfile(){
@@ -719,6 +740,16 @@ struct SkullProfile: View {
           
         }
         if !editingProfile {
+            
+            
+           
+                disliked = true
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation(.spring()) {
+                    disliked = false
+                }
+            }
             currentIndex += 1
         }
        

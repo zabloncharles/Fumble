@@ -79,8 +79,8 @@ struct Picture: Codable {
 }
 // Step 2: Fetch JSON data and decode it
 // Fetch and parse JSON data from the API
-func fetchUserData(parameter: String, completion: @escaping ([UserStruct]?) -> Void) {
-    guard let url = URL(string: parameter.isEmpty ? "https://randomuser.me/api/?gender=female&results=10" : parameter) else {
+func fetchUserData(parameter: String, userCount: String = "10", completion: @escaping ([UserStruct]?) -> Void) {
+    guard let url = URL(string: parameter.isEmpty ? "https://randomuser.me/api/?gender=female&results=\(userCount)" : parameter) else {
         completion(nil)
         return
     }
@@ -102,7 +102,7 @@ func fetchUserData(parameter: String, completion: @escaping ([UserStruct]?) -> V
                     email:"fakeemail@gmail.com",
                     age: 30,
                     gender: "female",
-                    avatar:"https://source.unsplash.com/random/?woman+selfie",
+                    avatar:result.picture.large,
                     photos: ["https://source.unsplash.com/random/?girl+woman+friends+candid", "https://source.unsplash.com/random/?girl+photography"],
                     occupation: "Software Engineer",
                     education: "Bachelor's Degree",

@@ -25,7 +25,7 @@ struct NoProfilesView: View {
                 Text("Opps! No profiles yet")
                     .font(.headline)
                 
-                Text("Nothing to see here. Matches are more intentional on Soulmate so don't worry, They'll come in very soon.")
+                Text("Nothing to see here. Matches are more intentional on Fumble so don't worry, They'll come in very soon.")
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 25)

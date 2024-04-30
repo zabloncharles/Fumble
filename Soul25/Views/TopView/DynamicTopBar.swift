@@ -15,15 +15,11 @@ struct DynamicTopBar: View {
     var trailinglabelicon = ""
     var notification = false
     @State var scrolledUp = false
+    @State var typeText = ""
     let completion: () -> Void
     var body: some View {
-        VStack(alignment: .center) {
-            ScrollDetectionView(userScrolledDown: $scrolledUp)
-            GeometryReader { proxy in
-                
-                
-              
-                
+        HStack(alignment: .center) {
+         
                 VStack {
                     Spacer()
                 }
@@ -38,6 +34,9 @@ struct DynamicTopBar: View {
                                 Text(label)
                                     .font(.title)
                                     .bold()
+                                
+                                  
+                                   
                                 
                                 
                                 Image(systemName: labelicon)
@@ -103,6 +102,40 @@ struct DynamicTopBar: View {
                     
                         .padding(.leading, 10)
                 )
+            
+        } .onAppear{
+          
+        }
+    }
+    
+    func typeWriter(_ text: String, completion: @escaping () -> Void) {
+        
+//        typeText = "hey"
+        var currentIndex = 0
+        
+        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { timer in
+            if currentIndex < text.count {
+                let index = text.index(text.startIndex, offsetBy: currentIndex)
+                let character = text[index]
+                
+                DispatchQueue.main.async {
+                    withAnimation(.easeIn) {
+                        typeText += String(character)
+                    } // Update the typedText property on the main queue
+                }
+                
+                currentIndex += 1
+            } else {
+                
+                timer.invalidate()
+                completion()
+                // Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { timer in
+                //   withAnimation(.easeInOut) {
+                //  typeText = original
+                //
+                //   }
+                // }
+                
             }
         }
     }

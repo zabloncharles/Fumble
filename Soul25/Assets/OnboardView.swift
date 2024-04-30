@@ -47,6 +47,7 @@ struct OnboardView: View {
                                 }
                             }
                     }.padding(.horizontal,30)
+                        .padding(.top,20)
                     Spacer()
                 }
             )
