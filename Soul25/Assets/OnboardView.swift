@@ -42,9 +42,9 @@ struct OnboardView: View {
                             .font(.title2)
                             .foregroundColor(.gray)
                             .neoButton(isToggle: false) {
-                                withAnimation(.spring()) {
+                             
                                     onboardComplete = true
-                                }
+                                
                             }
                     }.padding(.horizontal,30)
                         .padding(.top,20)

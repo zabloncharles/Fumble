@@ -32,9 +32,10 @@ struct ChatsView: View {
     @State private var chatMessages: [MessageModel] = []
     @State var currentViewed = ""
     @State var texter = ""
-
-    
-    
+    @Binding var likedEmails: [String]
+    @Binding var dislikedEmails: [String]
+    @State private var xOffset: CGFloat = 0
+    @AppStorage("currentPage") var selected = 0
     //  @State var fakeincomingMessages = IncomingMessage(name: "", text: "", timestamp: "")
     
     var body: some View {
@@ -55,12 +56,12 @@ struct ChatsView: View {
                   
                 }
                 
-            if profiles.count != 0 && !showMessages {
+            if !profiles.isEmpty && !showMessages {
                 gettingmessages
                     .transition(.opacity)
             }
         }.onAppear{
-           
+       
             hidemainTab = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(.spring()){
@@ -83,7 +84,7 @@ struct ChatsView: View {
                 sectionsSection
             
                 .padding(.bottom, 30)
-                .offset(y: !showMessages ? UIScreen.main.bounds.height  : 0)
+//                .offset(y: !showMessages ? UIScreen.main.bounds.height  : 0)
                 
         }
     }
@@ -93,24 +94,25 @@ struct ChatsView: View {
         
         VStack(spacing: 10) {
             if !profiles.isEmpty {
-                ForEach(profiles, id: \.id) { user in
+                ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
 
                     NavigationLink(destination:
                                     MessageDetailView(log: user)
                     ) {
-                        MessageCard(section: user, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded)
-                        
+                        VStack {
+                            MessageCard(section: user, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
+                           
+                        }
                     }
                 }
             } else {
                 nomessages
             }
-           
-
-        }.opacity(showMessages ? 1 : 0)
-           
+        }
+       
         .padding(.horizontal,10)
         .padding(.top, 5)
+        .padding(.bottom,40)
         
     }
     var gettingmessages: some View {
@@ -147,20 +149,20 @@ struct ChatsView: View {
     }
     var nomessages: some View {
         VStack {
-            VStack {
-                LottieView(filename: "loveflying" ,loop: true)
-                    .frame(width: 100)
-                    .opacity(pageAppeared ? 1 : 0)
-                
-            }.offset( x:-40, y:280)
-                .opacity(0.7)
+//            VStack {
+//                LottieView(filename: "loveflying" ,loop: true)
+//                    .frame(width: 100, height: 150)
+//
+//
+//            }.offset( x:-40, y:280)
+//                .opacity(0.7)
             
-            VStack {
-                LottieView(filename: "girllikingstuff" ,loop: true)
-                    .frame(width: 280)
-                    .opacity(pageAppeared ? 1 : 1)
+            
+                LottieView(filename: "sadheart" ,loop: true)
+                    .frame(width: 280, height: 180)
                 
-            }
+                
+            
             
             VStack(alignment: .center, spacing: 20.0) {
                 
@@ -178,9 +180,12 @@ struct ChatsView: View {
                     .padding(.vertical,10)
                     .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
                     .cornerRadius(30)
+                    .neoButton(isToggle: false) {
+                        selected = 4
+                    }
             }.padding(10)
-                .opacity(pageAppeared ? 1 : 0)
-        }.offset(y:150)
+//                .opacity(pageAppeared ? 1 : 0)
+        }.offset(y:130)
     }
     var filteredProfiles: [UserStruct] {
         guard let currentUser = currentUser

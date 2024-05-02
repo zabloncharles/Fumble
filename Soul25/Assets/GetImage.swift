@@ -49,11 +49,11 @@ struct GetImageAndUrl: View {
                     } else {
                         
                         
-//                            LottieView(filename: "paperplaneloading" ,loop: true)
-//                                .frame(width: 400)
+                            LottieView(filename: "eyesrainbow" ,loop: true)
+                                .frame(width: 400)
                        
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .frame(width: height != 0 ? width : nil, height: height != 0 ? height : nil)
+                        
                      
                     }
                 

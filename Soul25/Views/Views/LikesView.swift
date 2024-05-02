@@ -16,7 +16,7 @@ struct LikesView: View {
     @Binding var currentUser: UserStruct?
     @State var profile = fakeUsers[0]
     @State var dataMessages = "Getting your likes :)"
-
+    @State var errorLoading = false
     @State var indexRemoved = 0
     @State var unmatch = false
     @Namespace var namespace
@@ -30,7 +30,8 @@ struct LikesView: View {
     @State var currentIndex = 0
     @State var showX = false
     @State var animateX = false
-    
+    @Binding var likedEmails: [String]
+    @Binding var dislikedEmails: [String]
     var body: some View {
         ZStack {
             BackgroundView()
@@ -47,7 +48,7 @@ struct LikesView: View {
                
                   
                 
-                    if profileLoaded < 5 {
+                    if profileLoaded < 5 && !errorLoading {
                         loading
                     }
                   
@@ -155,9 +156,9 @@ struct LikesView: View {
     var showprofile: some View {
         ZStack {
             if showProfile {
-                SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
+                SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
                     .padding(.top,37)
-                    .padding(.bottom,-80)
+                    .padding(.bottom,-24)
                     .animation(.spring(), value: showProfile)
                     .cornerRadius(showProfile ?  40 : 43)
                     .edgesIgnoringSafeArea(.all)
@@ -172,7 +173,7 @@ struct LikesView: View {
                    
                     .onAppear{
                         profileAppeared = true
-                        hidemainTab = true
+//                        hidemainTab = true
                     }
                     .onDisappear{
                         profileAppeared = false
@@ -234,6 +235,13 @@ struct LikesView: View {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
             
+        } .onAppear{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                //if user pictures have not loaded in more than 9 seconds
+                if profileLoaded < 5 {
+                    errorLoading = true
+                }
+            }
         }
     }
     var nolikes: some View {
@@ -264,7 +272,62 @@ struct LikesView: View {
             .offset(y:  profileLoaded < 2 ? 0 : UIScreen.main.bounds.height )
         
     }
-   
+    var errorloadingdata: some View {
+        VStack {
+            ZStack {
+                
+                VStack {
+                    LottieView(filename: "loveflying" ,loop: true)
+                        .frame(width: 100)
+                     
+                    
+                }.offset( x:-40, y:280)
+                    .opacity(0.7)
+                
+                VStack {
+                    LottieView(filename: "sadheart" ,loop: true)
+                        .frame(width: 280)
+                       
+                    
+                }.offset(y:-160)
+                
+                
+                VStack {
+                    
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .center, spacing: 20.0) {
+                        
+                        Text("Error loading user!")
+                            .font(.headline)
+                        Text("Matches are carefully curated on Fumble so don't worry, They'll come in very soon.")
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                        HStack {
+                            Text("Report issue")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                        }.padding(.horizontal,15)
+                            .padding(.vertical,10)
+                            .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                            .cornerRadius(30)
+                            .neoButton(isToggle: false) {
+                                //log error
+                            }
+                          
+                    }.padding(10)
+                       
+                    
+                    
+                    
+                    Spacer()
+                }.padding(20)
+            }
+           
+        } .transition(.offset(y:UIScreen.main.bounds.height))
+            .animation(.spring(), value: errorLoading)
+    }
     var stories : some View {
         VStack {
             DynamicTopBar(label: "likes", labelicon: "fleuron"){
@@ -338,44 +401,54 @@ struct LikesView: View {
                     
                     .offset(x:10)
                 }.padding(.top, 2)
+                
                 Divider()
+                    .padding(.leading,10)
                 likesprofiles
             }.coordinateSpace(name: "scroll")
         }
     }
     var likesprofiles : some View {
       
+        VStack {
+            if errorLoading {
+                errorloadingdata
+                    .padding(.top,170)
+            }
+            else {
                 VStack(spacing: 25.0) {
-          
-                    ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
-                            //
-                        PostCard(firstname: user.firstName,avatar: user.avatar, post: user.photos[0], indexRemoved: $indexRemoved, imageUrlReturned: $profileUrl, imageLoaded: $profileLoaded, unmatch: $unmatch, index: index){
-                            //tapp does what?
-                            currentIndex = index
-                            profile = user
+                  
+                            ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
+                                    //
+                                PostCard(firstname: user.firstName,avatar: user.avatar, post: user.photos[0], indexRemoved: $indexRemoved, imageUrlReturned: $profileUrl, imageLoaded: $profileLoaded, unmatch: $unmatch, index: index){
+                                    //tapp does what?
+                                    currentIndex = index
+                                    profile = user
+                                    
+                                    withAnimation(.spring()) {
+                                        showProfile = true
+                                        
+                                    }
+                                    
+                                    
+                                }
                             
-                            withAnimation(.spring()) {
-                                showProfile = true
+                                   
+                                    .padding(.bottom,5)
+                                if index != profiles.count - 1{
+                                    Divider()
+                                }
+                                }
+                            
+                            
                                 
-                            }
-                            
-                            
                         }
-                    
-                           
-                            .padding(.bottom,5)
-                        if index != profiles.count - 1{
-                            Divider()
-                        }
-                        }
-                    
-                    
-                        
-                }
-                .padding(.top,20)
-                .padding(.bottom,80)
-                .offset(y:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.height )
-            .animation(.spring(), value: profileLoaded)
+                        .padding(.top,20)
+                        .padding(.bottom,80)
+                        .offset(y:  profileLoaded > 5 ? 0 : UIScreen.main.bounds.height )
+                    .animation(.spring(), value: profileLoaded)
+            }
+        }
             
         
     }

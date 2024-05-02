@@ -22,7 +22,8 @@ struct HomeView: View {
     @State var loadingIcon = false
     @State var showProfile = false
     @AppStorage("hidemainTab") var hidemainTab = false
-    
+    @Binding var likedEmails: [String]
+    @Binding var dislikedEmails: [String]
     
     var body: some View {
         ZStack {
@@ -57,17 +58,17 @@ struct HomeView: View {
             // show the profile of the user in full view
           
                
-                    SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0))
+            SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
                         .animation(.spring(), value: showProfile)
                         .cornerRadius(showProfile ?  40 : 43)
                         .padding(.top,selected == 2 ? 30 : 0)
+                        .padding(.bottom,-15)
                     .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
                     .onChange(of: showProfile, perform: { newValue in
                         if showProfile {
                                 withAnimation(.spring()){
-                                    hidemainTab = true
                                   
-                                    
+                                    hidemainTab = false
                                 }
                         } else {
                             withAnimation(.spring()){

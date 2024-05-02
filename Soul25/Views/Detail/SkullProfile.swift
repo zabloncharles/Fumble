@@ -28,7 +28,7 @@ struct SkullProfile: View {
     var editingProfile = false
     @State private var isShowingModal = false
     @State private var shuffledViews: [Int] = (0..<4).shuffled()
-    @State var showDragProgressView = false
+  @State var errorLoading = false
     @State var text = ""
     @State var erro = ""
     @State var sendMessage = ""
@@ -51,6 +51,8 @@ struct SkullProfile: View {
     @State var scrolledItem = 0
     @State var profileNumber = 0
     @Binding var currentIndex : Int
+    @Binding var likedEmails : [String]
+    @Binding var dislikedEmails : [String]
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.presentationMode) var presentationMode
     
@@ -58,15 +60,15 @@ struct SkullProfile: View {
         
         
         ZStack {
-            if !profileImagesLoaded[1] {
-                progressloading
-            }
+            
             
             VStack {
-                DynamicTopBar(label: selected != 4 ? "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "gear" : disliked ? "heart.slash.fill" : "heart.slash"){
+                DynamicTopBar(label: selected != 4 ? !userScrolledDown ? profile.firstName : "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "checklist" : disliked ? "heart.slash.fill" : "heart.slash"){
                     //go to next profile
                     if selected == 4 {
                         currentIndex = 1
+                    } else {
+                        dislikedEmails.append(profile.email)
                     }
                     
                     nextProfile()
@@ -83,18 +85,24 @@ struct SkullProfile: View {
                                         //
                                         withAnimation(.spring()) {
                                             arrowTappedFunc()
+//                                            likedEmails.append(profile.email)
                                         }
                                     }
                                     .offset(x:-60,y:23)
-                            }.opacity(currentIndex != 0 ? 1 : 0)
+                            }.opacity(selected == 0 && profiles.count > 0  ? 1 : 0)
                         
                     }
                 
                 ScrollView(.vertical, showsIndicators: false) {
                           
                         
-                            
+                  
+                       
+                    
+                  
                             content
+                        
+                        
                               
                            
                             
@@ -142,6 +150,16 @@ struct SkullProfile: View {
         }.background(Color("offwhiteneo"))
             .sheet(isPresented: $isShowingModal) {
                 likedcontent
+            }
+            .overlay{
+                if showHearts {
+                    
+                    LottieView(filename: "loveflying",loop: false)
+                        .frame(width: 299, height: 250)
+                        .colorMultiply(.white)
+                        .opacity(0.57)
+                    
+                }
             }
       
         .onChange(of: liked) { V in
@@ -216,7 +234,7 @@ struct SkullProfile: View {
                         
                         VStack{
                             Image(systemName: "balloon.fill")
-                            Text(String(currentIndex))
+                            Text(String(profile.age))
                         }
                         .padding(.horizontal,10)
                         .padding(.vertical,4)
@@ -360,59 +378,88 @@ struct SkullProfile: View {
                 Spacer()
             }
         }.padding(.top,30)
+            .onAppear{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                    //if user pictures have not loaded in more than 9 seconds
+                   if !profileImagesLoaded[0] {
+                        errorLoading = true
+                    }
+                }
+            }
     }
     var content: some View {
             VStack( spacing: 20.0) {
                
                avatarandthreeinfo
-           
-               
-                VStack(alignment: .leading, spacing: 13.0) {
-                    
-                   
-                   
-                        moreinfohorizontalcards
-                       
-                    
-                        Divider()
-                     
-                    
-                    ForEach(shuffledViews, id: \.self) { index in
-                        switch index {
-                            case 0:
-                                QuoteImageCard(name: profile.firstName, caption: "Life is too short to worry about thigh gaps, focus on making memories", url: profile.photos[0], urlReturned: $profileImages[0], loaded: $profileImagesLoaded[0], report: $report)
-                                    .neoDoubleTapButton(isToggle: false) {
-                                        // Handle double tap action
-                                        likedquote = "Life is too short to worry about thigh gaps, focus on making memories"
-                                        likedImageUrl = profileImages[0]
-                                        if profileImagesLoaded[0] {
-                                            isShowingModal.toggle()
-                                        }
-                                    }
-                            case 1:
-                                whatilike
-                                Divider()
-                            case 2:
-                                QuoteImageCard(name: profile.firstName, caption: "Life's a beach, enjoy the waves and soak up the sun", url: profile.photos[1], urlReturned: $profileImages[1], loaded: $profileImagesLoaded[1], report: $report)
-                                    .neoDoubleTapButton(isToggle: false) {
-                                        // Handle double tap action
-                                        likedquote = "Life's a beach, enjoy the waves and soak up the sun"
-                                        likedImageUrl = profileImages[1]
-                                        if profileImagesLoaded[1] {
-                                            isShowingModal.toggle()
-                                        }
-                                    }
-                            case 3:
-                                answerprompt
-                            default:
-                                outofmatchesView
-                        }
-                    }
-                    
-                }
-                //animate the profile loading and show it coming from the bottom
+                    .background(ScrollDetectionView(userScrolledDown: $userScrolledDown))
+              
                 
-                .offset(y:  !profileImagesLoaded[0] && !profileImagesLoaded[1] ? UIScreen.main.bounds.height : 0)
+                
+           
+                if !profileImagesLoaded[1] && !errorLoading {
+                    progressloading
+                        .padding(.top,100)
+                }
+                //if it took more than 9 seconds and it's still loading
+                if errorLoading {
+                   
+                    VStack {
+                        Divider()
+                            .padding(.horizontal)
+                        errorloadingdata
+                            .padding(.top,150)
+                    }
+                }
+                //hide the user info if pictures have not loaded in more than 9 seconds
+               if !errorLoading {
+                    VStack(alignment: .leading, spacing: 13.0) {
+                        
+                       
+                       
+                            moreinfohorizontalcards
+                           
+                        
+                            Divider()
+                         
+                        
+                        ForEach(shuffledViews, id: \.self) { index in
+                            switch index {
+                                case 0:
+                                    QuoteImageCard(name: profile.firstName, caption: "Life is too short to worry about thigh gaps, focus on making memories", url: profile.photos[0], urlReturned: $profileImages[0], loaded: $profileImagesLoaded[0], report: $report)
+                                        .neoDoubleTapButton(isToggle: false) {
+                                            // Handle double tap action
+                                            likedquote = "Life is too short to worry about thigh gaps, focus on making memories"
+                                            likedImageUrl = profileImages[0]
+                                            if profileImagesLoaded[0] {
+                                                isShowingModal.toggle()
+                                            }
+                                        }
+                                case 1:
+                                    whatilike
+                                    Divider()
+                                case 2:
+                                    QuoteImageCard(name: profile.firstName, caption: "Life's a beach, enjoy the waves and soak up the sun", url: profile.photos[1], urlReturned: $profileImages[1], loaded: $profileImagesLoaded[1], report: $report)
+                                        .neoDoubleTapButton(isToggle: false) {
+                                            // Handle double tap action
+                                            likedquote = "Life's a beach, enjoy the waves and soak up the sun"
+                                            likedImageUrl = profileImages[1]
+                                            if profileImagesLoaded[1] {
+                                                isShowingModal.toggle()
+                                            }
+                                        }
+                                case 3:
+                                    answerprompt
+                                default:
+                                    outofmatchesView
+                            }
+                        }
+                        
+                    }
+                    //animate the profile loading and show it coming from the bottom
+                    
+                    .offset(y:  !profileImagesLoaded[0] && !profileImagesLoaded[1] ? UIScreen.main.bounds.height : 0)
+                }
+                
                 
             }
             .padding(.bottom,120)
@@ -518,199 +565,275 @@ struct SkullProfile: View {
             }
         }
     }
+    var errorloadingdata: some View {
+       VStack {
+            ZStack {
+                
+                VStack {
+                    LottieView(filename: "loveflying" ,loop: true)
+                        .frame(width: 100)
+                        .opacity(pageAppeared ? 1 : 0)
+                    
+                }.offset( x:-40, y:280)
+                    .opacity(0.7)
+                
+                VStack {
+                    LottieView(filename: "sadheart" ,loop: true)
+                        .frame(width: 280)
+                        .opacity(pageAppeared ? 1 : 0)
+                    
+                }.offset(y:-160)
+                
+                
+                VStack {
+                   
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .center, spacing: 20.0) {
+                        
+                        Text("Error loading user!")
+                            .font(.headline)
+                        Text("Matches are carefully curated on Fumble so don't worry, They'll come in very soon.")
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                        HStack {
+                            Text("Report issue")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                        }.padding(.horizontal,15)
+                            .padding(.vertical,10)
+                            .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                            .cornerRadius(30)
+                            .neoButton(isToggle: false) {
+                                //code
+                                selected = 4
+                            }
+                    }.padding(10)
+                        .opacity(pageAppeared ? 1 : 0)
+                    
+                    
+                    
+                    Spacer()
+                }.padding(20)
+            }
+            .onAppear{
+                
+                withAnimation(.spring().speed(0.4)){
+                    pageAppeared = true
+                }
+            }
+            .onDisappear{
+                
+                withAnimation(.spring()){
+                    pageAppeared = false
+                }
+            }
+        }
+    }
     
     var likedcontent: some View {
         
-        ScrollView(.vertical) {
-            VStack(spacing: 20.0) {
-                Text("Message")
-                    .font(.body)
-                    .bold()
-                    .padding()
-                    .padding(.bottom,-40)
-                VStack(alignment: .leading) {
-                        HStack {
-                           
-                                GetImageAndUrl(url:likedImageUrl, width: 40 , height: 40, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
-                                    .frame(width: 40 , height: 40)
-                                    .cornerRadius(36)
-                                VStack {
-                                    Text(profile.firstName)
-                                        .bold()
-                                    .font(.title3)
-                                  
+        ZStack {
+            BackgroundView()
+            ScrollView(.vertical) {
+                VStack(spacing: 20.0) {
+                    Text("Message")
+                        .font(.body)
+                        .bold()
+                        .padding()
+                        .padding(.bottom,-40)
+                    VStack(alignment: .leading) {
+                            HStack {
+                               
+                                    GetImageAndUrl(url:likedImageUrl, width: 40 , height: 40, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
+                                        .frame(width: 40 , height: 40)
+                                        .cornerRadius(36)
+                                    VStack {
+                                        Text(profile.firstName)
+                                            .bold()
+                                        .font(.title3)
+                                      
+                                    }
+                                    
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.blue)
+                                        .font(.system(size: 18, weight: .medium))
+                                
+                                Text("2d")
+                                
+                                    .font(.callout)
+                                
+                                Spacer()
+                                HStack (spacing: 4.0){
+                                   
+                                   
+                                        Image(systemName: "fleuron.fill")
+                                            .foregroundColor(.red)
+                                            .font(.title3)
+                                            .padding(.trailing,10)
                                 }
+                               
+                            }
+                            HStack(spacing: 6.0) {
+                                VStack {
+                                    Text("\"\(likedquote)\"")
+                                        .font(.callout)
+                                        .italic()
+                                        .multilineTextAlignment(.leading)
+                                        .padding(.leading,40)
+                                        .overlay{
+                                            HStack {
+                                                Rectangle()
+                                                    .fill(.red)
+                                                    .frame(width:1)
+                                                    .offset(x:20)
+                                                Spacer()
+                                            }
+                                        }
+                                    
+                                    if !likedImageUrl.isEmpty {
+                                        GetImageAndUrl(url:likedImageUrl, width:UIScreen.main.bounds.width - 80 , height: UIScreen.main.bounds.width - 80, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
+                                            .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)
+                                            .cornerRadius(13)
+                                            .padding(.leading,40)
+                                            .overlay{
+                                                ZStack {
+                                                    HStack {
+                                                        Rectangle()
+                                                            .fill(.gray)
+                                                            .frame(width:1)
+                                                            .offset(x:20)
+                                                        Spacer()
+                                                    }
+                                                    if showHearts && isShowingModal{
+                                                        
+                                                        LottieView(filename: "loveflying",loop: false)
+                                                            .frame(width: 299, height: 250)
+                                                            .colorMultiply(.white)
+                                                            .opacity(0.57)
+                                                        
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }.overlay{
+                                    HStack {
+                                        Rectangle()
+                                            .fill(.gray)
+                                            .frame(width:1)
+                                            .offset(x:20)
+                                        Spacer()
+                                    }
+                                }
+                                
+                                
+                            }
+                        
+                      
+                            
+                        
+                       
+                    }
+     
+                    
+                    
+                       
+                        .padding(.top, 30)
+                       
+                    
+                 
+                
+                    HStack {
+                        GetImageAndUrl(url:currentUser?.avatar ?? "", width: 40 , height: 40, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
+                            .frame(width: 40 , height: 40)
+                            .cornerRadius(36)
+                        
+                        VStack(spacing: 8.0) {
+                            HStack{
+                               
+                                Text(currentUser?.firstName ?? "")
+                                        .bold()
+                                        .font(.title3)
+                                    
+                               
                                 
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.blue)
                                     .font(.system(size: 18, weight: .medium))
-                            
-                            Text("2d")
-                            
-                                .font(.callout)
-                            
-                            Spacer()
-                            HStack (spacing: 4.0){
-                               
-                               
-                                    Image(systemName: "fleuron.fill")
-                                        .foregroundColor(.red)
-                                        .font(.title3)
-                                        .padding(.trailing,10)
-                            }
-                           
-                        }
-                        HStack(spacing: 6.0) {
-                            VStack {
-                                Text("\"\(likedquote)\"")
+                                
+                                Text("2d")
+                                
                                     .font(.callout)
-                                    .italic()
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.leading,40)
-                                    .overlay{
-                                        HStack {
-                                            Rectangle()
-                                                .fill(.red)
-                                                .frame(width:1)
-                                                .offset(x:20)
-                                            Spacer()
-                                        }
-                                    }
-                                
-                                if !likedImageUrl.isEmpty {
-                                    GetImageAndUrl(url:likedImageUrl, width:UIScreen.main.bounds.width - 80 , height: UIScreen.main.bounds.width - 80, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
-                                        .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)
-                                        .cornerRadius(13)
-                                        .padding(.leading,40)
-                                        .overlay{
-                                            ZStack {
-                                                HStack {
-                                                    Rectangle()
-                                                        .fill(.gray)
-                                                        .frame(width:1)
-                                                        .offset(x:20)
-                                                    Spacer()
-                                                }
-                                                if showHearts {
-                                                    
-                                                    LottieView(filename: "loveflying",loop: false)
-                                                        .frame(width: 299, height: 250)
-                                                        .colorMultiply(.white)
-                                                        .opacity(0.57)
-                                                    
-                                                }
-                                            }
-                                    }
-                                }
-                            }.overlay{
-                                HStack {
-                                    Rectangle()
-                                        .fill(.gray)
-                                        .frame(width:1)
-                                        .offset(x:20)
-                                    Spacer()
-                                }
+                            Spacer()
+                         
                             }
-                            
-                            
-                        }
-                    
-                  
-                        
-                    
-                   
-                }
- 
-                
-                
-                   
-                    .padding(.top, 30)
-                   
-                
-             
-            
-                HStack {
-                    GetImageAndUrl(url:currentUser?.avatar ?? "", width: 40 , height: 40, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
-                        .frame(width: 40 , height: 40)
-                        .cornerRadius(36)
-                    
-                    VStack(spacing: 8.0) {
-                        HStack{
-                           
-                            Text(currentUser?.firstName ?? "")
-                                    .bold()
-                                    .font(.title3)
+                            TextField("What do you think...", text: $sendMessage)
                                 
-                           
-                            
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.blue)
-                                .font(.system(size: 18, weight: .medium))
-                            
-                            Text("2d")
-                            
-                                .font(.callout)
-                        Spacer()
-                     
-                        }
-                        TextField("What do you think...", text: $sendMessage)
-                            
-                                .focused($sendMessageFocused)
-                                .italic()
-                                .foregroundColor(Color("black"))
-                                
-                                .padding(.trailing,70)
-                                .overlay{
+                                    .focused($sendMessageFocused)
+                                    .italic()
+                                    .foregroundColor(Color("black"))
                                     
-                                       
-                                    HStack(alignment: .center, spacing: 0.0) {
-                                            Spacer()
-                                            Image(systemName: "paperplane")
-                                                .padding(.vertical,12)
-                                                .padding(.horizontal,12)
-                                                .foregroundColor(.white)
-                                                .background(Color.blue)
-                                                .cornerRadius(29)
-                                            
-                                        }
-                                    .offset(x: -10,y:-10)
-                                    .neoButton(isToggle: false) {
-                                        isShowingModal.toggle()
-                                    }
+                                    .padding(.trailing,70)
+                                    .overlay{
                                         
-                                    
-                                }
-                                .onAppear{
-                                    sendMessageFocused = true
-                                }
+                                           
+                                        HStack(alignment: .center, spacing: 0.0) {
+                                                Spacer()
+                                                Image(systemName: "paperplane")
+                                                    .padding(.vertical,12)
+                                                    .padding(.horizontal,12)
+                                                    .foregroundColor(.white)
+                                                    .background(Color.blue)
+                                                    .cornerRadius(29)
+                                                
+                                            }
+                                        .offset(x: -10,y:-10)
+                                        .neoButton(isToggle: false) {
+                                            likedEmails.append(profile.email)
+                                            isShowingModal.toggle()
+                                            showHearts = true
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                                
+                                                nextProfile()
+                                            }
+                                        }
+                                            
+                                        
+                                    }
+                                    .onAppear{
+                                        sendMessageFocused = true
+                                    }
+                        }
                     }
-                }
-                Spacer()
-            }.padding(.horizontal, 10)
-                .padding(.bottom,10)
-                .onTapGesture {
-                    withAnimation(.spring()) {
-                        liked = false
+                    Spacer()
+                }.padding(.horizontal, 10)
+                    .padding(.bottom,10)
+                    .onTapGesture {
+                        withAnimation(.spring()) {
+                            liked = false
+                        }
                     }
-                }
-                .onAppear{
-                    
-                    withAnimation(.spring()) {
-                  
+                    .onAppear{
                         
-                        heartsFunc()
-                        
+                        withAnimation(.spring()) {
+                      
+                            
+                            heartsFunc()
+                            
+                        }
                     }
-                }
-                .onDisappear{
-                    
-                    withAnimation(.spring()) {
+                    .onDisappear{
+                        
+                        withAnimation(.spring()) {
 
-                    }
-            }
-    
-        }.background(Color("offwhiteneo"))
+                        }
+                }
+        
+            }.background(Color("offwhiteneo"))
+                .offset(y:10)
             .modifier(KeyboardAwareModifier())
+        }
     }
     
     
@@ -797,17 +920,7 @@ func calculateDistance() -> String {
             }
         }
     }
-    func topDragFunc(){
-        withAnimation(.spring()){
-            showDragProgressView = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation(.spring()){
-                showDragProgressView = false
-            }
-        }
-    }
+  
     
 
     

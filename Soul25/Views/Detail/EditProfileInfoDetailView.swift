@@ -12,6 +12,7 @@ struct EditProfileInfoDetailView: View {
     @AppStorage("signedIn") var signedIn = false
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @State var userScrolledDown : CGFloat = 0
+    @State var showPromptEditView = false
     @State  var firstName: String = ""
     @State  var lastName: String = ""
     @State  var age: String = ""
@@ -27,29 +28,83 @@ struct EditProfileInfoDetailView: View {
     @State var optionType = 0
     @State var trackChanges : Set<Int> = []
     @Binding var isSheetPresented: Bool
-    
+    @State var showfullimageTapped = false
+    @Namespace var namespace
+    @State var imageNamespaceId = ""
+    @State var imageIndex = 0
     // Add more @State properties for other user profile information
     
     var body: some View {
         ZStack {
             BackgroundView()
-            ScrollView(.vertical, showsIndicators: false) {
-                HStack {
-                    Text("Profile Infomation: \(returnedChange)")
-                    
-                        .foregroundColor(.gray)
-                    Spacer()
-                }.padding(.horizontal)
-                    .padding(.bottom,-5)
+            VStack {
+                HStack{
+                    Text("Profile")
+                        .font(.largeTitle)
+                        .bold()
+                       Spacer()
+                      
+                                    Image(systemName: "xmark")
+                                        .font(.title2)
+                                        .foregroundColor(Color("black"))
+                                        .neoButton(isToggle: false) {
+                                            withAnimation(.spring()) {
+                                                isSheetPresented = false
+                                            }
+                                        }
+                                
+                             
+                            
+                            
+                            
+                        
+                }.padding(.horizontal,25)
+                    .padding(.vertical,5)
                 
-               VStack {
-                    ScrollView(.horizontal,showsIndicators: false){
-                        HStack {
-                            ForEach(0 ..< 2) { item in
+                ScrollView(.vertical, showsIndicators: false) {
+                    HStack {
+                        VStack(alignment: .center) {
+                            Text("Profile Infomation")
+                            
+                                .foregroundColor(Color("black"))
+                            
+                                Text("Tap to edit your pictures")
+                                    .font(.footnote)
+                                
+                                    .foregroundColor(.gray)
                                
-                                GetImageAndUrl(url: currentUser?.photos[item] ?? "",width: 150, height: 150, loaded: .constant(true), imageUrl: .constant(""))
-                                    .cornerRadius(8)
-                                    .overlay(
+                               
+                            
+                        }
+                        
+                    }.padding(.horizontal)
+                        .padding(.bottom,-5)
+                    
+                   VStack {
+                       
+                            LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: 16), count: 3), spacing: 16) {
+                                ForEach(0 ..< 6) { item in
+                                   
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(.gray)
+                                            .frame(width: 120, height: 150)
+                                            .cornerRadius(8)
+                                        
+                                        Image(systemName: "photo")
+                                        
+                                        GetImageAndUrl(url: currentUser?.photos[item] ?? "",width: 120, height: 150, loaded: .constant(true), imageUrl: .constant(""))
+                                            .cornerRadius(8)
+                                            .matchedGeometryEffect(id: "imageNamespaceId\(item)", in: namespace)
+                                            .neoButton(isToggle: false) {
+                                                withAnimation(.spring()) {
+                                                    showfullimageTapped = true
+                                                    imageNamespaceId = "imageNamespaceId\(item)"
+                                                    imageIndex = item
+                                                }
+                                            }
+                                           
+                                    } .overlay(
                                         VStack {
                                             HStack {
                                                 Spacer()
@@ -66,99 +121,98 @@ struct EditProfileInfoDetailView: View {
                                             }
                                             Spacer()
                                         }
-                                    ).padding(.top,8)
-                                    Divider()
-                            }
-                        }.padding(.horizontal,30)
+                                    )
+                                        
+                                }
+                            }.padding(.horizontal,25)
+                                .padding(.top,10)
+                            
                         
+                     
                     }
-                   HStack {
-                       Text("Tap to edit your pictures")
-                           .font(.footnote)
-                       
-                           .foregroundColor(.gray)
-                       .multilineTextAlignment(.leading)
-                       Spacer()
-                   }.padding(.horizontal)
-                       .padding(.horizontal)
+                    
+                    
+                    
+                    
+                    HStack {
+                        Text("Written Prompts: (3)")
+                        
+                            .foregroundColor(.gray)
+                        Spacer()
+                    }.padding(.horizontal)
+                        .padding(.top,20)
+                    
+                    VStack {
+                        
+                        NavigationLink(destination: promptedit) {
+                            PreferenceInfoCard(label: "I recently discovered that", sublabel: "Hamburgers are made in germany")
+                        }
+                        
+                        NavigationLink(destination: promptedit) {
+                            PreferenceInfoCard(label: "My favorite hobby is", sublabel: "Hiking")
+                        }
+                        NavigationLink(destination: promptedit) {
+                            PreferenceInfoCard(label: "I like to undwind by", sublabel: "Going out to eat")
+                        }
+                   
+                        // Add more form fields for other personal information
+                    }.padding(.horizontal,25)
+                        .padding(.top,10)
+                   
+                    HStack {
+                        Text("Virtues")
+                        
+                            .foregroundColor(.gray)
+                        Spacer()
+                    }.padding(.horizontal)
+                    
+                    VStack {
+                        
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Work", sublabel: "Emonics")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Job Title", sublabel: "Software Engineer")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "School", sublabel: "Minnesota State")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Education Level", sublabel: "Undergrad")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Religious Beliefs", sublabel: "Christian")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Hometown", sublabel: "Otsego")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Languages Spoken", sublabel: "Swahili, English, Spanish")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Dating Intentions", sublabel: "Long-term relationship")
+                        }
+                        NavigationLink(destination: picklistview) {
+                            PreferenceInfoCard(label: "Relationship Type", sublabel: "Monogamy")
+                        }
+                        // Add more form fields for other personal information
+                    }.padding(.horizontal,25)
+                        .padding(.top,10)
+                
+                
+                    secondsection
+                    
+                    thirdsection
+                    
+                    
                 }
-                Divider()
-                HStack {
-                    Text("Written Prompts: (3)")
-                    
-                        .foregroundColor(.gray)
-                    Spacer()
-                }.padding(.horizontal)
-                
-                VStack {
-                    
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "I recently discovered that", sublabel: "Hamburgers are made in germany")
-                    }
-                    
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "My favorite hobby is", sublabel: "Hiking")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "I like to undwind by", sublabel: "Going out to eat")
-                    }
-               
-                    // Add more form fields for other personal information
-                }.padding()
-                
-                    
-                    .padding(.horizontal)
-                Divider()
-                HStack {
-                    Text("Virtues")
-                    
-                        .foregroundColor(.gray)
-                    Spacer()
-                }.padding(.horizontal)
-                
-                VStack {
-                    
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Work", sublabel: "Emonics")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Job Title", sublabel: "Software Engineer")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "School", sublabel: "Minnesota State")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Education Level", sublabel: "Undergrad")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Religious Beliefs", sublabel: "Christian")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Hometown", sublabel: "Otsego")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Languages Spoken", sublabel: "Swahili, English, Spanish")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Dating Intentions", sublabel: "Long-term relationship")
-                    }
-                    NavigationLink(destination: picklistview) {
-                        PreferenceInfoCard(label: "Relationship Type", sublabel: "Monogamy")
-                    }
-                    // Add more form fields for other personal information
-                }.padding()
-                
-                
-                    .padding(.horizontal)
-            
-            
-                secondsection
-                
-                thirdsection
-                
-                
             }
           
+            
+            
+            if showfullimageTapped {
+                showfullimage
+            }
           
         }.sheet(isPresented: $isPresented) {
             
@@ -201,8 +255,8 @@ struct EditProfileInfoDetailView: View {
             }
             
         }
-        .navigationTitle("Profile")
-        .navigationBarTitleDisplayMode(.large)
+//        .navigationTitle("Profile")
+//        .navigationBarTitleDisplayMode(.large)
         .onChange(of: isPresented) { newValue in
             
             
@@ -292,6 +346,10 @@ struct EditProfileInfoDetailView: View {
         }.padding()
            
     }
+    
+    var promptedit: some View {
+        PromptEditView(isPresented: $showPromptEditView)
+    }
     var picklistview : some View{
         PicklistSheetView(isPresented: $isPresented, returned: $returnedChange, title: "Preferences", label: label, sublabel: sublabel, list: list)
             .onAppear{
@@ -311,6 +369,10 @@ struct EditProfileInfoDetailView: View {
                 }
             }
     }
+    
+    var showfullimage: some View {
+        FullImageView(showfullimageTapped: $showfullimageTapped, namespace: namespace,imageNamespaceId:imageNamespaceId, imageIndex: imageIndex)
+    }
 }
 
 
@@ -319,4 +381,5 @@ struct EditProfileInfoDetailView_Previews: PreviewProvider {
         EditProfileInfoDetailView( isSheetPresented: .constant(false))
     }
 }
+
 

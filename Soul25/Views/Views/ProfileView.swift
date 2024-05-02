@@ -18,7 +18,7 @@ struct ProfileView: View {
         ZStack {
           
           
-            SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex)
+            SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex,likedEmails: .constant([""]), dislikedEmails: .constant([""]))
             
         
            
@@ -26,7 +26,7 @@ struct ProfileView: View {
             editingProfile = true
            
         }
-        .sheet(isPresented: $isSheetPresented) {
+        .fullScreenCover(isPresented: $isSheetPresented) {
         
                 
                 
@@ -34,6 +34,7 @@ struct ProfileView: View {
                 if currentIndex == 1 {
                     NavigationView {
                         SettingsView(isSheetPresented: $isSheetPresented)
+                           
                         
                         
                     }
@@ -42,6 +43,7 @@ struct ProfileView: View {
                 } else  {
                     NavigationView {
                         EditProfileInfoDetailView(isSheetPresented: $isSheetPresented)
+                           
                     }
                 }
             }

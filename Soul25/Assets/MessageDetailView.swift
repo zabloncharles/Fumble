@@ -56,7 +56,7 @@ struct MessageDetailView: View {
             .navigationBarBackButtonHidden(false) // Hide the default back button
           
             .sheet(isPresented: $goToProfile){
-                SkullProfile(currentUser: $currentUser, profile: log, showProfile: .constant(false), currentIndex: .constant(-1))
+                SkullProfile(currentUser: $currentUser, profile: log, showProfile: .constant(false), currentIndex: .constant(-1),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
                     .edgesIgnoringSafeArea(.top)
                     .padding(.bottom, -120)
                     
@@ -142,7 +142,7 @@ struct MessageDetailView: View {
                             
                             
                         
-                        .onChange(of: blurPage || messageSent) { newValue in
+                        .onChange(of: blurPage || messageSent || keyboardFocus) { newValue in
                             if !blurPage {
                                 btapped = ""
                             }
@@ -155,6 +155,14 @@ struct MessageDetailView: View {
                                                                 }
                                 
                                 
+                            }
+                            //when i start typing scroll the messages to last message
+                            if keyboardFocus {
+                                Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { timer in
+                                    withAnimation(.spring()) {
+                                        scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+                                    }
+                                }
                             }
                         }
     //                    .onChange(of: messageDeleted) { newValue in

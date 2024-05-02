@@ -100,10 +100,10 @@ func fetchUserData(parameter: String, userCount: String = "10", completion: @esc
                     firstName: result.name.first,
                     lastName: result.name.last,
                     email:"fakeemail@gmail.com",
-                    age: 30,
+                    age: calculateAge(from: result.dob.date) ?? 30,
                     gender: "female",
                     avatar:result.picture.large,
-                    photos: ["https://source.unsplash.com/random/?girl+woman+friends+candid", "https://source.unsplash.com/random/?girl+photography"],
+                    photos: ["https://source.unsplash.com/random/?woman+friends+pretty", "https://source.unsplash.com/random/?girl+pretty"],
                     occupation: "Software Engineer",
                     education: "Bachelor's Degree",
                     location: [result.location.country,result.location.state,result.location.city],
@@ -112,7 +112,7 @@ func fetchUserData(parameter: String, userCount: String = "10", completion: @esc
                     interests: ["Cooking"],
                     lastActive: Date(),
                     lookingFor: "male",
-                    hometown: "result.city",
+                    hometown: result.location.city,
                     relationshipStatus: .single,
                     height: .average,
                     ethnicity: .white,
@@ -137,4 +137,24 @@ func fetchUserData(parameter: String, userCount: String = "10", completion: @esc
             completion(nil)
         }
     }.resume()
+}
+
+
+//get the age from the user dob
+func calculateAge(from dateString: String) -> Int? {
+    // Create a date formatter
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" // Adjust the date format for the provided string
+    
+    // Parse the string date into a Date object
+    guard let birthDate = dateFormatter.date(from: dateString) else {
+        return nil // Return nil if the string cannot be parsed
+    }
+    
+    // Calculate the difference between the birth date and the current date in years
+    let calendar = Calendar.current
+    let ageComponents = calendar.dateComponents([.year], from: birthDate, to: Date())
+    
+    // Return the age as an integer
+    return ageComponents.year
 }

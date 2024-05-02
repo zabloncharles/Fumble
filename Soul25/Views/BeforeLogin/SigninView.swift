@@ -40,19 +40,19 @@ struct SigninView: View {
          
                 ZStack {
                    
-                    LogoLoadingView()
+                    LogoLoadingView(animateForever: true)
                         .scaleEffect(1.2)
                         .offset(y:-80)
                 
                     //MARK: THE TOP ICONS
                
-                    LottieView(filename: "stars" ,loop: true)
-                        .frame(width: 380)
-                        .offset(x: 0, y: -420)
-                    
-                    LottieView(filename: "birds" ,loop: true)
-                        .frame(width: 380)
-                        .offset(x: 0, y: -220)
+//                    LottieView(filename: "stars" ,loop: true)
+//                        .frame(width: 380)
+//                        .offset(x: 0, y: -420)
+//                    
+//                    LottieView(filename: "birds" ,loop: true)
+//                        .frame(width: 380)
+//                        .offset(x: 0, y: -220)
                     
                     topIcons
                     

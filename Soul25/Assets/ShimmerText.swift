@@ -16,6 +16,7 @@ struct ShimmerVar: View {
     @State var shimmerOpacity = false
     @State var useCustomFont = false
     @State var ifNotCustomFont : Font = .subheadline
+    var animateForever = false
     
     var body : some View {
         
@@ -47,7 +48,7 @@ struct ShimmerVar: View {
                             
                                 .opacity(shimmerAppeared ? 1 : 1)
     //                            .animation(.easeIn(duration: 2.3), value: shimmerAppeared)
-                            .animation(.easeIn(duration: 2.3).repeatCount(10).delay(0.1), value: shimmerAppeared)
+                                .animation(.easeIn(duration: 2.3).repeatCount(animateForever ? 25 : 10).delay(0.1), value: shimmerAppeared)
                             .offset(x:shimmerAppeared ? 170 : -290)
                         }
                         

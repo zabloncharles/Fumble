@@ -12,91 +12,135 @@ struct MainTab: View {
     @State var chatProfiles: [UserStruct] = fakeUsers
     @State var likesProfiles: [UserStruct] = fakeUsers
     @State var homeProfiles: [UserStruct] = fakeUsers
-   @State var loadApp = true
+    @State var likedEmails = [""]
+    @State var dislikedEmails = [""]
+    
+   @State var appLoading = true
  
 
     var body: some View {
         
         ZStack {
             BackgroundView()
-            
-            
-            NavigationView {
-                VStack{
-                    
-                    if self.selected == 0{
-                        MatchView(profiles: $matchProfiles, currentUser: $currentUser)
-                    }
-                   if self.selected == 1{
-                       LikesView(profiles: $likesProfiles, currentUser: $currentUser)
-                          
-                      
-                    }
-                    if self.selected == 2{
+            ZStack {
+                
+                
+                
+                NavigationView {
+                    VStack{
                         
-                        HomeView(profiles:$homeProfiles, currentUser: $currentUser)
-                    }
-                    if self.selected == 3{
-                        ChatsView(profiles: $chatProfiles)
-                        
-                    }
-                    if self.selected == 4{
-                    
-                        ProfileView(currentUser: $currentUser)
+                        if self.selected == 0{
+                            MatchView(profiles: $matchProfiles, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails, currentUser: $currentUser)
+                        }
+                       if self.selected == 1{
+                           LikesView(profiles: $likesProfiles, currentUser: $currentUser, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                               
+                        }
+                        if self.selected == 2{
+                            
+                            HomeView(profiles:$homeProfiles, currentUser: $currentUser,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                        }
+                        if self.selected == 3{
+                            ChatsView(profiles: $chatProfiles,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                        }
+                        if self.selected == 4{
+                            ProfileView(currentUser: $currentUser)
+                        }
                     }
                 }
-            }
+                
+                FloatingTabbar(selected: self.$selected)
+                    .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
+                    .animation(.spring(), value: hidemainTab)
+                   
+                    
+            }.opacity(appLoading ? 0 : 1)
+                .onAppear{
             
-            
-            FloatingTabbar(selected: self.$selected)
-                .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
-                .animation(.spring(), value: hidemainTab)
+                fetchFakeUser()
                
-            
-            if loadApp {
-                LogoLoadingView()
-            }
-            
-            
-            
+                    //get match profiles
+                    switch selected {
+                        case 0:
+                            getFakeRecommendedProfiles()
+                        case 1:
+                            // Get likes profiles
+                            getFakeLikesProfiles()
+                        case 2: // Changed from 3 to 2 since 2 corresponds to the third case
+                                // Get chat profiles
+                            getFakeChats()
+                        default:
+                            // Get chat profiles as default
+                            getFakeChats()
+                    }
+              
                 
-        }.onAppear{
-        
-            fetchFakeUser()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                withAnimation(.easeInOut){
-                    loadApp = false
+                //home profiles
+                fetchUserData(parameter: "",userCount: "100") { result in
+                    
+                    homeProfiles = fakeUsers
+                    
                 }
+                
+        }
+            
+            //show app loading view
+            if appLoading {
+                LogoLoadingView()
+                    .onAppear{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation(.easeInOut){
+                                appLoading = false
+                            }
+                        }
+                    }
             }
+        }.onChange(of: selected) { newValue in
             //get match profiles
-            fetchUserData(parameter: "") { result in
-                
-                matchProfiles += result ?? [fakeUser]
-                
-            }
-            //get chat profiles
-            fetchUserData(parameter: "") { result in
-                
-                likesProfiles = result ?? fakeUsers
-                
-            }
-            //get chat profiles
-            fetchUserData(parameter: "") { result in
-                
-                chatProfiles = result ?? fakeUsers
-                
+            switch selected {
+                case 0:
+                    getFakeRecommendedProfiles()
+                case 1:
+                    // Get likes profiles
+                    getFakeLikesProfiles()
+                case 2: // Changed from 3 to 2 since 2 corresponds to the third case
+                        // Get chat profiles
+                    getFakeChats()
+                default:
+                    // Get chat profiles as default
+                    getFakeChats()
             }
             
-            //home profiles
-            fetchUserData(parameter: "",userCount: "100") { result in
-                
-                homeProfiles = result ?? []
-                
-            }
+           
             
         }
         
     }
+    
+   
+    
+    func getFakeRecommendedProfiles(){
+        // Filter the profiles based on whether their email is in the likedEmails array
+        let disliked = dislikedEmails
+        matchProfiles = fakeUsers.filter { profile in
+            !disliked.contains(profile.email) && !likedEmails.contains(profile.email)
+        }
+    }
+    func getFakeLikesProfiles(){
+        // Filter the profiles based on whether their email is in the likedEmails array
+        let disliked = dislikedEmails
+        likesProfiles = fakeUsers.filter { profile in
+            !disliked.contains(profile.email)
+        }
+    }
+    func getFakeChats() {
+        // Filter the profiles based on whether their email is in the likedEmails array
+        let liked = likedEmails
+        chatProfiles = fakeUsers.filter { profile in
+            liked.contains(profile.email)
+        }
+    }
+    
     
     func fetchFakeUser(){
         
@@ -186,9 +230,6 @@ struct FloatingTabbar : View {
     
  
 }
-
-
-
 
 
 struct TabIcon: View {

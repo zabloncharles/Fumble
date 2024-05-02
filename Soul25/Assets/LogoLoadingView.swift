@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct LogoLoadingView: View {
+    var animateForever = false
     var body: some View {
         ZStack {
             appbackground
             VStack {
                 Spacer()
-                ShimmerVar(text:"Fumble")
+                ShimmerVar(text:"Fumble",animateForever: animateForever)
+                    .scaleEffect(1.1)
                 Spacer()
             }
         }

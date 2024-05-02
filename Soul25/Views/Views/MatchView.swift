@@ -13,6 +13,9 @@ struct MatchView: View {
     @AppStorage("hidemainTab") var hidemainTab = false
     @AppStorage("currentPage") var selected = 0
     @Binding var profiles: [UserStruct]
+    
+    @Binding var likedEmails: [String]
+    @Binding var dislikedEmails: [String]
     @Binding var currentUser: UserStruct?
     @State var profile = fakeUsers[0]
     @State var viewState: CGSize = .zero
@@ -27,6 +30,7 @@ struct MatchView: View {
     @State var dislike = false
     @State var animateapper = false
     @State var outOfMatches = false
+    @State var profileChanged = false
     @State var liked = false
     @State var profileImages = ["","",""]
     @State var likedImage = ""
@@ -47,9 +51,9 @@ struct MatchView: View {
                 ZStack {
                   
                         ForEach(profiles.indices, id: \.self) { index in
-                            SkullProfile(currentUser: $currentUser, profile:  profiles[index], showProfile: .constant(true),currentIndex: $currentIndex)
+                            SkullProfile(currentUser: $currentUser, profile:  profiles[index], showProfile: $profileChanged,currentIndex: $currentIndex, likedEmails: $likedEmails,dislikedEmails: $dislikedEmails)
                                // .cornerRadius(23)
-                               
+                                
                                 .zIndex(Double(index))
                                 .offset(y: index == currentIndex ? 0 : index == currentIndex - 1 ? -5 : UIScreen.main.bounds.height * 1.02)
                                 
@@ -207,6 +211,10 @@ struct MatchView: View {
             }
            
         }
+    }
+    func removeLikedProfiles() {
+        // Filter the profiles based on whether their email is in the likedEmails array
+        
     }
     
    
