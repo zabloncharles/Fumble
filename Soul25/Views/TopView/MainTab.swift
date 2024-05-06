@@ -5,6 +5,7 @@ import SwiftUI
 
 
 struct MainTab: View {
+    @AppStorage("signedIn") var signedIn = false
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @AppStorage("currentPage") var selected = 0
     @AppStorage("hidemainTab") var hidemainTab = false
@@ -23,9 +24,6 @@ struct MainTab: View {
         ZStack {
             BackgroundView()
             ZStack {
-                
-                
-                
                 NavigationView {
                     VStack{
                         
@@ -44,7 +42,7 @@ struct MainTab: View {
                             ChatsView(profiles: $chatProfiles,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
                         }
                         if self.selected == 4{
-                            ProfileView(currentUser: $currentUser)
+                            ProfileView(currentUser: $currentUser, signedIn: $signedIn)
                         }
                     }
                 }
@@ -54,9 +52,12 @@ struct MainTab: View {
                     .animation(.spring(), value: hidemainTab)
                    
                     
-            }.opacity(appLoading ? 0 : 1)
+            }.opacity(appLoading ? 0 : signedIn ? 1 : 0)
                 .onAppear{
-            
+                    withAnimation(.spring()) {
+                        hidemainTab = false
+                    }
+            selected = 0
                 fetchFakeUser()
                
                     //get match profiles
@@ -85,8 +86,10 @@ struct MainTab: View {
         }
             
             //show app loading view
-            if appLoading {
-                LogoLoadingView()
+            if appLoading{
+                LogoLoadingView(background: false)
+                    .scaleEffect(1.2)
+                    .offset(y:-50)
                     .onAppear{
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                             withAnimation(.easeInOut){
@@ -95,6 +98,15 @@ struct MainTab: View {
                         }
                     }
             }
+            
+            if !signedIn {
+                SigninView(signIn: $signedIn, doneIntro: .constant(true))
+                    
+            }
+           
+            
+            
+            
         }.onChange(of: selected) { newValue in
             //get match profiles
             switch selected {

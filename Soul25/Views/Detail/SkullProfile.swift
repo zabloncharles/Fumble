@@ -27,7 +27,7 @@ struct SkullProfile: View {
     @State var arrowTapped = false
     var editingProfile = false
     @State private var isShowingModal = false
-    @State private var shuffledViews: [Int] = (0..<4).shuffled()
+    @State private var shuffledViews: [Int] = (0..<3).shuffled()
   @State var errorLoading = false
     @State var text = ""
     @State var erro = ""
@@ -55,6 +55,7 @@ struct SkullProfile: View {
     @Binding var dislikedEmails : [String]
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.presentationMode) var presentationMode
+  
     
     var body: some View {
         
@@ -63,16 +64,19 @@ struct SkullProfile: View {
             
             
             VStack {
-                DynamicTopBar(label: selected != 4 ? !userScrolledDown ? profile.firstName : "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "checklist" : disliked ? "heart.slash.fill" : "heart.slash"){
+                DynamicTopBar(label: selected != 4 ? !userScrolledDown ? profile.firstName.lowercased() : "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "slider.horizontal.3" : disliked ? "heart.slash.fill" : "heart.slash"){
                     //go to next profile
                     if selected == 4 {
-                        currentIndex = 1
+                        currentIndex = -4
                     } else {
                         dislikedEmails.append(profile.email)
                     }
                     
                     nextProfile()
-                }.padding(.top,selected == 0 ? 45 : 0)
+                }
+                .animation(.easeInOut, value: userScrolledDown)
+               
+                .padding(.top,selected == 0 ? 45 : 0)
                     .overlay{
                      
                             HStack {
@@ -195,16 +199,21 @@ struct SkullProfile: View {
                         .frame(width: 91)
                         .cornerRadius(64)
                         .overlay(
-                            Text(selected ==  4 ? "Edit Profile" : "Active")
-                                .font(.caption)
+                            HStack(spacing: 2.0) {
+                                if selected == 4 {
+                                    Image(systemName: "square.and.pencil")
+                                }
+                                Text(selected ==  4 ? "Edit" : "Active")
+                                 
+                            }   .font(.caption)
                                 .padding(.horizontal,5)
                                 .padding(.vertical,2)
                                 .background(.black)
                                 .neoButtonOff(isToggle: false, cornerRadius: 12)
                                 .onTapGesture {
-                                  
+                                    
                                     if selected ==  4 {
-                                        currentIndex = 2
+                                        currentIndex = -2
                                         nextProfile()
                                     }
                                 }
@@ -218,7 +227,7 @@ struct SkullProfile: View {
                             //
                             
                             if selected ==  4 {
-                                currentIndex = 2
+                                currentIndex = -2
                                 nextProfile()
                             }
                             
@@ -314,7 +323,7 @@ struct SkullProfile: View {
             HStack {
                
                 
-                InfoButton(icon: "globe.europe.africa", label: calculateDistance())
+                InfoButton(icon: "globe.europe.africa", label: "\(calculateDistance()) miles away")
                     .neoDoubleTapButton(isToggle: false, perform: {
                         likedtext = true
                     })
@@ -447,13 +456,13 @@ struct SkullProfile: View {
                                                 isShowingModal.toggle()
                                             }
                                         }
-                                case 3:
-                                    answerprompt
+                              
+                                   
                                 default:
                                     outofmatchesView
                             }
                         }
-                        
+                        answerprompt
                     }
                     //animate the profile loading and show it coming from the bottom
                     
@@ -462,7 +471,7 @@ struct SkullProfile: View {
                 
                 
             }
-            .padding(.bottom,120)
+            .padding(.bottom,95)
             .padding(.top,10)
            
    
@@ -730,20 +739,8 @@ struct SkullProfile: View {
                                 
                             }
                         
-                      
-                            
-                        
-                       
                     }
-     
-                    
-                    
-                       
                         .padding(.top, 30)
-                       
-                    
-                 
-                
                     HStack {
                         GetImageAndUrl(url:currentUser?.avatar ?? "", width: 40 , height: 40, loaded: .constant(true), imageUrl: .constant(likedImageUrl))
                             .frame(width: 40 , height: 40)
@@ -773,11 +770,8 @@ struct SkullProfile: View {
                                     .focused($sendMessageFocused)
                                     .italic()
                                     .foregroundColor(Color("black"))
-                                    
                                     .padding(.trailing,70)
                                     .overlay{
-                                        
-                                           
                                         HStack(alignment: .center, spacing: 0.0) {
                                                 Spacer()
                                                 Image(systemName: "paperplane")
@@ -801,9 +795,7 @@ struct SkullProfile: View {
                                             
                                         
                                     }
-                                    .onAppear{
-                                        sendMessageFocused = true
-                                    }
+                                   
                         }
                     }
                     Spacer()
@@ -831,8 +823,10 @@ struct SkullProfile: View {
                 }
         
             }.background(Color("offwhiteneo"))
-                .offset(y:10)
+                .padding(.bottom,20)
             .modifier(KeyboardAwareModifier())
+        } .onAppear{
+            sendMessageFocused = true
         }
     }
     

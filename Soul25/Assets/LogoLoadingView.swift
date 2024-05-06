@@ -9,9 +9,12 @@ import SwiftUI
 
 struct LogoLoadingView: View {
     var animateForever = false
+    var background = true
     var body: some View {
         ZStack {
-            appbackground
+           if  background {
+                appbackground
+            }
             VStack {
                 Spacer()
                 ShimmerVar(text:"Fumble",animateForever: animateForever)

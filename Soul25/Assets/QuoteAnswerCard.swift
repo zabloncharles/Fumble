@@ -54,6 +54,7 @@ struct QuoteAnswerCard: View {
             //                        the prompt
             HStack {
               Divider()
+                    .padding(.vertical)
                    
                 HStack {
                     Spacer()

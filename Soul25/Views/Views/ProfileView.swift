@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @AppStorage("hidemainTab") var hidemainTab = false
     @Binding var currentUser: UserStruct?
+    @Binding var signedIn : Bool
     @State var profile : UserStruct = fakeUser
     @State var editingProfile = false
     @State var isSheetPresented = false
@@ -20,32 +22,58 @@ struct ProfileView: View {
           
             SkullProfile(currentUser: $currentUser, profile: profile, showProfile:  $isSheetPresented, editingProfile: editingProfile, currentIndex: $currentIndex,likedEmails: .constant([""]), dislikedEmails: .constant([""]))
             
-        
+           
+               
+                    
+                    
+                   
+                    
+                
+            
            
         }.onAppear{
             editingProfile = true
+            
+            withAnimation(.spring()) {
+                hidemainTab = false
+            }
            
         }
-        .fullScreenCover(isPresented: $isSheetPresented) {
-        
-                
-                
-                
-                if currentIndex == 1 {
-                    NavigationView {
-                        SettingsView(isSheetPresented: $isSheetPresented)
-                           
-                        
-                        
-                    }
-                    
-                    
-                } else  {
-                    NavigationView {
-                        EditProfileInfoDetailView(isSheetPresented: $isSheetPresented)
-                           
-                    }
+        .onChange(of: currentIndex, perform: { newValue in
+            if isSheetPresented {
+                withAnimation(.spring()) {
+                    hidemainTab = true
                 }
+            } else {
+                withAnimation(.spring()) {
+                    hidemainTab = false
+                }
+            }
+            if currentIndex == -4 || currentIndex == -2 {
+                isSheetPresented = true
+            }
+        })
+        .fullScreenCover(isPresented: $isSheetPresented) {
+
+            if currentIndex == -4 {
+                NavigationView {
+                    SettingsView(isSheetPresented: $isSheetPresented)
+                }
+                
+                
+            } else if currentIndex == -2   {
+                NavigationView {
+                    EditProfileInfoDetailView(signedIn: $signedIn, isSheetPresented: $isSheetPresented)
+                }
+            }  else {
+                Text("There was an error loading that view!")
+                    .onAppear{
+                        isSheetPresented = false
+                    }
+            }
+
+
+              
             }
   
         

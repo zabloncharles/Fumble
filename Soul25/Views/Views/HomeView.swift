@@ -61,7 +61,7 @@ struct HomeView: View {
             SkullProfile(currentUser: $currentUser, profile: profile, showProfile: $showProfile, currentIndex: .constant(0),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
                         .animation(.spring(), value: showProfile)
                         .cornerRadius(showProfile ?  40 : 43)
-                        .padding(.top,selected == 2 ? 30 : 0)
+                        .offset(y:selected == 2 ? 51 : 0)
                         .padding(.bottom,-15)
                     .offset(y: !showProfile ? UIScreen.main.bounds.height *  1.02 : 0)
                     .onChange(of: showProfile, perform: { newValue in

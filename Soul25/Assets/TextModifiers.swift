@@ -6,10 +6,11 @@ struct GradientText: View {
    
    @State var text: String
    @State var gradient: [Color]
-    @State var typeWriter = true
+    var animate = true
     @State var typeWriterSpeed = 0.06
     @State var appeared = false
     @State var doneTyping = false
+  
    
    var body: some View {
        
@@ -29,10 +30,12 @@ struct GradientText: View {
                         .mask(Text(self.text))
                 })
                .onAppear{
-                  if typeWriter {
+                  if animate {
                        withAnimation(.spring()) {
                            appeared = true
                        }
+                      
+                      
                        typeWriter(text){
                            withAnimation(.spring()) {
                                doneTyping = true

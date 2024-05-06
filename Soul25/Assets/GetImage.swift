@@ -14,7 +14,7 @@ struct GetImageAndUrl: View {
     var height : CGFloat = 0
     @Binding var loaded : Bool
     @Binding var imageUrl : String
-    
+    @State var animate = false
     
     var body: some View {
        VStack {
@@ -49,11 +49,39 @@ struct GetImageAndUrl: View {
                     } else {
                         
                         
-                            LottieView(filename: "eyesrainbow" ,loop: true)
-                                .frame(width: 400)
-                       
-                                .frame(width: height != 0 ? width : nil, height: height != 0 ? height : nil)
-                        
+                        ZStack {
+                            
+                            HStack {
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.gray.opacity(0.10)]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                    
+                                ).frame(width: 30)
+                                    .blur(radius: 20)
+                                    .offset(x: animate ? -UIScreen.main.bounds.width : UIScreen.main.bounds.width)
+                                  
+                                    .animation(.spring().repeatCount(10), value: animate)
+                                
+                                Spacer()
+                                    
+                            }
+                            Color.gray.opacity(0.50)
+                            
+                                    ProgressView()
+                                   
+                                    Image(systemName: "photo")
+                                        .font(.title)
+                                   
+                              
+                   
+                            
+                           
+                               
+                        } .frame(width: height != 0 ? width : nil, height: height != 0 ? height : nil)
+                            .onAppear{
+                                animate = true
+                            }
                      
                     }
                 

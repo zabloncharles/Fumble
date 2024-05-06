@@ -32,15 +32,22 @@ struct SettingsView: View {
        
             ZStack {
                 BackgroundView()
-               
+              
                     ScrollView(.vertical, showsIndicators: false) {
       
                         HStack {
                             Text("Match Preferences: ")
-
+                            
                                 .foregroundColor(.gray)
                             Spacer()
-                        }.padding(.horizontal)
+                            Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                                .foregroundColor(.gray)
+                            
+                        }.padding(.horizontal,10)
+                            .padding(.vertical,10)
+                            .neoButtonOff(isToggle: false, cornerRadius: 10)
+                            .padding(.horizontal,20)
+                            .padding(.top,10)
                           
                             VStack {
                                 
@@ -103,6 +110,7 @@ struct SettingsView: View {
                                 }
                                 // Add more form fields for other personal information
                             }.padding()
+                            .padding(.top,-10)
                             
                             
                             .padding(.horizontal)
@@ -112,17 +120,24 @@ struct SettingsView: View {
                            
                             // Add more sections for additional profile information
                         HStack {
-        //
-                            Text("Subscribed Member Preferences:")
+                            Text("Subcribed Member Preferences: ")
+                            
                                 .foregroundColor(.gray)
                             Spacer()
-                        }.padding(.top,10)
-                            .padding(.horizontal)
+                            Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                                .foregroundColor(.gray)
+                            
+                        }.padding(.horizontal,10)
+                            .padding(.vertical,10)
+                            .neoButtonOff(isToggle: false, cornerRadius: 10)
+                            .padding(.horizontal,20)
+                      
                         VStack {
                             
                             NavigationLink(destination:picklistview) {
                                 VStack {
                                     PreferenceInfoCard(label: "Height", sublabel: "Open")
+                                       
                                 }
                             }
                             
@@ -182,18 +197,46 @@ struct SettingsView: View {
 
                            
                             // Add more form fields for other personal information
-                        }.padding()
-                        
+                        } .padding()
+                            .padding(.top,-10)
                             .padding(.horizontal)
+                           
                         
                         
                 
                         Spacer()
                     }
-                    .padding(.top, 0)
-                    .navigationTitle("Preferences")
-                    .navigationBarTitleDisplayMode(.inline)
-                
+                    .padding(.top, 50)
+                    
+                    
+                VStack {
+                    HStack{
+                       
+                            Text("Settings")
+                         .font(.largeTitle)
+                            .bold()
+                        Spacer()
+                        
+                        Image(systemName: "xmark")
+                            .font(.title2)
+                            .foregroundColor(Color("black"))
+                            .neoButton(isToggle: false) {
+                                withAnimation(.spring()) {
+                                    isSheetPresented = false
+                                }
+                            }
+                        
+                        
+                        
+                        
+                        
+                        
+                    }
+                        .padding(.horizontal,25)
+                        .padding(.vertical,5)
+                        .background(Color("offwhiteneo"))
+                    Spacer()
+                }
                 
     //        
                

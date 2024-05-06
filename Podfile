@@ -8,4 +8,5 @@ target 'Soul25' do
   # Pods for ionicFusion
 pod 'lottie-ios'
 
+
 end

@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct ViewController: View {
-    @AppStorage("signedIn") var signedIn = false
+    
     @AppStorage("onboardComplete") var onboardComplete = false
    
     
@@ -14,13 +14,8 @@ struct ViewController: View {
             OnboardView(onboardComplete: $onboardComplete)
             
         } else {
-         
-                if !signedIn {
-                    SigninView(signIn: $signedIn)
-                } else {
                     MainTab()
-            }
-            
+                    
          }
 
      }

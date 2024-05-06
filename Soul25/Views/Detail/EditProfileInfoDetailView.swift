@@ -7,9 +7,11 @@
 
 import SwiftUI
 import MapKit
+import Firebase
+import FirebaseAuth
 
 struct EditProfileInfoDetailView: View {
-    @AppStorage("signedIn") var signedIn = false
+    @Binding var signedIn : Bool
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
     @State var userScrolledDown : CGFloat = 0
     @State var showPromptEditView = false
@@ -32,11 +34,12 @@ struct EditProfileInfoDetailView: View {
     @Namespace var namespace
     @State var imageNamespaceId = ""
     @State var imageIndex = 0
+    @State var signOutLabel = "Sign Out!"
     // Add more @State properties for other user profile information
     
     var body: some View {
         ZStack {
-            BackgroundView()
+        BackgroundView()
             VStack {
                 HStack{
                     Text("Profile")
@@ -139,8 +142,14 @@ struct EditProfileInfoDetailView: View {
                         
                             .foregroundColor(.gray)
                         Spacer()
-                    }.padding(.horizontal)
-                        .padding(.top,20)
+                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                            .foregroundColor(.gray)
+
+                    }.padding(.horizontal,10)
+                        .padding(.vertical,10)
+                        .neoButtonOff(isToggle: false, cornerRadius: 10)
+                        .padding(.horizontal,10)
+                        .padding(.top,10)
                     
                     VStack {
                         
@@ -157,14 +166,19 @@ struct EditProfileInfoDetailView: View {
                    
                         // Add more form fields for other personal information
                     }.padding(.horizontal,25)
-                        .padding(.top,10)
+                        .padding(.top,5)
                    
                     HStack {
                         Text("Virtues")
                         
                             .foregroundColor(.gray)
                         Spacer()
-                    }.padding(.horizontal)
+                        Image(systemName: "figure.barre")
+                            .foregroundColor(.gray)
+                    }.padding(.horizontal,10)
+                        .padding(.vertical,10)
+                        .neoButtonOff(isToggle: false, cornerRadius: 10)
+                        .padding(.horizontal,10)
                     
                     VStack {
                         
@@ -183,7 +197,7 @@ struct EditProfileInfoDetailView: View {
                         NavigationLink(destination: picklistview) {
                             PreferenceInfoCard(label: "Religious Beliefs", sublabel: "Christian")
                         }
-                        NavigationLink(destination: picklistview) {
+                        NavigationLink(destination: MapSheetView(isPresented: .constant(false), returned: .constant(""), title: "location", label: "Central Minneapolis", sublabel: "central", list: [""])) {
                             PreferenceInfoCard(label: "Hometown", sublabel: "Otsego")
                         }
                         NavigationLink(destination: picklistview) {
@@ -197,7 +211,7 @@ struct EditProfileInfoDetailView: View {
                         }
                         // Add more form fields for other personal information
                     }.padding(.horizontal,25)
-                        .padding(.top,10)
+                        .padding(.top,5)
                 
                 
                     secondsection
@@ -214,7 +228,8 @@ struct EditProfileInfoDetailView: View {
                 showfullimage
             }
           
-        }.sheet(isPresented: $isPresented) {
+        }
+        .sheet(isPresented: $isPresented) {
             
             //optiontype helps us know where we are making the change
             
@@ -267,13 +282,18 @@ struct EditProfileInfoDetailView: View {
     }
     var secondsection : some View {
         VStack{
-            Divider()
-            HStack {
-                Text("My Vitals")
+           
+           HStack {
+                Text("Vitals")
                 
                     .foregroundColor(.gray)
                 Spacer()
-            }.padding(.horizontal)
+                Image(systemName: "sailboat")
+                    .foregroundColor(.gray)
+           }.padding(.horizontal,10)
+                .padding(.vertical,10)
+                .neoButtonOff(isToggle: false, cornerRadius: 10)
+                .padding(.horizontal,10)
             
             VStack {
                 
@@ -295,7 +315,7 @@ struct EditProfileInfoDetailView: View {
                 NavigationLink(destination: picklistview) {
                     PreferenceInfoCard(label: "Height", sublabel: "6' 0\"")
                 }
-                NavigationLink(destination: picklistview) {
+                NavigationLink(destination: MapSheetView(isPresented: .constant(false), returned: .constant(""), title: "location", label: "Central Minneapolis", sublabel: "central", list: [""])) {
                     PreferenceInfoCard(label: "Location", sublabel: "Central Minneapolis")
                 }
                 NavigationLink(destination: picklistview) {
@@ -306,10 +326,8 @@ struct EditProfileInfoDetailView: View {
                 }
             
                 // Add more form fields for other personal information
-            }.padding()
-            
-            
-                .padding(.horizontal)
+            }.padding(.horizontal,25)
+                .padding(.top,5)
             
            
         }
@@ -317,33 +335,48 @@ struct EditProfileInfoDetailView: View {
     
     var thirdsection: some View {
         VStack{
-            Divider()
+            
             HStack {
                 Text("Account")
                 
                     .foregroundColor(.gray)
                 Spacer()
-            }
-            
-            
-         
-            Text(signedIn ? "Sign Out" : "Logging Out..")
-                
-            .padding(.horizontal,13)
-            .padding(.vertical,6)
-            .background(.red)
-            .cornerRadius(12)
-            .neoButton(isToggle: false, perform: {
-               
-                withAnimation(.spring()) {
-                    isSheetPresented = false
-                    signedIn = false
+                Image(systemName: "exclamationmark.triangle")
+                    .foregroundColor(.gray)
+            }.padding(.horizontal,10)
+                .padding(.vertical,10)
+                .neoButtonOff(isToggle: false, cornerRadius: 10)
+                .padding(.horizontal,10)
+            VStack {
+                PreferenceInfoCard(label: "Sign Out", sublabel: "Log out of your account!")
+                   
+                    .overlay{
+                        HStack {
+                            Spacer()
+                            Text(signOutLabel)
+                                .padding(.horizontal,13)
+                                .padding(.vertical,6)
+                             
+                                .background(.red)
+                                .cornerRadius(10)
+                                .neoButton(isToggle: false, perform: {
+                                    // sign out using firebase
+                                    signout()
+                                    
+                                })
+                        } .padding(.horizontal,0)
+                           
                 }
-            })
+                PreferenceInfoCard(label: "Hibernate", sublabel: "Pause your account")
+                PreferenceInfoCard(label: "Delete", sublabel: "Delete your account")
+            } .padding(.horizontal,25)
+                .padding(.top,5)
+         
+           
            
             
            
-        }.padding()
+        }
            
     }
     
@@ -373,12 +406,48 @@ struct EditProfileInfoDetailView: View {
     var showfullimage: some View {
         FullImageView(showfullimageTapped: $showfullimageTapped, namespace: namespace,imageNamespaceId:imageNamespaceId, imageIndex: imageIndex)
     }
+    
+    func signout(){
+        signOutLabel = "Signing Out!"
+        
+        
+        let db = Firestore.firestore()
+        let user = Auth.auth().currentUser
+        // Set the data to update
+        
+        db.collection("users").whereField("email", isEqualTo: user?.email ?? "")
+            .getDocuments() { (querySnapshot, error) in
+                if error != nil {
+                    //there was an error
+                    
+                    signOutLabel = "There was an error"
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        db.collection("users").document("\(document.documentID)").setData(["online": false], merge: true) { error in
+                            
+                            if error == nil {
+                                
+                               
+                                
+                                isSheetPresented = false
+                                    signedIn = false
+                               
+                            }
+                        }
+                    }
+                }
+            }
+        try! Auth.auth().signOut()
+        
+     
+    }
 }
 
 
 struct EditProfileInfoDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        EditProfileInfoDetailView( isSheetPresented: .constant(false))
+        EditProfileInfoDetailView( signedIn: .constant(false), isSheetPresented: .constant(false))
     }
 }
 
