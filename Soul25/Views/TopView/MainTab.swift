@@ -47,7 +47,8 @@ struct MainTab: View {
                     }
                 }
                 
-                FloatingTabbar(selected: self.$selected)
+                //the tab bar // it also gets the chat notifications
+                FloatingTabbar(selected: self.$selected,chatCount: "\(chatProfiles.count)")
                     .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
                     .animation(.spring(), value: hidemainTab)
                    
@@ -175,6 +176,7 @@ struct FloatingTabbar : View {
     @Binding var selected : Int
     @Namespace var namespace
     @State var tappedicon = false
+    var chatCount = ""
     let generator = UINotificationFeedbackGenerator()
     
     var body : some View{
@@ -196,6 +198,24 @@ struct FloatingTabbar : View {
                 TabIcon(selected: $selected, selectedicon: 2, icon: "person.2" , name:"Explore" ,tappedicon: $tappedicon )
                 Spacer()
                 TabIcon(selected: $selected, selectedicon: 3, icon: "bubble.left.and.bubble.right",name:"Chats" , tappedicon: $tappedicon )
+                        .overlay{
+                            if !chatCount.isEmpty && chatCount != "0" {
+                                VStack{
+                                   
+                                    Text(chatCount)
+                                        .foregroundColor(.white)
+                                        .font(.caption)
+                                        .padding(0.00)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(red: 0.998, green: 0.268, blue: 0.227))
+                                                .padding(-2)
+                                        )
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                                        .offset(x:1, y: -1)
+                                }
+                            }
+                         }
                 Spacer()
                 TabIcon(selected: $selected, selectedicon: 4, icon: "person.2.badge.gearshape",name:"Profile" , tappedicon: $tappedicon )
                 
