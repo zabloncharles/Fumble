@@ -14,7 +14,7 @@ struct ViewController: View {
             OnboardView(onboardComplete: $onboardComplete)
             
         } else {
-                    MainTab()
+                    MainTab(onboardComplete: $onboardComplete)
                     
          }
 
@@ -25,8 +25,7 @@ struct ViewController: View {
         struct ViewController_Previews: PreviewProvider {
             static var previews: some View {
                 ViewController()
-
-                    
+ 
             }
         }
         

@@ -10,8 +10,6 @@
 		7E52D23886849852767335C4 /* Pods_Soul25.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE65DE2F6550D2F9B0273A2 /* Pods_Soul25.framework */; };
 		F71110312BCC8B880045A36B /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71110302BCC8B880045A36B /* BackgroundView.swift */; };
 		F71110332BCC8BAF0045A36B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71110322BCC8BAF0045A36B /* LottieView.swift */; };
-		F712ACDD2BE62A4A00510171 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F712ACDC2BE62A4A00510171 /* FirebaseAuth */; };
-		F712ACDF2BE62A4A00510171 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F712ACDE2BE62A4A00510171 /* FirebaseFirestore */; };
 		F712ACE32BE67DE700510171 /* HelpWithSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F712ACE22BE67DE700510171 /* HelpWithSignIn.swift */; };
 		F73597172BDF2C360065F504 /* OnboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73597162BDF2C360065F504 /* OnboardView.swift */; };
 		F735971B2BE0DF260065F504 /* FullImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F735971A2BE0DF260065F504 /* FullImageView.swift */; };
@@ -66,10 +64,18 @@
 		F7F6D3512BD0837400B9C526 /* KeyboardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F6D3502BD0837400B9C526 /* KeyboardModifier.swift */; };
 		F7F6D3532BD08D2900B9C526 /* loader.json in Resources */ = {isa = PBXBuildFile; fileRef = F7F6D3522BD08D2900B9C526 /* loader.json */; };
 		F7F6D3552BD0EC7D00B9C526 /* AddCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F6D3542BD0EC7D00B9C526 /* AddCards.swift */; };
+		F7FD48032C3068C800BE60F5 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD48022C3068C800BE60F5 /* ChatService.swift */; };
+		F7FD48092C337A9D00BE60F5 /* LogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD48082C337A9D00BE60F5 /* LogViewModel.swift */; };
+		F7FD480B2C3430D500BE60F5 /* FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD480A2C3430D500BE60F5 /* FirebaseAuthService.swift */; };
+		F7FD480D2C35709000BE60F5 /* SaveUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD480C2C35709000BE60F5 /* SaveUserService.swift */; };
+		F7FD480F2C35731300BE60F5 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD480E2C35731300BE60F5 /* SignUpView.swift */; };
+		F7FD48112C3576F800BE60F5 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD48102C3576F800BE60F5 /* TextFieldView.swift */; };
+		F7FD48132C35A12E00BE60F5 /* ImagePickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD48122C35A12E00BE60F5 /* ImagePickerHelper.swift */; };
+		F7FD481D2C35C24900BE60F5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F7FD481C2C35C24900BE60F5 /* FirebaseAuth */; };
+		F7FD481F2C35C24900BE60F5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F7FD481E2C35C24900BE60F5 /* FirebaseFirestore */; };
 		F7FF11EE2BCC72D800880D0A /* Soul25App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF11ED2BCC72D800880D0A /* Soul25App.swift */; };
 		F7FF11F52BCC72DA00880D0A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7FF11F42BCC72DA00880D0A /* Preview Assets.xcassets */; };
 		F7FF12132BCC745400880D0A /* PreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF12012BCC745300880D0A /* PreferenceKey.swift */; };
-		F7FF12182BCC745400880D0A /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF12062BCC745300880D0A /* MessagesModel.swift */; };
 		F7FF121F2BCC745400880D0A /* AppUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FF120D2BCC745300880D0A /* AppUserData.swift */; };
 		F7FF130A2BCC746A00880D0A /* woman3.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF125A2BCC746500880D0A /* woman3.json */; };
 		F7FF130B2BCC746A00880D0A /* girlwaving.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF125B2BCC746500880D0A /* girlwaving.json */; };
@@ -211,11 +217,17 @@
 		F7F6D3502BD0837400B9C526 /* KeyboardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardModifier.swift; sourceTree = "<group>"; };
 		F7F6D3522BD08D2900B9C526 /* loader.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loader.json; sourceTree = "<group>"; };
 		F7F6D3542BD0EC7D00B9C526 /* AddCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCards.swift; sourceTree = "<group>"; };
+		F7FD48022C3068C800BE60F5 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		F7FD48082C337A9D00BE60F5 /* LogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewModel.swift; sourceTree = "<group>"; };
+		F7FD480A2C3430D500BE60F5 /* FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = "<group>"; };
+		F7FD480C2C35709000BE60F5 /* SaveUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveUserService.swift; sourceTree = "<group>"; };
+		F7FD480E2C35731300BE60F5 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		F7FD48102C3576F800BE60F5 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		F7FD48122C35A12E00BE60F5 /* ImagePickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerHelper.swift; sourceTree = "<group>"; };
 		F7FF11EA2BCC72D800880D0A /* Soul25.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soul25.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7FF11ED2BCC72D800880D0A /* Soul25App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Soul25App.swift; sourceTree = "<group>"; };
 		F7FF11F42BCC72DA00880D0A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F7FF12012BCC745300880D0A /* PreferenceKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceKey.swift; sourceTree = "<group>"; };
-		F7FF12062BCC745300880D0A /* MessagesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesModel.swift; sourceTree = "<group>"; };
 		F7FF120D2BCC745300880D0A /* AppUserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUserData.swift; sourceTree = "<group>"; };
 		F7FF125A2BCC746500880D0A /* woman3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = woman3.json; sourceTree = "<group>"; };
 		F7FF125B2BCC746500880D0A /* girlwaving.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = girlwaving.json; sourceTree = "<group>"; };
@@ -302,8 +314,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E52D23886849852767335C4 /* Pods_Soul25.framework in Frameworks */,
-				F712ACDD2BE62A4A00510171 /* FirebaseAuth in Frameworks */,
-				F712ACDF2BE62A4A00510171 /* FirebaseFirestore in Frameworks */,
+				F7FD481D2C35C24900BE60F5 /* FirebaseAuth in Frameworks */,
+				F7FD481F2C35C24900BE60F5 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,9 +395,12 @@
 			isa = PBXGroup;
 			children = (
 				F7FF12012BCC745300880D0A /* PreferenceKey.swift */,
-				F7FF12062BCC745300880D0A /* MessagesModel.swift */,
 				F7FF120D2BCC745300880D0A /* AppUserData.swift */,
 				F7B3BF1A2BD266DD00CE2425 /* RandomUser.swift */,
+				F7FD48022C3068C800BE60F5 /* ChatService.swift */,
+				F7FD48082C337A9D00BE60F5 /* LogViewModel.swift */,
+				F7FD480A2C3430D500BE60F5 /* FirebaseAuthService.swift */,
+				F7FD480C2C35709000BE60F5 /* SaveUserService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -429,11 +444,12 @@
 				F755EEDB2BD4F20100BFBB82 /* ScrollDetectionView.swift */,
 				F755EEE02BD60D6900BFBB82 /* EditPostPopUp.swift */,
 				F755EEE22BD62E5100BFBB82 /* LogoLoadingView.swift */,
-				F73597162BDF2C360065F504 /* OnboardView.swift */,
 				F735971A2BE0DF260065F504 /* FullImageView.swift */,
 				F735971C2BE0E3040065F504 /* PicklistSheetView.swift */,
 				F735971E2BE0E35C0065F504 /* PromptEditView.swift */,
 				F712ACE22BE67DE700510171 /* HelpWithSignIn.swift */,
+				F7FD48102C3576F800BE60F5 /* TextFieldView.swift */,
+				F7FD48122C35A12E00BE60F5 /* ImagePickerHelper.swift */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -543,6 +559,8 @@
 			children = (
 				F7FF13A72BCC74B700880D0A /* LauchView.swift */,
 				F7FF13A82BCC74B700880D0A /* SigninView.swift */,
+				F7FD480E2C35731300BE60F5 /* SignUpView.swift */,
+				F73597162BDF2C360065F504 /* OnboardView.swift */,
 			);
 			path = BeforeLogin;
 			sourceTree = "<group>";
@@ -598,8 +616,8 @@
 			);
 			name = Soul25;
 			packageProductDependencies = (
-				F712ACDC2BE62A4A00510171 /* FirebaseAuth */,
-				F712ACDE2BE62A4A00510171 /* FirebaseFirestore */,
+				F7FD481C2C35C24900BE60F5 /* FirebaseAuth */,
+				F7FD481E2C35C24900BE60F5 /* FirebaseFirestore */,
 			);
 			productName = Soul25;
 			productReference = F7FF11EA2BCC72D800880D0A /* Soul25.app */;
@@ -630,7 +648,7 @@
 			);
 			mainGroup = F7FF11E12BCC72D800880D0A;
 			packageReferences = (
-				F712ACDB2BE62A4A00510171 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				F7FD481B2C35C24900BE60F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = F7FF11EB2BCC72D800880D0A /* Products */;
 			projectDirPath = "";
@@ -776,6 +794,7 @@
 			files = (
 				F755EEC42BD445B500BFBB82 /* PreferenceInfoCard.swift in Sources */,
 				F7C37D4C2BCCF563002E6B25 /* QuoteImageCard.swift in Sources */,
+				F7FD48112C3576F800BE60F5 /* TextFieldView.swift in Sources */,
 				F7C37D332BCC8F9B002E6B25 /* TextModifiers.swift in Sources */,
 				F755EEDE2BD4FCAA00BFBB82 /* DynamicTopBar.swift in Sources */,
 				F755EED22BD4D32A00BFBB82 /* ScrollDetectionModifier.swift in Sources */,
@@ -790,6 +809,7 @@
 				F7C37D252BCC8D62002E6B25 /* NeoModifier.swift in Sources */,
 				F7C37D462BCCA7F6002E6B25 /* ShimmerText.swift in Sources */,
 				F7C37D312BCC8EBA002E6B25 /* OffWhiteButtonModifier.swift in Sources */,
+				F7FD480F2C35731300BE60F5 /* SignUpView.swift in Sources */,
 				F77EBD792BDB486E002E22E0 /* FeedView.swift in Sources */,
 				F7C37D272BCC8E13002E6B25 /* MessageDetailView.swift in Sources */,
 				F755EEC22BD43E2300BFBB82 /* SettingsView.swift in Sources */,
@@ -797,6 +817,7 @@
 				F7C37D1F2BCC8C0E002E6B25 /* HomeCard.swift in Sources */,
 				F7C37D352BCC9144002E6B25 /* SkullProfile.swift in Sources */,
 				F755EEE12BD60D6900BFBB82 /* EditPostPopUp.swift in Sources */,
+				F7FD48032C3068C800BE60F5 /* ChatService.swift in Sources */,
 				F7C37D3B2BCC94DA002E6B25 /* ColorExtension.swift in Sources */,
 				F755EEE32BD62E5200BFBB82 /* LogoLoadingView.swift in Sources */,
 				F7C37D442BCCA4A4002E6B25 /* ExploreMenuRow.swift in Sources */,
@@ -804,7 +825,6 @@
 				F7C37D232BCC8D52002E6B25 /* LikesPill.swift in Sources */,
 				F7FF13DA2BCC74B800880D0A /* MainTab.swift in Sources */,
 				F755EED82BD4D54F00BFBB82 /* NearMeProfilesCards.swift in Sources */,
-				F7FF12182BCC745400880D0A /* MessagesModel.swift in Sources */,
 				F7FF11EE2BCC72D800880D0A /* Soul25App.swift in Sources */,
 				F755EED62BD4D4D800BFBB82 /* HomeHeaderView.swift in Sources */,
 				F755EECE2BD4C14400BFBB82 /* CompatibleProfilesCards.swift in Sources */,
@@ -817,6 +837,7 @@
 				F7FF13D12BCC74B800880D0A /* SigninView.swift in Sources */,
 				F71110312BCC8B880045A36B /* BackgroundView.swift in Sources */,
 				F7FF13D02BCC74B800880D0A /* LauchView.swift in Sources */,
+				F7FD48092C337A9D00BE60F5 /* LogViewModel.swift in Sources */,
 				F7FF13542BCC746A00880D0A /* FontModifier.swift in Sources */,
 				F7C37D4E2BCCF98F002E6B25 /* QuotePillsCard.swift in Sources */,
 				F755EEDC2BD4F20100BFBB82 /* ScrollDetectionView.swift in Sources */,
@@ -826,9 +847,11 @@
 				F7C37D392BCC937B002E6B25 /* MatchView.swift in Sources */,
 				F712ACE32BE67DE700510171 /* HelpWithSignIn.swift in Sources */,
 				F7C37D4A2BCCF0B7002E6B25 /* InfoButton.swift in Sources */,
+				F7FD48132C35A12E00BE60F5 /* ImagePickerHelper.swift in Sources */,
 				F735971F2BE0E35C0065F504 /* PromptEditView.swift in Sources */,
 				F7FF13F82BCC74C100880D0A /* ViewController.swift in Sources */,
 				F7C37D212BCC8C87002E6B25 /* GetImage.swift in Sources */,
+				F7FD480B2C3430D500BE60F5 /* FirebaseAuthService.swift in Sources */,
 				F735971D2BE0E3040065F504 /* PicklistSheetView.swift in Sources */,
 				F7B3BF1B2BD266DD00CE2425 /* RandomUser.swift in Sources */,
 				F7C37D292BCC8E19002E6B25 /* MessageCard.swift in Sources */,
@@ -836,6 +859,7 @@
 				F7C37D482BCCB085002E6B25 /* ProfileView.swift in Sources */,
 				F7FF13F12BCC74B800880D0A /* ChatsView.swift in Sources */,
 				F7F6D3552BD0EC7D00B9C526 /* AddCards.swift in Sources */,
+				F7FD480D2C35709000BE60F5 /* SaveUserService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,7 +989,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Soul25/Preview Content\"";
-				DEVELOPMENT_TEAM = 25W7NUNB49;
+				DEVELOPMENT_TEAM = RB57AZ828B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soul25/Info.plist;
@@ -1002,7 +1026,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Soul25/Preview Content\"";
-				DEVELOPMENT_TEAM = 25W7NUNB49;
+				DEVELOPMENT_TEAM = RB57AZ828B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soul25/Info.plist;
@@ -1054,7 +1078,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F712ACDB2BE62A4A00510171 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		F7FD481B2C35C24900BE60F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -1065,14 +1089,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F712ACDC2BE62A4A00510171 /* FirebaseAuth */ = {
+		F7FD481C2C35C24900BE60F5 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F712ACDB2BE62A4A00510171 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = F7FD481B2C35C24900BE60F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		F712ACDE2BE62A4A00510171 /* FirebaseFirestore */ = {
+		F7FD481E2C35C24900BE60F5 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F712ACDB2BE62A4A00510171 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = F7FD481B2C35C24900BE60F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -6,8 +6,9 @@
     import Firebase
     
     struct SigninView: View {
-        @AppStorage("currentPage") var selected = 0
-        @State var text = "test@gmail.com"
+        @AppStorage("currentPage") var selected = 3
+        @StateObject var authViewModel = AuthViewModel()
+        @State var email = "test@gmail.com"
         @State var password = "123456"
         @State var circleInitialY = CGFloat.zero
         @State var circleY = CGFloat.zero
@@ -94,6 +95,7 @@
                 
             }
             .navigationViewStyle(StackNavigationViewStyle())
+           
         }
         var applogo: some View {
            LogoLoadingView(background: false)
@@ -131,7 +133,14 @@
                     }.padding(.horizontal,7)
                         .padding(.vertical,5)
                         .background(Color("white"))
-                        .neoButtonOff(isToggle: false, cornerRadius: 10)
+                        .cornerRadius(10)
+                        .neoButton(isToggle: false, perform: {
+                         
+                                doneIntro = false
+                                
+                            
+                        })
+                      
                         
                       
                    
@@ -152,10 +161,7 @@
                     
                     
                 }.padding(.horizontal,20)
-                    .onTapGesture {
-                        withAnimation(.spring()) {
-                            infoPressed()
-                        }}
+                   
                 
                 
                 
@@ -164,37 +170,9 @@
         }
         
         var titleandDescription: some View{
-            //        VStack {
+    
             VStack{
-                //MARK: PROFILE PICTURE
-                //                Image(profilePictureTapped ? "image_04" : "image_03")
-                //                    .resizable(resizingMode: .stretch)
-                //                    .aspectRatio(contentMode: .fill)
-                //                    .font(.body)
-                //                    .rotationEffect(.degrees(profilePictureTapped ? 360 : 0))
-                //                    .animation(.spring(), value: profilePictureTapped)
-                //
-                //            }.frame(width:  90, height:  90)
-                //                .background(.ultraThinMaterial)
-                //                .background(Circle().fill(.blue).blur(radius: 20))
-                //                .cornerRadius(80)
-                //                .background(
-                //                    Circle()
-                //                        .fill(.ultraThinMaterial)
-                //                        .padding(-0.5)
-                //                )
-                //                .onTapGesture {
-                //                    withAnimation(.easeInOut(duration: 23)){
-                //                        profilePictureTapped.toggle()
-                //                    }
-                //                }
-                
-                //MARK: SIGN IN MESSAGE AND DESCRIPTION
-                //            Text(messageTitle)
-                //                .font(.title)
-                //                .foregroundColor(Color("black"))
-                //                .lineLimit(2)
-                
+             
                 if !infoTapped {
                     VStack {
                         //  Text(messageDescription)
@@ -362,7 +340,7 @@
                         .padding(.bottom, -12)
                     VStack {
                         
-                        TextField("Email address", text: $text)
+                        TextField("Email address", text: $email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
@@ -517,23 +495,8 @@
               
                 
                 
-                Auth.auth().signIn(withEmail: text, password: password) { (result, error) in
-                    if error != nil {
-                        
-                        //if the auth is unsuccessful
-                        UserDefaults.standard.set(false, forKey: "signIn")
-                        self.alertMessage = error?.localizedDescription ?? ""
-                        //if the auth is not successful
-                        userMessage = "Checking info..."
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            userMessage = "Incorrect Password/Email!"
-                        }
-                     
-                        //                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        //                    userMessage = "\(error?.localizedDescription ?? "")"
-                        //                }
-                        
-                    } else {
+                authViewModel.signIn(email: email, password: password)  { success, error in
+                    if success {
                         let db = Firestore.firestore()
                         let user = Auth.auth().currentUser
                         // Set the data to update
@@ -554,8 +517,8 @@
                                     }
                                 }
                             }
-                       
-                        //if the auth is not successful
+                        
+                        //if the auth is  successful
                         userMessage = "Checking info..."
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             userMessage = "Successful..."
@@ -572,7 +535,7 @@
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             selected = 0
                             
-                            self.text = ""
+                            self.email = ""
                             self.password = ""
                             userMessage = ""
                             withAnimation(.spring()){
@@ -587,8 +550,23 @@
                                 self.signIn = true
                                 UserDefaults.standard.set(true, forKey: "signIn")
                             }
-                           
+                            
                         }
+                       
+                        
+                    } else if let error = error {
+                        //if the auth is unsuccessful
+                        UserDefaults.standard.set(false, forKey: "signIn")
+                        //                        self.alertMessage = error?.localizedDescription ?? ""
+                        //if the auth is not successful
+                        userMessage = "Checking info..."
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            userMessage = "Incorrect Password/Email!"
+                        }
+                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            userMessage = "\(error.localizedDescription )"
+                                        }
                     }
                 }
             }
@@ -604,7 +582,6 @@ struct SigninView_Previews: PreviewProvider {
     static var previews: some View {
         
         ViewController()
-         .preferredColorScheme(.light)
       
         
     }

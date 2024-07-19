@@ -10,8 +10,9 @@
 import SwiftUI
 
 struct MessageDetailView: View {
+    @StateObject var authViewModel = AuthViewModel()
     @AppStorage("hidemainTab") var hidemainTab = false
-   
+   var username = "doe"
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.presentationMode) var presentationMode
     @State var text = "yo"
@@ -19,8 +20,8 @@ struct MessageDetailView: View {
     @State var hideNav = false
     @State var scrolling = CGFloat(0)
     @State var scrolledItem: Int = 0
-    @State var chatMessages: [MessageModel] = []
-    var log: UserStruct
+    @State var chatMessages: [Book] = []
+    var log: Book  //has user id
     @State var userAvatarLoaded = false
    // var log : MessageUser
     // var holdData : [IncomingMessage]
@@ -42,9 +43,27 @@ struct MessageDetailView: View {
     @State var tappedUserAvatar  = ""
     @State var goToProfile = false
     @State var currentUser : UserStruct? = fakeUser
+    @ObservedObject var viewModel = BooksViewModel()
+    @ObservedObject var logoModel = LogViewModel()
+    @Binding var profiles: [UserStruct]
+    @State var teste = false
     var body: some View {
         NavigationView {
             ZStack {
+//                VStack {
+//                    if chatMessages.isEmpty {
+//                        Text("No chat logs available")
+//                    } else {
+//                        List(chatMessages) { book in
+//                            VStack(alignment: .leading) {
+//                                Text("User: \(book.userId)")
+//                                Text("Message: \(book.message)")
+//                                Text("Timestamp: \(book.timestamp)")
+//                            }
+//                        }
+//                    }
+//                }
+               
                 BackgroundView()
                 content
                 cover
@@ -52,27 +71,28 @@ struct MessageDetailView: View {
                 
             }
            
-        }  .navigationBarTitle(log.firstName, displayMode: .inline)
+        }  .navigationBarTitle(log.userId, displayMode: .inline)
             .navigationBarBackButtonHidden(false) // Hide the default back button
           
             .sheet(isPresented: $goToProfile){
-                SkullProfile(currentUser: $currentUser, profile: log, showProfile: .constant(false), currentIndex: .constant(-1),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
+                SkullProfile(currentUser: $currentUser, profile: fakeUser, showProfile: .constant(false), currentIndex: .constant(-1),likedEmails: .constant([""]), dislikedEmails: .constant([""]))
                     .edgesIgnoringSafeArea(.top)
                     .padding(.bottom, -120)
                     
             }
         .onAppear{
+           
+            logoModel.fetchData(for: log.userId) { books in
+                    self.chatMessages = books
+                }
+            
+           
             withAnimation(.spring()) {
                 hidemainTab = true
-                chatMessages = messages
+//                chatMessages = viewModel.fetchData(for: "emilyjohnson@example.com")
             }
         }
-        .onDisappear {
-            
-            withAnimation(.spring()) {
-                hidemainTab = false
-            }
-        }
+        
     }
    
     var cover: some View {
@@ -102,59 +122,60 @@ struct MessageDetailView: View {
     var content: some View {
         VStack {
             ScrollViewReader { scrollViewProxy in
+                
+              
                 ScrollView(showsIndicators: false) {
-                  
-                                    ForEach(chatMessages.sorted(by: { $1.timestamp > $0.timestamp })) {section in
-                                   
+   
+                    ForEach(chatMessages.sorted(by: { dateStringToDate($1.timestamp) ?? Date() > dateStringToDate($0.timestamp) ?? Date() })) {section in
                                         VStack {
-                                        
-                                            MessageBubblesView(section: section, blurPage: $blurPage, messageDeleted: $messageDeleted, avatar: log.avatar, bTapped: $btapped, goToProfile: $goToProfile)
-                                              
+                                          
+                                            MessageBubblesView(section: section, blurPage: $blurPage, messageDeleted: $messageDeleted, avatar: "", bTapped: $btapped, goToProfile: $goToProfile,log:log)
+
     //                                            .opacity(bubblesAppeared ? 1 : 0.30)
                                                 .onLongPressGesture {
                                                     blurPage.toggle()
-                                                 
+
                                                 }
-                                                
+
                                                 .opacity( btapped == (section.timestamp ) ? 1 : blurPage ? 0 : 1)
                                                 .blur(radius: btapped == (section.timestamp ) ? 0 :  blurPage ? 13 : 0)
                                                 .id(section.id)
-                                                .onAppear{
-                                                    withAnimation(.spring()) {
-                                                        scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
-                                                    }
-                                                    
-                                                    
-                                                    Timer.scheduledTimer(withTimeInterval: 0.9, repeats: false) { timer in
-                                                        withAnimation(.spring()) {
-                                                            scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
-                                                        }
-                                                    }
-                                                   // scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
-                                                }
+//                                                .onAppear{
+//                                                    withAnimation(.spring()) {
+//                                                        scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
+//                                                    }
+//
+//
+//                                                    Timer.scheduledTimer(withTimeInterval: 0.9, repeats: false) { timer in
+//                                                        withAnimation(.spring()) {
+//                                                            scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
+//                                                        }
+//                                                    }
+//                                                    scrollViewProxy.scrollTo(((chatMessages[chatMessages.count - 4]).id), anchor: .bottom)
+//                                                }
     //
                                         }
-                                        
-                                        
+
+
                                     }
-                                    
-                                
-                            
-                            
-                        
+
+
+
+
+
                         .onChange(of: blurPage || messageSent || keyboardFocus) { newValue in
                             if !blurPage {
                                 btapped = ""
                             }
-                            // scroll chats to bottom if i send message 
+                            // scroll chats to bottom if i send message
                             if messageSent {
                                 Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { timer in
                                     withAnimation(.spring()) {
                                         scrollViewProxy.scrollTo((chatMessages.last?.id), anchor: .bottom)
                                     }
                                                                 }
-                                
-                                
+
+
                             }
                             //when i start typing scroll the messages to last message
                             if keyboardFocus {
@@ -165,30 +186,34 @@ struct MessageDetailView: View {
                                 }
                             }
                         }
-    //                    .onChange(of: messageDeleted) { newValue in
-    //                        if messageDeleted {
-    //                            blurPage = false
-    //
-    //                            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
-    //
-    //                            }
-    //
-    //                            typeWriteText("Message deleted!") {
-    //                                //Message was deleted
-    //                                messageDeleted = false
-    //                            }
-    //                        }
-    //                    }
-                        
-                    
-                    
-                    
-                    
-                    
-                    .padding(.top, 150)
-                    
-                 
-                  
+                        .onChange(of: messageDeleted) { newValue in
+                            if messageDeleted {
+                                blurPage = false
+                               
+                                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
+    
+                                }
+    
+                                typeWriteText("Message deleted!") {
+                                    //Message was deleted
+                                    messageDeleted = false
+                                    logoModel.fetchData(for: log.userId) { books in
+                                        self.chatMessages = books
+                                    }
+                                    
+                                }
+                            }
+                        }
+
+
+
+
+
+
+                    .padding(.top, 30)
+
+
+
                 }.coordinateSpace(name: "scrollView")
                 .background( Color("offwhiteneo"))
                     .onTapGesture{
@@ -248,19 +273,29 @@ struct MessageDetailView: View {
                     
                     .onTapGesture{
                         
-                        if messageText.count > 0 && !guardSending{
-                          //  sendMessage(message: messageText)
-                            //send the fake text to array
-                            sendFakeText()
-                            messageText = ""
-                            
-                        } else {
-                            if !guardSending {
-                                typeWriteText("You haven't typed anything :/") {
-                                    print("Typing finished")
-                                }
+                        if (authViewModel.getCurrentUserEmail() != nil) {
+                            viewModel.sendMessage(to: log.userId, message: messageText, senderEmail: authViewModel.getCurrentUserEmail() ?? "error")
+                            logoModel.fetchData(for: log.userId) { books in
+                                self.chatMessages = books
                             }
+                            messageText = ""
+                        } else {
+                            messageText = "there was an error!"
                         }
+                       
+//                        if messageText.count > 0 && !guardSending{
+//                          //  sendMessage(message: messageText)
+//                            //send the fake text to array
+//                            sendFakeText()
+//                            messageText = ""
+//
+//                        } else {
+//                            if !guardSending {
+//                                typeWriteText("You haven't typed anything :/") {
+//                                    print("Typing finished")
+//                                }
+//                            }
+//                        }
                         
                     }
                 
@@ -280,12 +315,21 @@ struct MessageDetailView: View {
         
         
         // Generate and add a fake message to the chat
-        let fakeMessage = MessageModel(userID: "user1", text: messageText, sender: "user1", timestamp: "\(Date())", stamp: "Sent")
-        
-        withAnimation {
-            messageSent = true
-            chatMessages.append(fakeMessage)
-        }
+//        let fakeMessage = MessageModel(userID: "user1", text: messageText, sender: "user1", timestamp: "\(Date())", stamp: "Sent")
+//
+//        withAnimation {
+//            messageSent = true
+//            chatMessages.append(fakeMessage)
+//        }
+    }
+    func dateStringToDate(_ dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/d/yy, h:mm a"  // Adjust format to match your timestamp format
+        return dateFormatter.date(from: dateString)
+    }
+    // Function to filter profiles by email
+    func filteredProfilesByEmail() -> [UserStruct] {
+        return profiles.filter { $0.email == log.userId }
     }
     func typeWriteText(_ text: String, completion: @escaping () -> Void) {
         let original = messageText

@@ -96,7 +96,7 @@ struct EditProfileInfoDetailView: View {
                                         
                                         Image(systemName: "photo")
                                         
-                                        GetImageAndUrl(url: currentUser?.photos[item] ?? "",width: 120, height: 150, loaded: .constant(true), imageUrl: .constant(""))
+                                        GetImageAndUrl(url:"",width: 120, height: 150, loaded: .constant(true), imageUrl: .constant(""))
                                             .cornerRadius(8)
                                             .matchedGeometryEffect(id: "imageNamespaceId\(item)", in: namespace)
                                             .neoButton(isToggle: false) {

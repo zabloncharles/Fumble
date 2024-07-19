@@ -7,12 +7,12 @@
 
 
 import SwiftUI
+import FirebaseAuth
 
 
 struct MessageBubblesView: View {
-    
-    
-    var section: MessageModel
+    @StateObject var authViewModel = AuthViewModel()
+    var section: Book
     @State var messageTapped = false
     var message = "You still tryna go"
     var messageTime = "2:30 PM"
@@ -23,10 +23,12 @@ struct MessageBubblesView: View {
     @Binding var bTapped : String
     @State var tappedUserAvatar = ""
     @Binding var goToProfile : Bool
+    let viewModel = BooksViewModel()
+   var log: Book
     var body: some View {
         
-        if section.userID == "user1" {
-            
+        if section.userId == authViewModel.getCurrentUserEmail() {
+          
             HStack {
                 Rectangle()
                     .fill(.clear)
@@ -48,9 +50,23 @@ struct MessageBubblesView: View {
                                         .frame(width: 0.4, height: .infinity)
                                     HStack {
                                         Image(systemName: "trash")
-                                        Text("Delete")
+                                        Text("Delete\(section.userId)")
                                             .foregroundColor(.red)
-                                    }.padding(5).offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
+                                    }.padding(5)
+                                        
+//                                        .offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
+                                        .neoButton(isToggle: false) {
+                                            
+                                            
+                                            viewModel.deleteMessage(userId: log.userId, messageId: section.id) { error in
+                                                if let error = error {
+                                                    
+                                                } else {
+                                                    messageDeleted = true
+                                                }
+                                            }
+                                           
+                                        }
                                 }.font(.footnote)
                                     .padding(10)
                                     .offset(y: -60)
@@ -70,7 +86,7 @@ struct MessageBubblesView: View {
                         }
                    
                            
-                            Text(section.text)
+                            Text(section.message)
                                 .fontWeight(.medium)
                                 .foregroundColor(Color("black"))
                                 .font(.subheadline)
@@ -104,7 +120,7 @@ struct MessageBubblesView: View {
                     
                     
                     
-                    Text(showDate ? section.timestamp : section.stamp)
+                    Text((showDate ? section.timestamp : extractTime(from: section.timestamp)) ?? "Seen")
                         .font(.caption2)
                         .foregroundColor(.gray)
                         .padding(.horizontal, 3.0)
@@ -118,7 +134,6 @@ struct MessageBubblesView: View {
         } else {
             
             HStack {
-                
                 VStack(alignment: .leading, spacing: 2.0) {
                     ZStack {
                         
@@ -137,7 +152,20 @@ struct MessageBubblesView: View {
                                     Image(systemName: "trash")
                                     Text("Delete")
                                         .foregroundColor(.red)
-                                }.padding(5).offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
+                                }.padding(5)
+                                //                                        .offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
+                                    .neoButton(isToggle: false) {
+                                        
+                                        
+                                        viewModel.deleteMessage(userId: log.userId, messageId: section.id) { error in
+                                            if let error = error {
+                                                
+                                            } else {
+                                                messageDeleted = true
+                                            }
+                                        }
+                                        
+                                    }
                             }.font(.footnote)
                                 .padding(10)
                                 .offset(y: -60)
@@ -179,7 +207,7 @@ struct MessageBubblesView: View {
                                     .offset(y:-8)
                                 }
                                 
-                                Text(section.text)
+                                Text(section.message)
                                     .fontWeight(.medium)
                                     .foregroundColor(Color("black"))
                                     .font(.subheadline)
@@ -215,7 +243,7 @@ struct MessageBubblesView: View {
                     
                     
                     
-                    Text(showDate ? section.timestamp : section.stamp)
+                    Text(showDate ? section.timestamp : extractTime(from: section.timestamp) ?? "Seen")
                         .font(.caption2)
                         .foregroundColor(.gray)
                         .padding(.horizontal, 3.0)
@@ -241,6 +269,22 @@ struct MessageBubblesView: View {
         dateFormatter.dateFormat = "h:mm a"
         return dateFormatter.string(from: timedate)
         
+    }
+  
+    func extractTime(from timestamp: String) -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/d/yy, h:mm a"
+        
+        guard let date = dateFormatter.date(from: timestamp) else {
+            return nil
+        }
+        
+        dateFormatter.dateFormat = "h:mm a"
+        return dateFormatter.string(from: date)
+    }
+    
+    func getCurrentUserEmail() -> String? {
+        return Auth.auth().currentUser?.email
     }
 }
 

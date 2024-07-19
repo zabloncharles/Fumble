@@ -25,7 +25,9 @@ struct SettingsView: View {
     @State var optionType = 500
     @State var trackChanges : Set<Int> = []
     @Binding var isSheetPresented: Bool
-    
+    @AppStorage("signedIn") var signedIn = false
+    @StateObject private var authModel = AuthViewModel()
+    @State private var isSpinning = false
     // Add more @State properties for other user profile information
     
     var body: some View {
@@ -189,12 +191,53 @@ struct SettingsView: View {
                                 }
                             }
                             
-                            NavigationLink(destination: picklistview) {
-                                VStack {
-                                    PreferenceInfoCard(label: "Education Level", sublabel: "Open")
-                                }
-                            }
-
+//                            NavigationLink(destination: picklistview) {
+//                                VStack {
+//                                    PreferenceInfoCard(label: "Education Level", sublabel: "Open")
+//                                }
+//                            }
+                          
+                            
+                            VStack {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 3.0) {
+                                        Text("Sign Out")
+                                            .foregroundColor(Color("black"))
+                                        Text(authModel.isSignedOut ? "Success":"Error signing out!")
+                                            .font(.subheadline)
+                                            .foregroundColor(authModel.isSignedOut ? .green : .gray)
+                                    }
+                                    Spacer()
+                                    
+                                    if authModel.isSignedOut {
+                                        Image(systemName:"circle.dotted")
+                                            .foregroundColor(.gray)
+                                            .rotationEffect(.degrees(isSpinning ? 360 : 0))
+                                            .animation(
+                                                Animation.linear(duration: 5.0),
+                                                value: isSpinning
+                                            )
+                                            .onAppear {
+                                                self.isSpinning = true
+                                            }
+                                            
+                                           
+                                    } else {
+                                        Image(systemName:"arrow.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    
+                                   
+                                    
+                                }.background(Color("white").opacity(0.02))
+                                Divider()
+                            }.neoButton(isToggle: false, perform: {
+                                isSheetPresented = false
+                                authModel.signOut()
+                                signedIn = false
+                                
+                            })
                            
                             // Add more form fields for other personal information
                         } .padding()

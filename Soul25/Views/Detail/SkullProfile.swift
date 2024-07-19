@@ -46,6 +46,7 @@ struct SkullProfile: View {
     @State var profileImages = ["","",""]
     @State var likedImageUrl = ""
     @State var report = false
+    @State var reloadpage = false
     @State var showMore = false
     @State var hidenav = false
     @State var scrolledItem = 0
@@ -62,7 +63,9 @@ struct SkullProfile: View {
         
         ZStack {
             
-            
+            if !reloadpage {
+                
+           
             VStack {
                 DynamicTopBar(label: selected != 4 ? !userScrolledDown ? profile.firstName.lowercased() : "match" : "profile",labelicon: "person", trailinglabelicon:  selected == 4 ? "slider.horizontal.3" : disliked ? "heart.slash.fill" : "heart.slash"){
                     //go to next profile
@@ -119,7 +122,11 @@ struct SkullProfile: View {
                     }
             }
                    
-                  
+            }
+            else {
+                ProgressView()
+                
+            }
                     
           
            
@@ -306,7 +313,8 @@ struct SkullProfile: View {
                 }
                 HStack{
 //                    text characters of 131
-                    Text("\"Music lover and hopeless romantic. Enjoy quiet nights in with a good book or movie, but also love hitting the dance floor and losing myself in the music.\"")
+//                    Text("\"Music lover and hopeless romantic. Enjoy quiet nights in with a good book or movie, but also love hitting the dance floor and losing myself in the music.\"")
+                    Text("\"\(profile.bio).\"")
                         .font(.subheadline)
                         .lineLimit(3)
                     Spacer()
@@ -390,9 +398,9 @@ struct SkullProfile: View {
             .onAppear{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                     //if user pictures have not loaded in more than 9 seconds
-                   if !profileImagesLoaded[0] {
-                        errorLoading = true
-                    }
+//                   if !profileImagesLoaded[1] {
+//                        errorLoading = true
+//                    }
                 }
             }
     }
@@ -404,11 +412,11 @@ struct SkullProfile: View {
               
                 
                 
-           
-                if !profileImagesLoaded[1] && !errorLoading {
-                    progressloading
-                        .padding(.top,100)
-                }
+           //images did not load
+//                if !profileImagesLoaded[0] && !errorLoading {
+//                    progressloading
+//                        .padding(.top,100)
+//                }
                 //if it took more than 9 seconds and it's still loading
                 if errorLoading {
                    
@@ -420,7 +428,7 @@ struct SkullProfile: View {
                     }
                 }
                 //hide the user info if pictures have not loaded in more than 9 seconds
-               if !errorLoading {
+              
                     VStack(alignment: .leading, spacing: 13.0) {
                         
                        
@@ -466,8 +474,8 @@ struct SkullProfile: View {
                     }
                     //animate the profile loading and show it coming from the bottom
                     
-                    .offset(y:  !profileImagesLoaded[0] && !profileImagesLoaded[1] ? UIScreen.main.bounds.height : 0)
-                }
+//                    .offset(y:  !profileImagesLoaded[0] && !profileImagesLoaded[1] ? UIScreen.main.bounds.height : 0)
+                
                 
                 
             }
@@ -601,23 +609,54 @@ struct SkullProfile: View {
                     
                     VStack(alignment: .center, spacing: 20.0) {
                         
-                        Text("Error loading user!")
+                        Text("Error loading user data!")
                             .font(.headline)
                         Text("Matches are carefully curated on Fumble so don't worry, They'll come in very soon.")
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
                         HStack {
-                            Text("Report issue")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                        }.padding(.horizontal,15)
-                            .padding(.vertical,10)
-                            .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
-                            .cornerRadius(30)
-                            .neoButton(isToggle: false) {
-                                //code
-                                selected = 4
+                            HStack {
+                                Text("Try again!")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                            }.padding(.horizontal,15)
+                                .padding(.vertical,10)
+                               
+                                .cornerRadius(30)
+                                .neoButtonOff(isToggle: false, cornerRadius: 30)
+                                .onTapGesture {
+                               
+                                withAnimation(.spring()){
+                                    reloadpage = true
+                                    showProfile = false
+                                   
+                                    
+                                    
+                                    
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                   
+                                    withAnimation(.spring()){
+                                        showProfile = true
+                                        reloadpage = false
+                                    }
+                                }
                             }
+                            
+                            HStack {
+                                Text("Report issue")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                            }.padding(.horizontal,15)
+                                .padding(.vertical,10)
+                                .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                                .cornerRadius(30)
+                                .neoButton(isToggle: false) {
+                                    //code
+                                    selected = 4
+                            }
+                        }
                     }.padding(10)
                         .opacity(pageAppeared ? 1 : 0)
                     

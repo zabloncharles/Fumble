@@ -1,14 +1,4 @@
-//
 //  ChatsView.swift
-//  ionicFusion
-//
-//  Created by Zablon Charles on 8/20/23.
-//
-
-//
-//  Walls.swift
-//  Fusion
-//
 //  Created by Zablon Charles on 2/20/22.
 //
 
@@ -29,48 +19,64 @@ struct ChatsView: View {
     @State var appear = [false, false, false]
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State var pageAppeared = false
-    @State private var chatMessages: [MessageModel] = []
+
     @State var currentViewed = ""
     @State var texter = ""
     @Binding var likedEmails: [String]
     @Binding var dislikedEmails: [String]
     @State private var xOffset: CGFloat = 0
     @AppStorage("currentPage") var selected = 0
-    //  @State var fakeincomingMessages = IncomingMessage(name: "", text: "", timestamp: "")
+    
+    @ObservedObject var messagesModel: BooksViewModel
+    
     
     var body: some View {
         ZStack {
+            BackgroundView()
                 VStack {
-                    DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(profiles.count)",trailinglabelicon: "", notification: true){
+                    DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(messagesModel.books.count)",trailinglabelicon: "", notification: true){
                         
                     }
                     .background{
                         ScrollDetectionView(userScrolledDown: $userScrolledDown)
                     }
                     ScrollView(showsIndicators: false) {
-                       
+
                         navandmessages
                     }
                     .coordinateSpace(name: "scroll")
                     .background(BackgroundView())
+                 
+                    
+                    
                   
+                    
+                    
                 }
                 
-            if !profiles.isEmpty && !showMessages {
+//            if !profiles.isEmpty && !showMessages {
+//                gettingmessages
+//                    .transition(.opacity)
+//            }
+            
+            if messagesModel.books.isEmpty {
                 gettingmessages
-                    .transition(.opacity)
             }
+        
         }.onAppear{
-       
+           
+          
+            
+            
             hidemainTab = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    withAnimation(.spring()){
-                        if userAvatarsLoaded {
-                            showMessages = true
-                        }
-                }
-                
-            }
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                    withAnimation(.spring()){
+//                        if userAvatarsLoaded {
+//                            showMessages = true
+//                        }
+//                }
+//
+//            }
         }
         .onDisappear{
             withAnimation(.spring()){
@@ -92,59 +98,66 @@ struct ChatsView: View {
     
     var sectionsSection: some View {
         
-        VStack(spacing: 10) {
-            if !profiles.isEmpty {
-                ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
+        ZStack {
+            VStack(spacing: 10) {
+                if !messagesModel.books.isEmpty {
+                    ForEach(Array(messagesModel.books.enumerated()), id: \.element.id) { index, chatData in
 
-                    NavigationLink(destination:
-                                    MessageDetailView(log: user)
-                    ) {
-                        VStack {
-                            MessageCard(section: user, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
-                           
+                        NavigationLink(destination:
+                                        MessageDetailView(log: chatData, profiles: $profiles)
+                     
+                                     
+                        ) {
+                            VStack {
+                                MessageCard(section: chatData, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
+                            
+                               
+                            }
                         }
                     }
                 }
-            } else {
-                nomessages
+              
             }
-        }
-       
-        .padding(.horizontal,10)
-        .padding(.top, 5)
+           
+            .padding(.horizontal,10)
+            .padding(.top, 5)
         .padding(.bottom,40)
+           
+        }
         
     }
     var gettingmessages: some View {
         VStack {
-            Spacer()
-            VStack(alignment: .center) {
+           
+          
                 
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                   
-            }
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
+            Text("Loading...")
+                .font(.body)
+                .padding(.top,10)
+         
           
-            VStack(alignment: .center, spacing: 20.0) {
-                
-                Text("Getting your messages")
-                    .font(.headline)
-                Text("Oops well this is embarrassing. Making sure we have every message, They'll come in very soon.")
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal,25)
-                HStack {
-                    Text("Just a second :)")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                }.padding(.horizontal,15)
-                    .padding(.vertical,10)
-                    .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
-                    .cornerRadius(30)
-            }.padding(10)
-                
+//            VStack(alignment: .center, spacing: 20.0) {
+//
+//                Text("Getting your messages")
+//                    .font(.headline)
+//                Text("Oops well this is embarrassing. Making sure we have every message, They'll come in very soon.")
+//                    .foregroundColor(.secondary)
+//                    .multilineTextAlignment(.center)
+//                    .padding(.horizontal,25)
+//                HStack {
+//                    Text("Just a second :)")
+//                        .font(.body)
+//                        .fontWeight(.semibold)
+//                }.padding(.horizontal,15)
+//                    .padding(.vertical,10)
+//                    .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+//                    .cornerRadius(30)
+//            }.padding(10)
+//
 //                .offset(y: showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
-            Spacer()
+          
         }
     }
     var nomessages: some View {
@@ -184,9 +197,10 @@ struct ChatsView: View {
                         selected = 4
                     }
             }.padding(10)
-//                .opacity(pageAppeared ? 1 : 0)
+                .opacity(pageAppeared ? 1 : 0)
         }.offset(y:130)
     }
+    
     var filteredProfiles: [UserStruct] {
         guard let currentUser = currentUser
         else {
@@ -195,6 +209,8 @@ struct ChatsView: View {
         let matchingEmails = Set(currentUser.matched)
         return profiles.filter { !matchingEmails.contains($0.email) }
     }
+   
+    
     func close() {
         withAnimation {
             viewState = .zero

@@ -25,21 +25,21 @@ var fakeUser = UserStruct(
     lastActive: Date(),
     lookingFor: "female",
     hometown: "Chicago",
-    relationshipStatus: .single,
-    height: .average,
-    ethnicity: .white,
-    religion: "Atheist",
-    politicalAffiliation: "Independent",
-    smokingHabit: .nonSmoker,
-    drinkingHabit: .socialDrinker,
-    exerciseFrequency: .regularly,
-    children: .noChildren,
-    pets: .hasPets,
+    relationshipStatus: "single",
+    height: "average",
+    ethnicity: "black",
+    religion: "Christian",
+    politicalAffiliation: "Moderate",
+    smokingHabit: "nonSmoker",
+    drinkingHabit: "socialDrinker",
+    exerciseFrequency: "regularly",
+    children: "noChildren",
+    pets: "hasPets",
     dateJoined: Date(),
-    matched:["fakeemail@gmail.com","emmasmith@example.com","johndoe@example.com"],
-    unmatched:[""],
-    liked:[""],
-    prompts:.other
+    matched: [""],
+    unmatched: [""],
+    liked: [""],
+    prompts: "other"
 )
 
 var fakeUsers: [UserStruct] = [
@@ -49,8 +49,8 @@ var fakeUsers: [UserStruct] = [
         email: "emilyjohnson@example.com",
         age: 20,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1618374595738-96f68c8e47bf?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://plus.unsplash.com/premium_photo-1664464229692-44046bfd6b7d?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://plus.unsplash.com/premium_photo-1664464227921-cda481c1b8fa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1pbi1zYW1lLXNlcmllc3wxfHx8ZW58MHx8fHx8", "https://plus.unsplash.com/premium_photo-1664464228149-f93436b48c1b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1pbi1zYW1lLXNlcmllc3wyfHx8ZW58MHx8fHx8"],
         occupation: "Student",
         education: "College",
         location: ["United States", "New York", "Brooklyn", "11201"],
@@ -60,21 +60,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Chicago",
-        relationshipStatus: .single,
-        height: .short,
-        ethnicity: .white,
-        religion: "Agnostic",
-        politicalAffiliation: "Liberal",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
+        religion: "Christian",
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Second fake user
     UserStruct(
@@ -83,8 +83,8 @@ var fakeUsers: [UserStruct] = [
         email: "sophiasmith@example.com",
         age: 22,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1618375279997-351e32d80a02?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1646337427114-678dfd1851d8?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1646337430117-7662ce0f60eb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1646337429056-00906c1aab7b?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D"],
         occupation: "Graphic Designer",
         education: "Bachelor's Degree",
         location: ["United States", "California", "Los Angeles", "90001"],
@@ -94,21 +94,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Los Angeles",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .white,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
         politicalAffiliation: "Moderate",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Third fake user
     UserStruct(
@@ -117,8 +117,8 @@ var fakeUsers: [UserStruct] = [
         email: "oliviabrown@example.com",
         age: 24,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1618375601660-3e6842f5b791?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1519852208746-9ee7ab07e77c?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1519330377309-9ee1c6783348?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1525200237491-55f7e4814781?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDN8fHxlbnwwfHx8fHw%3D"],
         occupation: "Software Engineer",
         education: "Master's Degree",
         location: ["United States", "Texas", "Austin", "78701"],
@@ -128,21 +128,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Austin",
-        relationshipStatus: .single,
-        height: .tall,
-        ethnicity: .black,
-        religion: "Atheist",
-        politicalAffiliation: "Liberal",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
+        religion: "Christian",
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Fourth fake user
     UserStruct(
@@ -151,8 +151,8 @@ var fakeUsers: [UserStruct] = [
         email: "lilywilliams@example.com",
         age: 19,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1617059400269-0ef496bc0c37?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1531944342704-649d95a5838d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D",
+        photos: ["https://images.unsplash.com/photo-1533077650324-5cca2426cd20?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1531947110440-22515de7eacc?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDN8fHxlbnwwfHx8fHw%3D"],
         occupation: "Student",
         education: "College",
         location: ["United States", "Florida", "Miami", "33101"],
@@ -162,21 +162,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Miami",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .black,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
         politicalAffiliation: "Moderate",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Fifth fake user
     UserStruct(
@@ -185,8 +185,8 @@ var fakeUsers: [UserStruct] = [
         email: "avajones@example.com",
         age: 23,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1617058717173-5b171b787725?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1508970707-f6426fb47503?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1508970566-7e0cca18e5d7?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1508970436-b2150a27d7dd?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D"],
         occupation: "Journalist",
         education: "Bachelor's Degree",
         location: ["United States", "Washington", "Seattle", "98101"],
@@ -196,21 +196,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Seattle",
-        relationshipStatus: .single,
-        height: .tall,
-        ethnicity: .white,
-        religion: "Agnostic",
-        politicalAffiliation: "Liberal",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
+        religion: "Christian",
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Sixth fake user
     UserStruct(
@@ -219,8 +219,8 @@ var fakeUsers: [UserStruct] = [
         email: "miathompson@example.com",
         age: 21,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1617059322001-a61ce9551e08?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1495490140452-5a226aef25d4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1522390108011-5f8667fd551d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D", "https://plus.unsplash.com/premium_photo-1661315484619-15203e063255?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE2fHx8ZW58MHx8fHx8"],
         occupation: "Student",
         education: "College",
         location: ["United States", "California", "San Francisco", "94101"],
@@ -230,21 +230,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "San Francisco",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .white,
-        religion: "Atheist",
-        politicalAffiliation: "Liberal",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
+        religion: "Christian",
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Seventh fake user
     UserStruct(
@@ -253,8 +253,8 @@ var fakeUsers: [UserStruct] = [
         email: "chloemiller@example.com",
         age: 24,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1527628217451-b2414a1ee733?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1592101667236-ab434fc33dad?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+        photos: ["https://images.unsplash.com/photo-1585890483046-9461ebc1dace?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1507691754536-1d2b755da326?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D"],
         occupation: "Marketing Specialist",
         education: "Bachelor's Degree",
         location: ["United States", "Texas", "Houston", "77001"],
@@ -264,21 +264,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Houston",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .black,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
         politicalAffiliation: "Moderate",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Eighth fake user
     UserStruct(
@@ -287,8 +287,8 @@ var fakeUsers: [UserStruct] = [
         email: "isabellaanderson@example.com",
         age: 18,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1522938974444-f12497b69347?q=80&w=2818&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1591752270708-d2de0f30f7ec?q=80&w=1293&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1591751675630-498149a1aa89?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1591753115350-8902397bf3cb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D"],
         occupation: "Student",
         education: "High School",
         location: ["United States", "Florida", "Orlando", "32801"],
@@ -298,21 +298,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Orlando",
-        relationshipStatus: .single,
-        height: .short,
-        ethnicity: .white,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
-        politicalAffiliation: "Conservative",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Ninth fake user
     UserStruct(
@@ -321,8 +321,8 @@ var fakeUsers: [UserStruct] = [
         email: "charlottegarcia@example.com",
         age: 25,
         gender: "female",
-        avatar: "https://images.unsplash.com/photo-1539800925050-60b19309954e?q=80&w=2815&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        photos: ["https://source.unsplash.com/random/?woman+model", "https://source.unsplash.com/random/?girl+model"],
+        avatar: "https://images.unsplash.com/photo-1594434911783-e509961ee25c?q=80&w=1286&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        photos: ["https://images.unsplash.com/photo-1594435763464-05f0624e04c9?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D", "https://images.unsplash.com/photo-1593129747951-db31f82963da?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D"],
         occupation: "Teacher",
         education: "Master's Degree",
         location: ["United States", "Illinois", "Chicago", "60601"],
@@ -332,21 +332,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Chicago",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .hispanic,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
-        politicalAffiliation: "Liberal",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        politicalAffiliation: "Moderate",
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     ),
     // Tenth fake user
     UserStruct(
@@ -366,21 +366,21 @@ var fakeUsers: [UserStruct] = [
         lastActive: Date(),
         lookingFor: "male",
         hometown: "Detroit",
-        relationshipStatus: .single,
-        height: .average,
-        ethnicity: .black,
+        relationshipStatus: "single",
+        height: "average",
+        ethnicity: "black",
         religion: "Christian",
         politicalAffiliation: "Moderate",
-        smokingHabit: .nonSmoker,
-        drinkingHabit: .socialDrinker,
-        exerciseFrequency: .regularly,
-        children: .noChildren,
-        pets: .hasPets,
+        smokingHabit: "nonSmoker",
+        drinkingHabit: "socialDrinker",
+        exerciseFrequency: "regularly",
+        children: "noChildren",
+        pets: "hasPets",
         dateJoined: Date(),
         matched: [""],
         unmatched: [""],
         liked: [""],
-        prompts: .other
+        prompts: "other"
     )
 ]
 
@@ -406,82 +406,25 @@ struct UserStruct {
     var lastActive: Date
     var lookingFor: String
     var hometown: String
-    var relationshipStatus: RelationshipStatus
-    var height: Height
-    var ethnicity: Ethnicity
+    var relationshipStatus: String
+    var height: String
+    var ethnicity: String
     var religion: String
     var politicalAffiliation: String
-    var smokingHabit: SmokingHabit
-    var drinkingHabit: DrinkingHabit
-    var exerciseFrequency: ExerciseFrequency
-    var children: ChildrenStatus
-    var pets: PetsStatus
+    var smokingHabit: String
+    var drinkingHabit: String
+    var exerciseFrequency: String
+    var children: String
+    var pets: String
     var dateJoined: Date
     var matched: [String]
     var unmatched: [String]
     var liked: [String]
-    var prompts: Prompts
+    var prompts: String
 
 }
 
 
-enum Prompts {
-    case quote
-    case opinion
-    case other
-}
-
-enum RelationshipStatus {
-    case single
-    case inARelationship
-    case married
-    case divorced
-    case widowed
-}
-
-enum Height {
-    case short
-    case average
-    case tall
-}
-
-enum Ethnicity {
-    case asian
-    case black
-    case latino
-    case white
-    case hispanic
-    case other
-}
-
-enum SmokingHabit {
-    case nonSmoker
-    case socialSmoker
-    case regularSmoker
-}
-
-enum DrinkingHabit {
-    case nonDrinker
-    case socialDrinker
-    case regularDrinker
-}
-
-enum ExerciseFrequency {
-    case rarely
-    case occasionally
-    case regularly
-}
-
-enum ChildrenStatus {
-    case noChildren
-    case wantChildren
-    case haveChildren
-}
-
-enum PetsStatus {
-    case hasPets
-    case noPets
-}
 
 
 

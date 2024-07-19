@@ -39,7 +39,23 @@ struct ProfileView: View {
             }
            
         }
-        .onChange(of: currentIndex, perform: { newValue in
+//        .onChange(of: currentIndex, perform: { newValue in
+//            if isSheetPresented {
+//                withAnimation(.spring()) {
+//                    hidemainTab = true
+//                }
+//            } else {
+//                withAnimation(.spring()) {
+//                    hidemainTab = false
+//                }
+//            }
+//            if currentIndex == -4 || currentIndex == -2 {
+//                isSheetPresented = true
+//            }
+//        })
+        
+        //show the tab bar when the settings are dismissed
+        .onChange(of: isSheetPresented, perform: { newValue in
             if isSheetPresented {
                 withAnimation(.spring()) {
                     hidemainTab = true
@@ -49,11 +65,9 @@ struct ProfileView: View {
                     hidemainTab = false
                 }
             }
-            if currentIndex == -4 || currentIndex == -2 {
-                isSheetPresented = true
-            }
+           
         })
-        .fullScreenCover(isPresented: $isSheetPresented) {
+        .sheet(isPresented: $isSheetPresented) {
 
             if currentIndex == -4 {
                 NavigationView {

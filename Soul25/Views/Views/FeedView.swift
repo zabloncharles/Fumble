@@ -54,8 +54,8 @@ struct FeedView: View {
 }
 
 
-//struct FeedView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FeedView( profiles: .constant(fakeUsers))
-//    }
-//}
+struct FeedView_Previews: PreviewProvider {
+    static var previews: some View {
+        FeedView(profiles: .constant(fakeUsers), profile: .constant(fakeUser), showProfile: .constant(true))
+    }
+}

@@ -12,7 +12,7 @@ import SwiftUI
 
 
 struct MessageCard: View {
-    var section: UserStruct
+    var section: Book
     @Binding var profile : UserStruct
     @Binding var showProfile : Bool
     @Binding var userAvatarLoaded : Bool
@@ -58,7 +58,7 @@ struct MessageCard: View {
                   //  Image(section.avatar)
                       //  .resizable()
                       //  .aspectRatio(contentMode: .fill)
-                    GetImageAndUrl(url:section.avatar, loaded: $userAvatarLoaded, imageUrl: $image)
+                    GetImageAndUrl(url:"", loaded: $userAvatarLoaded, imageUrl: $image)
                         .frame(width: 49, height: 49)
                         .mask(Circle())
                        
@@ -66,7 +66,7 @@ struct MessageCard: View {
                         .neoButton(isToggle: false) {
                             //user tapped the avatar
                             showProfile = true
-                            profile = section
+//                            profile = section
                         }
     //                    .onTapGesture {
     //                        showProfile = true
@@ -76,19 +76,23 @@ struct MessageCard: View {
                         
                         
                         // GradientText(text: section.name, gradient: [.black, .blue])
-                        Text(section.firstName)
+                        Text("Stacy")
                             .font(.headline)
                             .foregroundColor(Color("black"))
-                        
-                        Text(whoSent[0])
+                        Text(section.message)
                             .font(.footnote)
                             .foregroundColor(.gray)
                             .lineLimit(1)
                         
+//                        Text(whoSent[0])
+//                            .font(.footnote)
+//                            .foregroundColor(.gray)
+//                            .lineLimit(1)
+                        
                     }
                     Spacer()
                     HStack {
-                        Text("03:23 PM")
+                        Text(section.timestamp)
                             .font(.caption)
                             .foregroundColor(.gray )
                         
@@ -125,7 +129,7 @@ struct MessageCard: View {
                                     unmatched = true
                                     profiles.remove(at: index)
                                     vibrate()
-                                    dislikedEmails.append(section.email)
+                                    dislikedEmails.append("section.email")
                                 } else {
                                     xOffset = 0
                                     vibrate()
@@ -142,7 +146,7 @@ struct MessageCard: View {
        }.frame(height: unmatched ? 0 : nil)
             .opacity(unmatched ? 0 : 1)
     
-        
+           
         
     }
     func formatDate(time:String) -> String{
@@ -154,7 +158,10 @@ struct MessageCard: View {
         return dateFormatter.string(from: timedate)
         
     }
-    
+    // Function to filter profiles by email
+    func filteredProfilesByEmail() -> [UserStruct] {
+        return profiles.filter { $0.email == section.userId }
+    }
     func vibrate() {
         let impactMed = UIImpactFeedbackGenerator(style: .soft)
         impactMed.impactOccurred()
@@ -163,3 +170,10 @@ struct MessageCard: View {
 }
 
 
+
+
+struct MessageCArd_Previews: PreviewProvider {
+    static var previews: some View {
+        ViewController()
+    }
+}

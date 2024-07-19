@@ -2,12 +2,13 @@
 
 
 import SwiftUI
-
+import Firebase
 
 struct MainTab: View {
     @AppStorage("signedIn") var signedIn = false
+    @Binding var onboardComplete : Bool
     @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
-    @AppStorage("currentPage") var selected = 0
+    @AppStorage("currentPage") var selected = 3
     @AppStorage("hidemainTab") var hidemainTab = false
     @State var matchProfiles: [UserStruct] = fakeUsers
     @State var chatProfiles: [UserStruct] = fakeUsers
@@ -17,74 +18,82 @@ struct MainTab: View {
     @State var dislikedEmails = [""]
     
    @State var appLoading = true
+    @ObservedObject var viewModel = BooksViewModel()
+    @StateObject private var authModel = AuthViewModel()
+
  
 
     var body: some View {
         
         ZStack {
             BackgroundView()
-            ZStack {
-                NavigationView {
-                    VStack{
-                        
-                        if self.selected == 0{
-                            MatchView(profiles: $matchProfiles, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails, currentUser: $currentUser)
-                        }
-                       if self.selected == 1{
-                           LikesView(profiles: $likesProfiles, currentUser: $currentUser, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
-                               
-                        }
-                        if self.selected == 2{
+            if !authModel.isSignedOut && signedIn   {
+                ZStack {
+                    NavigationView {
+                        VStack{
                             
-                            HomeView(profiles:$homeProfiles, currentUser: $currentUser,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
-                        }
-                        if self.selected == 3{
-                            ChatsView(profiles: $chatProfiles,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
-                        }
-                        if self.selected == 4{
-                            ProfileView(currentUser: $currentUser, signedIn: $signedIn)
+                            if self.selected == 0{
+                                MatchView(profiles: $matchProfiles, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails, currentUser: $currentUser)
+                            }
+                           if self.selected == 1{
+                               LikesView(profiles: $likesProfiles, currentUser: $currentUser, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                                   
+                            }
+                            if self.selected == 2{
+                                
+                                HomeView(profiles:$homeProfiles, currentUser: $currentUser,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                            }
+                            if self.selected == 3{
+                                ChatsView(profiles: $chatProfiles,likedEmails:$likedEmails, dislikedEmails: $dislikedEmails, messagesModel: viewModel)
+                            }
+                            if self.selected == 4{
+                                ProfileView(currentUser: $currentUser, signedIn: $signedIn)
+                            }
                         }
                     }
-                }
-                
-                //the tab bar // it also gets the chat notifications
-                FloatingTabbar(selected: self.$selected,chatCount: "\(chatProfiles.count)")
-                    .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
-                    .animation(.spring(), value: hidemainTab)
-                   
                     
-            }.opacity(appLoading ? 0 : signedIn ? 1 : 0)
-                .onAppear{
-                    withAnimation(.spring()) {
-                        hidemainTab = false
-                    }
-            selected = 0
-                fetchFakeUser()
+                    //the tab bar // it also gets the chat notifications
+                    FloatingTabbar(selected: self.$selected,chatCount: "\(viewModel.books.count)")
+                        .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
+                        .animation(.spring(), value: hidemainTab)
+                       
+                        
+                }.opacity(appLoading ? 0 : signedIn ? 1 : 0)
+                    .onAppear{
+                        withAnimation(.spring()) {
+                            hidemainTab = false
+                        }
                
-                    //get match profiles
-                    switch selected {
-                        case 0:
-                            getFakeRecommendedProfiles()
-                        case 1:
-                            // Get likes profiles
-                            getFakeLikesProfiles()
-                        case 2: // Changed from 3 to 2 since 2 corresponds to the third case
-                                // Get chat profiles
-                            getFakeChats()
-                        default:
-                            // Get chat profiles as default
-                            getFakeChats()
-                    }
-              
-                
-                //home profiles
-                fetchUserData(parameter: "",userCount: "100") { result in
+                    fetchFakeUser()
+                   
+                        //get match profiles
+                        switch selected {
+                            case 0:
+                                getFakeRecommendedProfiles()
+                            case 1:
+                                // Get likes profiles
+                                getFakeLikesProfiles()
+                            case 2: // Changed from 3 to 2 since 2 corresponds to the third case
+                                    // Get chat profiles
+                                getFakeChats()
+                            default:
+                                // Get chat profiles as default
+                                getFakeChats()
+                        }
+                  
                     
-                    homeProfiles = fakeUsers
+                    //home profiles
+                    fetchUserData(parameter: "",userCount: "100") { result in
+                        
+                        homeProfiles = fakeUsers
+                        
+                    }
                     
                 }
+            } else {
+                SigninView(signIn: $signedIn, doneIntro: $onboardComplete)
                 
-        }
+            }
             
             //show app loading view
             if appLoading{
@@ -100,10 +109,7 @@ struct MainTab: View {
                     }
             }
             
-            if !signedIn {
-                SigninView(signIn: $signedIn, doneIntro: .constant(true))
-                    
-            }
+          
            
             
             
@@ -136,8 +142,12 @@ struct MainTab: View {
         // Filter the profiles based on whether their email is in the likedEmails array
         let disliked = dislikedEmails
         matchProfiles = fakeUsers.filter { profile in
-            !disliked.contains(profile.email) && !likedEmails.contains(profile.email)
+             !disliked.contains(profile.email) && !likedEmails.contains(profile.email)
         }
+        
+//        fetchUserData(parameter: "") { users in
+//            matchProfiles = users ?? fakeUsers
+//        }
     }
     func getFakeLikesProfiles(){
         // Filter the profiles based on whether their email is in the likedEmails array
@@ -148,10 +158,12 @@ struct MainTab: View {
     }
     func getFakeChats() {
         // Filter the profiles based on whether their email is in the likedEmails array
-        let liked = likedEmails
-        chatProfiles = fakeUsers.filter { profile in
-            liked.contains(profile.email)
-        }
+//        let liked = likedEmails
+//        chatProfiles = fakeUsers.filter { profile in
+//            liked.contains(profile.email)
+//        }
+        
+        self.viewModel.fetchData()
     }
     
     
@@ -199,20 +211,16 @@ struct FloatingTabbar : View {
                 Spacer()
                 TabIcon(selected: $selected, selectedicon: 3, icon: "bubble.left.and.bubble.right",name:"Chats" , tappedicon: $tappedicon )
                         .overlay{
-                            if !chatCount.isEmpty && chatCount != "0" {
+                            if !chatCount.isEmpty {
                                 VStack{
                                    
-                                    Text(chatCount)
-                                        .foregroundColor(.white)
-                                        .font(.caption)
-                                        .padding(0.00)
-                                        .background(
+                                  
                                             Circle()
                                                 .fill(Color(red: 0.998, green: 0.268, blue: 0.227))
                                                 .padding(-2)
-                                        )
+                                                .frame(width: 5, height: 5)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                                        .offset(x:1, y: -1)
+                                        .offset(x:-5, y: 1)
                                 }
                             }
                          }

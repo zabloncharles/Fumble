@@ -9,4 +9,5 @@ target 'Soul25' do
 pod 'lottie-ios'
 
 
+
 end

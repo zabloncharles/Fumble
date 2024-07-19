@@ -34,6 +34,9 @@ struct OnboardView: View {
                 // Third slide
                 OnboardInfo(lottie:"girlonphone",title: "Superficial Interactions", description: "Unlike traditional dating apps focused solely on swiping, we encourage users to engage in deeper conversations through thought-provoking icebreaker questions and prompts.")
                 .tag(2)
+                
+                SignUpView(onboardComplete:$onboardComplete)
+                    .tag(3)
             }.overlay(
                 VStack {
                     HStack {
@@ -42,16 +45,16 @@ struct OnboardView: View {
                             .font(.title2)
                             .foregroundColor(.gray)
                             .neoButton(isToggle: false) {
-                             
+                                withAnimation(.spring()){
                                     onboardComplete = true
-                                
+                                } 
                             }
                     }.padding(.horizontal,30)
                         .padding(.top,20)
                     Spacer()
                 }
             )
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: currentPage > 2 ? .never : .always))
             .onAppear {
                 UITabBar.appearance().isHidden = true
         }
@@ -61,7 +64,8 @@ struct OnboardView: View {
 
 struct OnboardView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardView(onboardComplete: .constant(false))
+        //OnboardView(onboardComplete: .constant(false))
+        ViewController()
     }
 }
 
