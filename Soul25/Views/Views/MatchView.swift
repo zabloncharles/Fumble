@@ -13,7 +13,7 @@ struct MatchView: View {
     @AppStorage("hidemainTab") var hidemainTab = false
     @AppStorage("currentPage") var selected = 0
     @Binding var profiles: [UserStruct]
-    
+  
     @Binding var likedEmails: [String]
     @Binding var dislikedEmails: [String]
     @Binding var currentUser: UserStruct?

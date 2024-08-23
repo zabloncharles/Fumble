@@ -6,10 +6,12 @@
 //
 
 import FirebaseAuth
+import FirebaseFirestore
 
 class FirebaseAuthService {
     
     static let shared = FirebaseAuthService()
+    private var db = Firestore.firestore()
     
     private init() {}
     
@@ -23,18 +25,32 @@ class FirebaseAuthService {
                 completion(false, error)
                 return
             }
-            
             // Sign-in successful
             completion(true, nil)
         }
     }
-  
+    
     func signOut(completion: @escaping (Bool, Error?) -> Void) {
-        do {
-            try Auth.auth().signOut()
-            completion(true, nil)
-        } catch let signOutError as NSError {
-            completion(false, signOutError)
+        guard let email = getCurrentUserEmail() else {
+            completion(false, NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user is signed in."]))
+            return
+        }
+        
+        // Update the online status to false
+        let docRef = db.collection("users").document(email)
+        docRef.updateData(["online": false]) { error in
+            if let error = error {
+                completion(false, error)
+                return
+            }
+            
+            // Sign out from FirebaseAuth
+            do {
+                try Auth.auth().signOut()
+                completion(true, nil)
+            } catch let signOutError as NSError {
+                completion(false, signOutError)
+            }
         }
     }
 }
@@ -55,13 +71,14 @@ class AuthViewModel: ObservableObject {
                     self.signOutError = error
                 }
             }
-            
             completion(success, error)
         }
     }
+    
     func getCurrentUserEmail() -> String? {
         return FirebaseAuthService.shared.getCurrentUserEmail()
     }
+    
     func signOut() {
         FirebaseAuthService.shared.signOut { [weak self] success, error in
             if success {

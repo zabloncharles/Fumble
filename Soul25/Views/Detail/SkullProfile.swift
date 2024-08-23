@@ -21,6 +21,7 @@ struct SkullProfile: View {
     @State var viewState: CGSize = .zero
     @State var pageAppeared = false
     @Binding var showProfile : Bool
+    @StateObject var authLikedModel = AuthLikedModel()
     @FocusState var sendMessageFocused: Bool
     @State var profileImagesLoaded = [false,false,false]
     @State var showHearts = false
@@ -49,6 +50,7 @@ struct SkullProfile: View {
     @State var reloadpage = false
     @State var showMore = false
     @State var hidenav = false
+    @State var appeared = false
     @State var scrolledItem = 0
     @State var profileNumber = 0
     @Binding var currentIndex : Int
@@ -149,7 +151,9 @@ struct SkullProfile: View {
                         .background(Color("offwhiteneo"))
                         .cornerRadius(60)
                         .neoButton(isToggle: false, perform: {
-                            nextProfile()
+//                            nextProfile()
+                            
+                            
                         })
                         .padding(.bottom,110)
                         .padding(.leading,20)
@@ -157,6 +161,84 @@ struct SkullProfile: View {
                     Spacer()
                 }
             }
+            
+            
+            
+            if let message = authLikedModel.message {
+                VStack{
+                    Color("offwhiteneo")
+                        .opacity(0.0002)
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                appeared = false
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    
+                                }
+                            }
+                        }
+                    Spacer()
+                    VStack {
+                        VStack {
+                            Text(message)
+                                .foregroundColor(Color("black"))
+                                .multilineTextAlignment(.center)
+                                .padding(.top,10)
+                            Divider()
+                            HStack {
+                                Spacer()
+                                Text("Report")
+                                    .foregroundColor(.red)
+                                Spacer()
+                            } .padding(.vertical)
+                                .padding(.horizontal)
+                            
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+                        } .background(Color("offwhiteneo"))
+                            .cornerRadius(12)
+                            .neoButton(isToggle: false, perform: {
+                                //                        report = true
+                                // report the post
+                            })
+                            .padding()
+                            .padding(.bottom,-35)
+                        
+                        
+                        
+                        HStack {
+                            Spacer()
+                            Text("Cancel")
+                                .foregroundColor(Color("black"))
+                            Spacer()
+                        } .padding(.vertical)
+                            .padding(.horizontal)
+                            .background(Color("offwhiteneo"))
+                            .cornerRadius(12)
+                            .neoButton(isToggle: false, perform: {
+                                
+                                appeared = false
+                                
+                            })
+                            .padding()
+                            .padding(.bottom,20)
+                        
+                    }
+                    //                .offset(y: appeared ? 0 : UIScreen.main.bounds.height)
+                    .animation(.spring(), value: appeared)
+                    
+                }.edgesIgnoringSafeArea(.all)
+                    .onAppear{
+                        withAnimation(.spring()) {
+                            hidemainTab = true
+                        }
+                    }
+                    .onDisappear{
+                        withAnimation(.spring()) {
+                            hidemainTab = false
+                        }
+                    }
+            }
+            
             
         }.background(Color("offwhiteneo"))
             .sheet(isPresented: $isShowingModal) {
@@ -177,8 +259,12 @@ struct SkullProfile: View {
             if liked {
                 hidemainTab = true
                 withAnimation(.spring()) {
+                    
+                    
+                   
                     showHearts = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                       
                         showHearts = false
                     }
                 }
@@ -823,8 +909,12 @@ struct SkullProfile: View {
                                             }
                                         .offset(x: -10,y:-10)
                                         .neoButton(isToggle: false) {
-                                            likedEmails.append(profile.email)
+//                                            authLikedModel.addEmailToLiked(email: "oliviabrown@example.com")
                                             isShowingModal.toggle()
+//
+                                            
+//                                         
+                                            
                                             showHearts = true
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                 
@@ -843,6 +933,7 @@ struct SkullProfile: View {
                     .onTapGesture {
                         withAnimation(.spring()) {
                             liked = false
+                            
                         }
                     }
                     .onAppear{
@@ -874,7 +965,7 @@ struct SkullProfile: View {
         if currentIndex != 0 {
             arrowTapped = true
             
-            
+           
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation(.spring()) {
                     currentIndex -= 1
@@ -888,6 +979,7 @@ struct SkullProfile: View {
         
     }
     func nextProfile(){
+        
         if editingProfile {
             showProfile = true
           

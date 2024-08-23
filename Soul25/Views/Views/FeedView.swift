@@ -16,7 +16,7 @@ struct FeedView: View {
     
     var body: some View {
         LazyVStack {
-            ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
+            ForEach(Array(profiles.enumerated()), id: \.element.email) { index, user in
                 if index % 3 == 0 {
                     QuoteImageCard(name: user.firstName, urlReturned: .constant(""), loaded: .constant(true), report: .constant(false))
                         .neoButton(isToggle: false) {

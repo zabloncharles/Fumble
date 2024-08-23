@@ -32,7 +32,7 @@ struct CompatibleProfilesCards: View {
                         
                     
                     VStack(spacing: 10) {
-                        ForEach(filteredProfiles, id: \.id) { user in
+                        ForEach(filteredProfiles, id: \.email) { user in
                             
                             HomeCard(firstname: user.firstName,avatar: user.avatar, poster: user.photos[0], loaded : $profilesLoaded){
                                 //tapp does what?

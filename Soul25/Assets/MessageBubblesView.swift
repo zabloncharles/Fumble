@@ -24,11 +24,11 @@ struct MessageBubblesView: View {
     @State var tappedUserAvatar = ""
     @Binding var goToProfile : Bool
     let viewModel = BooksViewModel()
-   var log: Book
+    var log: Book
     var body: some View {
         
         if section.userId == authViewModel.getCurrentUserEmail() {
-          
+            
             HStack {
                 Rectangle()
                     .fill(.clear)
@@ -53,8 +53,8 @@ struct MessageBubblesView: View {
                                         Text("Delete\(section.userId)")
                                             .foregroundColor(.red)
                                     }.padding(5)
-                                        
-//                                        .offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
+                                    
+                                    //                                        .offwhitebutton(isTapped: !blurPage, isToggle: true, cornerRadius: 5, action: $messageDeleted)
                                         .neoButton(isToggle: false) {
                                             
                                             
@@ -65,7 +65,7 @@ struct MessageBubblesView: View {
                                                     messageDeleted = true
                                                 }
                                             }
-                                           
+                                            
                                         }
                                 }.font(.footnote)
                                     .padding(10)
@@ -81,39 +81,39 @@ struct MessageBubblesView: View {
                                             showDate = false
                                         }
                                     }
-                                   
+                                
                             }
                         }
-                   
-                           
-                            Text(section.message)
-                                .fontWeight(.medium)
-                                .foregroundColor(Color("black"))
-                                .font(.subheadline)
-                                .padding(.horizontal, 11.0)
-                                .padding(.vertical, 9.0)
-                                .background(Color("neolighshadow"))
-                                .cornerRadius(12)
-                                .background{
-                                    HStack {
+                        
+                        
+                        Text(section.message)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("black"))
+                            .font(.subheadline)
+                            .padding(.horizontal, 11.0)
+                            .padding(.vertical, 9.0)
+                            .background(Color("neolighshadow"))
+                            .cornerRadius(12)
+                            .background{
+                                HStack {
+                                    Spacer()
+                                    VStack {
                                         Spacer()
-                                        VStack {
-                                            Spacer()
-                                            
-                                            Rectangle()
-                                                .fill(Color("neolighshadow"))
-                                                .frame(width:20, height: 20)
-                                        }
                                         
+                                        Rectangle()
+                                            .fill(Color("neolighshadow"))
+                                            .frame(width:20, height: 20)
                                     }
                                     
                                 }
-                                .neoDoubleTapButton(isToggle: false, perform: {
-                                    withAnimation(.easeIn) {
-                                        bTapped = section.timestamp
-                                        showDate.toggle()
-                                    }
-                                })
+                                
+                            }
+                            .neoDoubleTapButton(isToggle: false, perform: {
+                                withAnimation(.easeIn) {
+                                    bTapped = section.timestamp
+                                    showDate.toggle()
+                                }
+                            })
                             .padding(.bottom,9)
                         
                     }
@@ -129,7 +129,7 @@ struct MessageBubblesView: View {
                 .padding(.horizontal)
                 .multilineTextAlignment(.leading)
                 .animation(.spring(), value: blurPage)
-               
+                
             }
         } else {
             
@@ -180,7 +180,7 @@ struct MessageBubblesView: View {
                                         showDate = false
                                     }
                                 }
-                                
+                            
                         }
                         
                         VStack {
@@ -203,8 +203,8 @@ struct MessageBubblesView: View {
                                                 .padding(-2)
                                             
                                         )
-                                    .frame(width: 30, height: 30)
-                                    .offset(y:-8)
+                                        .frame(width: 30, height: 30)
+                                        .offset(y:-8)
                                 }
                                 
                                 Text(section.message)
@@ -222,20 +222,20 @@ struct MessageBubblesView: View {
                                                 
                                                 Rectangle()
                                                     .fill(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
-                                                .frame(width:20, height: 20)
+                                                    .frame(width:20, height: 20)
                                             }
                                             Spacer()
                                         }
-                                            
+                                        
                                     }
                                     .neoDoubleTapButton(isToggle: false, perform: {
                                         //code
                                         withAnimation(.easeIn) {
-                                                bTapped = section.timestamp
-                                                showDate.toggle()
+                                            bTapped = section.timestamp
+                                            showDate.toggle()
                                         }
                                     })
-                                .padding(.bottom,9)
+                                    .padding(.bottom,9)
                             }
                         }
                         
@@ -270,7 +270,7 @@ struct MessageBubblesView: View {
         return dateFormatter.string(from: timedate)
         
     }
-  
+    
     func extractTime(from timestamp: String) -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/d/yy, h:mm a"
@@ -291,8 +291,7 @@ struct MessageBubblesView: View {
 struct MessageBubblesView_Previews: PreviewProvider {
     
     static var previews: some View {
-       
+        
         ViewController()
     }
 }
-

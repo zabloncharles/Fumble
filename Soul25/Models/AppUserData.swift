@@ -9,18 +9,18 @@ var appbackground = BackgroundView()
 //new model
 // Create a new user
 var fakeUser = UserStruct(
-    firstName: "Zack",
+    firstName: "fake",
     lastName: "Benson",
     email:"zack@gmail.com",
     age: 30,
     gender: "male",
     avatar:"https://plus.unsplash.com/premium_photo-1670282393309-70fd7f8eb1ef?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    photos: ["https://images.pexels.com/photos/4311436/pexels-photo-4311436.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", "https://images.pexels.com/photos/4311435/pexels-photo-4311435.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","https://images.pexels.com/photos/4311432/pexels-photo-4311432.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","https://images.pexels.com/photos/2331507/pexels-photo-2331507.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","https://images.pexels.com/photos/10757467/pexels-photo-10757467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","https://images.pexels.com/photos/2425012/pexels-photo-2425012.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"],
+    photos: ["", "","","","",""],
     occupation: "Software Engineer",
     education: "Bachelor's Degree",
     location: ["United States", "New Jersey", "Jersey City", "07305"],
     coordinates: ["40.728157","-74.077644"],
-    bio: "I enjoy hiking, playing guitar, and trying new foods.",
+    bio: "this is a local profile",
    interests: ["Cooking"],
     lastActive: Date(),
     lookingFor: "female",
@@ -388,8 +388,8 @@ var fakeUsers: [UserStruct] = [
 
 
 
-struct UserStruct {
-    var id = UUID()
+struct UserStruct: Codable {
+//    var id = UUID()
     var firstName: String
     var lastName: String
     var email: String
@@ -422,6 +422,9 @@ struct UserStruct {
     var liked: [String]
     var prompts: String
 
+    
+    
+    
 }
 
 

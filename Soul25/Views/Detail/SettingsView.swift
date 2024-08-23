@@ -8,13 +8,14 @@ import SwiftUI
 import MapKit
 
 struct SettingsView: View {
-    
+    @AppStorage("currentUserData") var currentUserData: String?
+    @Binding var currentUser: UserStruct?
     @State var userScrolledDown : CGFloat = 0
-    @State  var firstName: String = ""
-    @State  var lastName: String = ""
-    @State  var age: String = ""
-    @State  var gender: String = ""
-    @State  var occupation: String = ""
+    @State var firstName: String = ""
+    @State var lastName: String = ""
+    @State var age: String = ""
+    @State var gender: String = ""
+    @State var occupation: String = ""
     @State var returnedChange = ""
     @State var isPresented = false
     @State var list : [String] = []
@@ -27,6 +28,7 @@ struct SettingsView: View {
     @Binding var isSheetPresented: Bool
     @AppStorage("signedIn") var signedIn = false
     @StateObject private var authModel = AuthViewModel()
+    
     @State private var isSpinning = false
     // Add more @State properties for other user profile information
     
@@ -219,6 +221,7 @@ struct SettingsView: View {
                                             )
                                             .onAppear {
                                                 self.isSpinning = true
+                                                isSheetPresented = false
                                             }
                                             
                                            
@@ -233,9 +236,13 @@ struct SettingsView: View {
                                 }.background(Color("white").opacity(0.02))
                                 Divider()
                             }.neoButton(isToggle: false, perform: {
-                                isSheetPresented = false
-                                authModel.signOut()
+                               
+                                // Clear local storage
+                                currentUserData = nil
+                                currentUser = nil
                                 signedIn = false
+                                authModel.signOut()
+                                
                                 
                             })
                            
@@ -284,6 +291,8 @@ struct SettingsView: View {
     //        
                
             }
+               
+            
             .onChange(of: optionType) { newValue in
                
                
@@ -293,6 +302,7 @@ struct SettingsView: View {
                 // if we are editing the gender preference
                
         }
+        
         }
     
     var picklistview : some View{
@@ -325,7 +335,7 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView( isSheetPresented: .constant(false))
+        SettingsView( currentUser: .constant(fakeUser), isSheetPresented: .constant(false))
     }
 }
 

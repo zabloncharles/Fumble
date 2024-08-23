@@ -10,6 +10,7 @@ import SwiftUI
 struct LikesView: View {
     @AppStorage("currentPage") var selected = 0
     @AppStorage("hidemainTab") var hidemainTab = false
+    
     @State var userScrolledDown : Bool = false
     @State var pageAppeared = false
     @Binding var profiles: [UserStruct] 
@@ -48,15 +49,16 @@ struct LikesView: View {
                
                   
                 
-                    if profileLoaded < 5 && !errorLoading {
+                if profiles.count > 1   {
                         loading
                     }
                   
                    
                 
             }
-            if profiles.isEmpty && showError {
+            if profiles.count < 1 {
                 topbar
+                  
                 girlanimation
                 nolikes
             }
@@ -94,6 +96,10 @@ struct LikesView: View {
             }
             
         }.onAppear{
+       
+               
+            
+            
             profileAppeared = true
             
             withAnimation(.spring()){
@@ -101,7 +107,7 @@ struct LikesView: View {
             }
            
 //            if loading for 10 seconds show error
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 14) {
                 showError = true
             }
            
@@ -206,9 +212,12 @@ struct LikesView: View {
             }
                 .padding(15)
                 .neoButtonOff(isToggle: false, cornerRadius: 16)
-//                .offset(y: pageAppeared ? 0 : -300)
+                .offset(y: pageAppeared ? 0 : -300)
             Spacer()
         }.padding(20)
+            .onAppear{
+                pageAppeared = true
+            }
           
           
     }
@@ -248,12 +257,7 @@ struct LikesView: View {
         VStack(alignment: .center, spacing: 20.0) {
           
                 
-                VStack(alignment: .center) {
-                    
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        
-                }
+                
             
             Text(dataMessages)
                 .font(.headline)
@@ -261,7 +265,7 @@ struct LikesView: View {
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
             HStack {
-                Text("Try boosting your profile")
+                Text("Try boosting your profile ")
                     .font(.body)
                     .fontWeight(.semibold)
             }.padding(.horizontal,15)
@@ -269,7 +273,7 @@ struct LikesView: View {
                 .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
                 .cornerRadius(30)
         }.padding(20)
-            .offset(y:  profileLoaded < 2 ? 0 : UIScreen.main.bounds.height )
+            .offset(y:  profiles.count < 1 ? 0 : UIScreen.main.bounds.height )
         
     }
     var errorloadingdata: some View {
@@ -364,7 +368,7 @@ struct LikesView: View {
                                 .lineLimit(1)
                             
                         }
-                        ForEach(profiles, id: \.id) { user in
+                        ForEach(profiles, id: \.email) { user in
                             VStack {
                                 
                                 GetImageAndUrl(url:user.avatar, loaded: .constant(true), imageUrl: .constant(""))
@@ -418,7 +422,7 @@ struct LikesView: View {
             else {
                 VStack(spacing: 25.0) {
                   
-                            ForEach(Array(profiles.enumerated()), id: \.element.id) { index, user in
+                            ForEach(Array(profiles.enumerated()), id: \.element.email) { index, user in
                                     //
                                 PostCard(firstname: user.firstName,avatar: user.avatar, post: user.photos[0], indexRemoved: $indexRemoved, imageUrlReturned: $profileUrl, imageLoaded: $profileLoaded, unmatch: $unmatch, index: index){
                                     //tapp does what?

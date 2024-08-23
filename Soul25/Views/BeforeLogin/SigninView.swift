@@ -8,8 +8,11 @@
     struct SigninView: View {
         @AppStorage("currentPage") var selected = 3
         @StateObject var authViewModel = AuthViewModel()
-        @State var email = "test@gmail.com"
+        @AppStorage("currentUser") var currentUserData: String?
+        @Binding var currentUser: UserStruct?  // Variable to hold the user data
+        @State var email = "zack@gmail.com"
         @State var password = "123456"
+        @StateObject var currentUserViewModel = UserViewModel()
         @State var circleInitialY = CGFloat.zero
         @State var circleY = CGFloat.zero
         @State var alertMessage = "Something went wrong."
@@ -401,7 +404,7 @@
                         
                         HStack(spacing: 5.0) {
                             
-                            if userMessage == "Checking info..." {
+                            if !userMessage.isEmpty && userMessage != "Sign in" {
                                 ProgressView()
                                     .foregroundColor(.blue)
                             }
@@ -524,35 +527,54 @@
                             userMessage = "Successful..."
                             vibrate()
                         }
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             userMessage = "Signing you in..."
                             vibrate()
-                            
+                            currentUserViewModel.fetchCurrentUser()
+                         
                         }
-                        
-                        
-                        // Logs the user in then dismisses the model
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            selected = 0
-                            
-                            self.email = ""
-                            self.password = ""
-                            userMessage = ""
-                            withAnimation(.spring()){
-                                hideTopAndBottom = true
-                            }
-                            
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                             withAnimation(.spring()){
                                 //finally log the user in
-                                self.signIn = true
-                                UserDefaults.standard.set(true, forKey: "signIn")
+                                
+                                if let userData = currentUserData, let user = UserStruct.fromJSONString(userData) {
+                                    currentUser = user
+                                } else {
+                                    // Example fake user data
+                                    let fakeUserLocal = currentUserViewModel.currentUser
+                                    currentUser = currentUserViewModel.currentUser
+                                    currentUserData = fakeUserLocal?.toJSONString()
+                                    
+                                  
+                                }
+                                
+                                    if currentUser != nil {
+                                        userMessage = "Signing you in \(currentUser?.firstName ?? "..")"
+                                        vibrate()
+                                        self.signIn = true
+                                        UserDefaults.standard.set(true, forKey: "signIn")
+                                        
+                                        
+                                        hideTopAndBottom = true
+                                    } else {
+                                        userMessage = "There was a problem!"
+                                        vibrate()
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                            userMessage = "Couldn't find user data!"
+                                        }
+                                        self.signIn = false
+                                        UserDefaults.standard.set(false, forKey: "signIn")
+                                    }
+                                    
+                                
+                               
+                              
                             }
                             
                         }
-                       
+                        
+        
                         
                     } else if let error = error {
                         //if the auth is unsuccessful

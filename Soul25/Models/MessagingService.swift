@@ -72,14 +72,14 @@ class BooksViewModel: ObservableObject {
                     print("Error sending message: \(error.localizedDescription)")
                 } else {
                     print("Message sent successfully")
-//                    self.fetchData()  // Fetch updated chat data after sending a message
+                    //                    self.fetchData()  // Fetch updated chat data after sending a message
                 }
             }
         }
     }
     
     // Function to delete a message from the chat subcollection
-  
+    
     func deleteMessage(userId: String, messageId: String, completion: @escaping (Error?) -> Void) {
         // Query the "chats" collection to find the document with the matching user ID
         db.collection("chats").whereField("userId", isEqualTo: userId).getDocuments { (querySnapshot, error) in
@@ -105,36 +105,36 @@ class BooksViewModel: ObservableObject {
             }
         }
     }
-
     
-//    // Function to send a message to the specified user
-//    func sendMessage(to userId: String, message: String) {
-//        // Get the current timestamp as a string
-//        let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)
-//
-//        // Find the chat document for the specified user
-//        db.collection("chats").whereField("userId", isEqualTo: userId).getDocuments { (querySnapshot, error) in
-//            guard let documents = querySnapshot?.documents, let chatDocument = documents.first else {
-//                print("Chat document for user \(userId) not found")
-//                return
-//            }
-//
-//            // Create a new message in the chat subcollection
-//            let chatRef = chatDocument.reference.collection("chat").document()
-//            let messageData: [String: Any] = [
-//                "userId": userId,
-//                "message": message,
-//                "timestamp": timestamp
-//            ]
-//            chatRef.setData(messageData) { error in
-//                if let error = error {
-//                    print("Error sending message: \(error.localizedDescription)")
-//                } else {
-//                    print("Message sent successfully")
-//                }
-//            }
-//        }
-//    }
+    
+    //    // Function to send a message to the specified user
+    //    func sendMessage(to userId: String, message: String) {
+    //        // Get the current timestamp as a string
+    //        let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)
+    //
+    //        // Find the chat document for the specified user
+    //        db.collection("chats").whereField("userId", isEqualTo: userId).getDocuments { (querySnapshot, error) in
+    //            guard let documents = querySnapshot?.documents, let chatDocument = documents.first else {
+    //                print("Chat document for user \(userId) not found")
+    //                return
+    //            }
+    //
+    //            // Create a new message in the chat subcollection
+    //            let chatRef = chatDocument.reference.collection("chat").document()
+    //            let messageData: [String: Any] = [
+    //                "userId": userId,
+    //                "message": message,
+    //                "timestamp": timestamp
+    //            ]
+    //            chatRef.setData(messageData) { error in
+    //                if let error = error {
+    //                    print("Error sending message: \(error.localizedDescription)")
+    //                } else {
+    //                    print("Message sent successfully")
+    //                }
+    //            }
+    //        }
+    //    }
     
     var hasBooks: Bool {
         return !books.isEmpty

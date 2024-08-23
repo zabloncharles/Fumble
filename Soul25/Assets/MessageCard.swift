@@ -12,16 +12,11 @@ import SwiftUI
 
 
 struct MessageCard: View {
-    var section: Book
-    @Binding var profile : UserStruct
-    @Binding var showProfile : Bool
-    @Binding var userAvatarLoaded : Bool
-    @Binding var profiles : [UserStruct]
+    var section : UserProfile
     @State var isTapped = false
     @State var whoSent = ["Sent","Received","Seen"]
     @State var image = ""
     var index = 0
-    @Binding var dislikedEmails : [String]
     @State private var xOffset: CGFloat = 0
     @State var unmatched = false
     @State var animateArrow = false
@@ -58,14 +53,14 @@ struct MessageCard: View {
                   //  Image(section.avatar)
                       //  .resizable()
                       //  .aspectRatio(contentMode: .fill)
-                    GetImageAndUrl(url:"", loaded: $userAvatarLoaded, imageUrl: $image)
+                   GetImageAndUrl(url:section.avatar, loaded: .constant(true), imageUrl: $image)
                         .frame(width: 49, height: 49)
                         .mask(Circle())
                        
                        
                         .neoButton(isToggle: false) {
                             //user tapped the avatar
-                            showProfile = true
+//                            showProfile = true
 //                            profile = section
                         }
     //                    .onTapGesture {
@@ -76,12 +71,12 @@ struct MessageCard: View {
                         
                         
                         // GradientText(text: section.name, gradient: [.black, .blue])
-                        Text("Stacy")
+                        Text(section.name)
                             .font(.headline)
                             .foregroundColor(Color("black"))
-                        Text(section.message)
+                        Text(section.lastMessage.isEmpty ? "there's no message" : section.lastMessage)
                             .font(.footnote)
-                            .foregroundColor(.gray)
+                            .foregroundColor(section.userId == section.myEmail ? .gray : .blue)
                             .lineLimit(1)
                         
 //                        Text(whoSent[0])
@@ -92,7 +87,7 @@ struct MessageCard: View {
                     }
                     Spacer()
                     HStack {
-                        Text(section.timestamp)
+                        Text(section.timestamp.isEmpty ? "there's no time" :  formatDate(time: section.timestamp))
                             .font(.caption)
                             .foregroundColor(.gray )
                         
@@ -127,9 +122,7 @@ struct MessageCard: View {
                                 if xOffset < -262 {
                                     xOffset = -UIScreen.main.bounds.width
                                     unmatched = true
-                                    profiles.remove(at: index)
-                                    vibrate()
-                                    dislikedEmails.append("section.email")
+                                   
                                 } else {
                                     xOffset = 0
                                     vibrate()
@@ -159,9 +152,7 @@ struct MessageCard: View {
         
     }
     // Function to filter profiles by email
-    func filteredProfilesByEmail() -> [UserStruct] {
-        return profiles.filter { $0.email == section.userId }
-    }
+ 
     func vibrate() {
         let impactMed = UIImpactFeedbackGenerator(style: .soft)
         impactMed.impactOccurred()

@@ -7,36 +7,57 @@ import Firebase
 struct MainTab: View {
     @AppStorage("signedIn") var signedIn = false
     @Binding var onboardComplete : Bool
-    @State var currentUser: UserStruct? = fakeUser // Variable to hold the user data
+    @AppStorage("currentUser") private var currentUserData: String?
+    @State var currentUser: UserStruct?  // Variable to hold the user data
     @AppStorage("currentPage") var selected = 3
     @AppStorage("hidemainTab") var hidemainTab = false
     @State var matchProfiles: [UserStruct] = fakeUsers
     @State var chatProfiles: [UserStruct] = fakeUsers
-    @State var likesProfiles: [UserStruct] = fakeUsers
+    @State var likesProfiles : [UserStruct] = []
     @State var homeProfiles: [UserStruct] = fakeUsers
     @State var likedEmails = [""]
     @State var dislikedEmails = [""]
     
    @State var appLoading = true
+    @StateObject private var authLikedModel = AuthLikedModel()
     @ObservedObject var viewModel = BooksViewModel()
+    @ObservedObject var userViewModel = UserViewModel()
     @StateObject private var authModel = AuthViewModel()
-
+    @StateObject private var currentUserViewModel = UserViewModel()
  
 
     var body: some View {
         
         ZStack {
             BackgroundView()
-            if !authModel.isSignedOut && signedIn   {
+            if  signedIn   {
                 ZStack {
                     NavigationView {
                         VStack{
                             
                             if self.selected == 0{
                                 MatchView(profiles: $matchProfiles, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails, currentUser: $currentUser)
+                                    .overlay{
+                                        if userViewModel.users.count < 2 {
+                                            Text("\(userViewModel.users.count)")
+                                            
+//                                            BackgroundView()
+//                                            ProgressView()
+//                                            LogoLoadingView(animateForever: true)
+                                               
+                                        }
+                                    }
                             }
                            if self.selected == 1{
                                LikesView(profiles: $likesProfiles, currentUser: $currentUser, likedEmails:$likedEmails, dislikedEmails: $dislikedEmails)
+                                   .onAppear{
+                                       //get likes
+                                       authLikedModel.fetchLikedUsers()
+                                       DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                           likesProfiles = authLikedModel.likedUsers
+                                           
+                                       }
+                                   }
                                    
                             }
                             if self.selected == 2{
@@ -53,51 +74,69 @@ struct MainTab: View {
                     }
                     
                     //the tab bar // it also gets the chat notifications
-                    FloatingTabbar(selected: self.$selected,chatCount: "\(viewModel.books.count)")
+                    FloatingTabbar(selected: self.$selected,chatCount: "00", likeCount: likesProfiles.count)
                         .offset(y:  hidemainTab  ? UIScreen.main.bounds.height * 0.13 : 0)
                         .animation(.spring(), value: hidemainTab)
                        
                         
                 }.opacity(appLoading ? 0 : signedIn ? 1 : 0)
+                    
                     .onAppear{
                         withAnimation(.spring()) {
                             hidemainTab = false
                         }
-               
-                    fetchFakeUser()
-                   
+                        
+//                            userViewModel.fetchUsers()
+//                            currentUser = currentUserViewModel.currentUser
+                        
+                        getCurrentUser()
+                        
+                       
+                        //get likes
+//                        authLikedModel.fetchLikedUsers()
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//                            likesProfiles = authLikedModel.likedUsers
+//
+//                        }
                         //get match profiles
                         switch selected {
                             case 0:
-                                getFakeRecommendedProfiles()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    getFakeRecommendedProfiles()
+                                }
                             case 1:
                                 // Get likes profiles
                                 getFakeLikesProfiles()
                             case 2: // Changed from 3 to 2 since 2 corresponds to the third case
                                     // Get chat profiles
                                 getFakeChats()
+                            
                             default:
                                 // Get chat profiles as default
                                 getFakeChats()
                         }
                   
                     
-                    //home profiles
-                    fetchUserData(parameter: "",userCount: "100") { result in
                         
-                        homeProfiles = fakeUsers
                         
-                    }
-                    
+                            
+                        if currentUser == nil && signedIn {
+                            
+                            getCurrentUser()
+                        }
                 }
+                    
             } else {
-                SigninView(signIn: $signedIn, doneIntro: $onboardComplete)
+                SigninView(currentUser: $currentUser, signIn: $signedIn, doneIntro: $onboardComplete)
+                    .onAppear{
+                        currentUserData = nil
+                    }
                 
             }
             
             //show app loading view
-            if appLoading{
-                LogoLoadingView(background: false)
+            if appLoading || signedIn && matchProfiles == nil {
+                LogoLoadingView(animateForever: true, background: false)
                     .scaleEffect(1.2)
                     .offset(y:-50)
                     .onAppear{
@@ -108,17 +147,17 @@ struct MainTab: View {
                         }
                     }
             }
-            
           
+
            
-            
-            
             
         }.onChange(of: selected) { newValue in
             //get match profiles
             switch selected {
                 case 0:
-                    getFakeRecommendedProfiles()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        getFakeRecommendedProfiles()
+                    }
                 case 1:
                     // Get likes profiles
                     getFakeLikesProfiles()
@@ -140,10 +179,8 @@ struct MainTab: View {
     
     func getFakeRecommendedProfiles(){
         // Filter the profiles based on whether their email is in the likedEmails array
-        let disliked = dislikedEmails
-        matchProfiles = fakeUsers.filter { profile in
-             !disliked.contains(profile.email) && !likedEmails.contains(profile.email)
-        }
+        
+        matchProfiles = userViewModel.users
         
 //        fetchUserData(parameter: "") { users in
 //            matchProfiles = users ?? fakeUsers
@@ -163,14 +200,69 @@ struct MainTab: View {
 //            liked.contains(profile.email)
 //        }
         
-        self.viewModel.fetchData()
+//        self.viewModel.fetchData()
     }
     
-    
-    func fetchFakeUser(){
-        
+    func getCurrentUser(){
+        if let userData = currentUserData, let user = UserStruct.fromJSONString(userData) {
+            currentUser = user
+        }
     }
    
+    var signedInError : some View {
+        ZStack {
+            
+            VStack {
+                LottieView(filename: "loveflying" ,loop: true)
+                    .frame(width: 100)
+                
+                
+            }.offset( x:-40, y:280)
+                .opacity(0.7)
+            
+            VStack {
+                LottieView(filename: "sadheart" ,loop: true)
+                    .frame(width: 280)
+                
+                
+            }.offset(y:-160)
+            
+            
+            VStack {
+                
+                
+                Spacer()
+                
+                VStack(alignment: .center, spacing: 20.0) {
+                    
+                    Text("Error loading user!")
+                        .font(.headline)
+                    Text("There was an error getting user information!")
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                    HStack {
+                        Text("Reload Again")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                    }.padding(.horizontal,15)
+                        .padding(.vertical,10)
+                        .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+                        .cornerRadius(30)
+                        .neoButton(isToggle: false) {
+                            //log error
+                        }
+                    
+                }.padding(10)
+                
+                
+                
+                
+                Spacer()
+            }.padding(20)
+        }.background{
+            BackgroundView()
+        }
+    }
 }
 
 
@@ -189,6 +281,7 @@ struct FloatingTabbar : View {
     @Namespace var namespace
     @State var tappedicon = false
     var chatCount = ""
+    var likeCount = 0
     let generator = UINotificationFeedbackGenerator()
     
     var body : some View{
@@ -206,6 +299,22 @@ struct FloatingTabbar : View {
                 TabIcon(selected: $selected, selectedicon: 0, icon: "rectangle.portrait.on.rectangle.portrait.angled", name:"Match" ,tappedicon: $tappedicon )
                 Spacer()
                 TabIcon(selected: $selected, selectedicon: 1, icon: "fleuron",name:"Likes" , tappedicon: $tappedicon )
+                        .overlay{
+                            if likeCount != 0 {
+                                VStack{
+                                    
+                                    
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color(red: 0.998, green: 0.268, blue: 0.227))
+                                            .padding(-2)
+                                            .frame(width: 5, height: 5)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                                        .offset(x:-5, y: 1)
+                                    }
+                                }
+                            }
+                        }
                 Spacer()
                 TabIcon(selected: $selected, selectedicon: 2, icon: "person.2" , name:"Explore" ,tappedicon: $tappedicon )
                 Spacer()

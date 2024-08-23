@@ -32,6 +32,7 @@ struct ProfileView: View {
             
            
         }.onAppear{
+            profile = currentUser ?? fakeUser
             editingProfile = true
             
             withAnimation(.spring()) {
@@ -71,7 +72,7 @@ struct ProfileView: View {
 
             if currentIndex == -4 {
                 NavigationView {
-                    SettingsView(isSheetPresented: $isSheetPresented)
+                    SettingsView(currentUser: $currentUser, isSheetPresented: $isSheetPresented)
                 }
                 
                 

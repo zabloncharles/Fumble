@@ -19,7 +19,7 @@ struct ChatsView: View {
     @State var appear = [false, false, false]
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State var pageAppeared = false
-
+    
     @State var currentViewed = ""
     @State var texter = ""
     @Binding var likedEmails: [String]
@@ -30,53 +30,57 @@ struct ChatsView: View {
     @ObservedObject var messagesModel: BooksViewModel
     
     
+    @StateObject private var viewModel = CollectionViewModel()
+    
     var body: some View {
         ZStack {
             BackgroundView()
-                VStack {
-                    DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(messagesModel.books.count)",trailinglabelicon: "", notification: true){
-                        
-                    }
-                    .background{
-                        ScrollDetectionView(userScrolledDown: $userScrolledDown)
-                    }
-                    ScrollView(showsIndicators: false) {
-
-                        navandmessages
-                    }
-                    .coordinateSpace(name: "scroll")
-                    .background(BackgroundView())
-                 
-                    
-                    
-                  
-                    
+            VStack {
+                DynamicTopBar(label: "chats", labelicon: "bubble.left.and.bubble.right",trailinglabel: "\(messagesModel.books.count)",trailinglabelicon: "", notification: true){
                     
                 }
+                .background{
+                    ScrollDetectionView(userScrolledDown: $userScrolledDown)
+                }
+                ScrollView(showsIndicators: false) {
+
+                    navandmessages
+                }
+                .coordinateSpace(name: "scroll")
+                .background(BackgroundView())
                 
-//            if !profiles.isEmpty && !showMessages {
+               
+                
+                
+                
+                
+                
+            }
+            
+            //            if !profiles.isEmpty && !showMessages {
+            //                gettingmessages
+            //                    .transition(.opacity)
+            //            }
+            
+//            if viewModel.documentIds.isEmpty {
 //                gettingmessages
-//                    .transition(.opacity)
 //            }
             
-            if messagesModel.books.isEmpty {
-                gettingmessages
-            }
-        
         }.onAppear{
-           
-          
+            
+            
             
             
             hidemainTab = false
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                    withAnimation(.spring()){
-//                        if userAvatarsLoaded {
-//                            showMessages = true
-//                        }
-//                }
-//
-//            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                viewModel.fetchChatsDocumentIds()
+                                withAnimation(.spring()){
+                                    if userAvatarsLoaded {
+//                                        showMessages = true
+                                    }
+                            }
+            
+                        }
         }
         .onDisappear{
             withAnimation(.spring()){
@@ -87,11 +91,11 @@ struct ChatsView: View {
     
     var navandmessages: some View {
         VStack {
-                sectionsSection
+            sectionsSection
             
                 .padding(.bottom, 30)
-//                .offset(y: !showMessages ? UIScreen.main.bounds.height  : 0)
-                
+            //                .offset(y: !showMessages ? UIScreen.main.bounds.height  : 0)
+            
         }
     }
     
@@ -100,81 +104,87 @@ struct ChatsView: View {
         
         ZStack {
             VStack(spacing: 10) {
-                if !messagesModel.books.isEmpty {
-                    ForEach(Array(messagesModel.books.enumerated()), id: \.element.id) { index, chatData in
-
-                        NavigationLink(destination:
-                                        MessageDetailView(log: chatData, profiles: $profiles)
-                     
-                                     
-                        ) {
-                            VStack {
-                                MessageCard(section: chatData, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
-                            
-                               
-                            }
-                        }
-                    }
+                //                MessageCard(section: profile, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
+                
+                ForEach(viewModel.userProfiles) { profile in
+                MessageCard(section: profile)
                 }
-              
+                
+//                if !messagesModel.books.isEmpty {
+//                    ForEach(Array(messagesModel.books.enumerated()), id: \.element.id) { index, chatData in
+//
+//                        NavigationLink(destination:
+//                                        MessageDetailView(log: chatData, profiles: $profiles)
+//
+//
+//                        ) {
+//                            VStack {
+//                                MessageCard(section: chatData, profile: $profile, showProfile: $showProfile, userAvatarLoaded: $userAvatarsLoaded, profiles:$profiles, index:index, dislikedEmails:$dislikedEmails)
+//
+//
+//                            }
+//                        }
+//                    }
+//                }
+                
             }
-           
+            
             .padding(.horizontal,10)
             .padding(.top, 5)
-        .padding(.bottom,40)
-           
+            .padding(.bottom,40)
+            
         }
         
     }
     var gettingmessages: some View {
         VStack {
-           
-          
-                
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
+            
+            
+            
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: Color("black")))
             Text("Loading...")
                 .font(.body)
                 .padding(.top,10)
-         
-          
-//            VStack(alignment: .center, spacing: 20.0) {
-//
-//                Text("Getting your messages")
-//                    .font(.headline)
-//                Text("Oops well this is embarrassing. Making sure we have every message, They'll come in very soon.")
-//                    .foregroundColor(.secondary)
-//                    .multilineTextAlignment(.center)
-//                    .padding(.horizontal,25)
-//                HStack {
-//                    Text("Just a second :)")
-//                        .font(.body)
-//                        .fontWeight(.semibold)
-//                }.padding(.horizontal,15)
-//                    .padding(.vertical,10)
-//                    .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
-//                    .cornerRadius(30)
-//            }.padding(10)
-//
-//                .offset(y: showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
-          
+            
+            
+            //            VStack(alignment: .center, spacing: 20.0) {
+            //
+            //                Text("Getting your messages")
+            //                    .font(.headline)
+            //                Text("Oops well this is embarrassing. Making sure we have every message, They'll come in very soon.")
+            //                    .foregroundColor(.secondary)
+            //                    .multilineTextAlignment(.center)
+            //                    .padding(.horizontal,25)
+            //                HStack {
+            //                    Text("Just a second :)")
+            //                        .font(.body)
+            //                        .fontWeight(.semibold)
+            //                }.padding(.horizontal,15)
+            //                    .padding(.vertical,10)
+            //                    .background(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0))
+            //                    .cornerRadius(30)
+            //            }.padding(10)
+            //
+            //                .offset(y: showMessages ? UIScreen.main.bounds.height *  1.02 : 0)
+            
         }
     }
     var nomessages: some View {
         VStack {
-//            VStack {
-//                LottieView(filename: "loveflying" ,loop: true)
-//                    .frame(width: 100, height: 150)
-//
-//
-//            }.offset( x:-40, y:280)
-//                .opacity(0.7)
+            //            VStack {
+            //                LottieView(filename: "loveflying" ,loop: true)
+            //                    .frame(width: 100, height: 150)
+            //
+            //
+            //            }.offset( x:-40, y:280)
+            //                .opacity(0.7)
             
             
-                LottieView(filename: "sadheart" ,loop: true)
-                    .frame(width: 280, height: 180)
-                
-                
+            LottieView(filename: "sadheart" ,loop: true)
+                .frame(width: 280, height: 180)
+            
+            
             
             
             VStack(alignment: .center, spacing: 20.0) {
@@ -209,7 +219,7 @@ struct ChatsView: View {
         let matchingEmails = Set(currentUser.matched)
         return profiles.filter { !matchingEmails.contains($0.email) }
     }
-   
+    
     
     func close() {
         withAnimation {
@@ -218,8 +228,8 @@ struct ChatsView: View {
         
     }
     
-  
-   
+    
+    
 }
 
 
